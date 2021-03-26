@@ -12,7 +12,7 @@ async function run() {
                 const architecture = getAzureDevOpsVariable('Agent.OSArchitecture');
                 const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory');
 
-                const specifiedVersion = getAzureDevOpsInput('version');
+                const specifiedVersion = taskLib.getInput('version') || 'latest';
                 const scanfolder = getAzureDevOpsInput('scanfolder');
                 const configType = getAzureDevOpsInput('configtype');
 

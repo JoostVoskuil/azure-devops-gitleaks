@@ -89,7 +89,7 @@
             "type": "string",
             "label": "Gitleaks version",
             "defaultValue": "latest",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Specify the version of Gitleaks to use."
         }
     ],
