@@ -17,16 +17,7 @@
         "Minor": 1,
         "Patch": 11
     },
-    "minimumAgentVersion": "2.141.0",
     "inputs": [
-        {
-            "name": "version",
-            "type": "string",
-            "label": "Gitleaks version",
-            "defaultValue": "latest",
-            "required": true,
-            "helpMarkDown": "Specify the version of Gitleaks to use."
-        },
         {
             "name": "scanfolder",
             "type": "string",
@@ -83,7 +74,7 @@
             "label": "Verbose output",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Check this option if you want extended logging enabled."
+            "helpMarkDown": "Check this option if you want gitleaks to prints verbose output."
         },
         {
             "name": "uploadresults",
@@ -92,6 +83,14 @@
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "Check this option if you want to upload the results as an artifact."
+        },
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Gitleaks version",
+            "defaultValue": "latest",
+            "required": true,
+            "helpMarkDown": "Specify the version of Gitleaks to use."
         }
     ],
     "execution": {

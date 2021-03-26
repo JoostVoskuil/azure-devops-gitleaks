@@ -20,11 +20,11 @@ This Azure DevOps task downloads and runs a basic gitleak scan on the specified 
 
 | Name | Description |
 |-|-|
-| version |  Version of Gitleaks to be used. Use Semver. Set to latest to download the latest version of gitleaks |
 | scanfolder | The location to be scanned. Defaults to $(Build.SourcesDirectory). This is passed to gitleaks as '--path=' |
-| configtype | Can be 'default', 'predefined', 'custom'. When set to 'predefined' you can pass the argument 'predefinedconfigfile. When set to 'custom' you need to provide 'configfile' with the location of your gitleaks toml file |
-| predefinedconfigfile | When set to 'UDMSecretChecks.toml' it uses the Credscan config file provided by Jesse Houwing |
-| configFile | Sets the custom configfile in your repo. Use a relative path: '.github/gitleaks.config' |
-| verbose | When set to true, gitleaks prints verbose output |
-| nogit |  When set to true, gitleaks will be executed with the --no-git option |
-| uploadresults | When set to true, the results of gitleaks (in JSON) will be uploaded as an artifact |
+| configtype | Can be 'default', 'predefined', 'custom'. 'default' is using the default gitleaks setup. When set to 'predefined' you can pass the argument 'predefinedconfigfile'. When set to 'custom' you need to provide a custom 'configfile' with the location of your gitleaks config file. |
+| predefinedconfigfile | When set to 'UDMSecretChecks.toml' it uses the Credscan config file provided by Jesse Houwing. |
+| configfile | Sets the custom configfile in your repo. Use a relative path within the scanfolder. Example: '.github/gitleaks.config' |
+| verbose | When set to true, gitleaks prints verbose output. |
+| nogit |  When set to true, gitleaks will be executed with the --no-git option. |
+| uploadresults | When set to true, the results of gitleaks (in JSON) will be uploaded as an artifact to Azure DevOps. |
+| version | Version of Gitleaks to be used. See the gitleaks github page. Set to 'latest' to download the latest version of gitleaks. |
