@@ -3,7 +3,7 @@
     "id": "Gitleaks",
     "name": "Gitleaks",
     "publisher": "foxholenl",
-    "description": "This extension provides scanning your repo's for leaks with gitleaks.",
+    "description": "This extension provides scanning your repo's for leaks with gitleaks. Alternative for credscan.",
     "version": "0.0.11",
     "public": false,
     "targets": [
