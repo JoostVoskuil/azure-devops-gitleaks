@@ -116,23 +116,23 @@ stages:
       strategy: 
         runOnce:
           deploy:
-          steps:
-          - task: TfxInstaller@3
-            displayName: 'Use Node CLI for Azure DevOps'
-            inputs:
-              version: '0.8.x'
-              checkLatest: true
+            steps:
+            - task: TfxInstaller@3
+              displayName: 'Use Node CLI for Azure DevOps'
+              inputs:
+                version: '0.8.x'
+                checkLatest: true
 
-          - task: PublishAzureDevOpsExtension@3
-            name: 'PublishProd'
-            inputs:
-              connectTo: 'VsTeam'
-              connectedServiceName: 'Marketplace'
-              fileType: 'vsix'
-              vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks.vsix'
-              publisherId: 'foxholenl'
-              extensionId: 'Gitleaks'
-              updateTasksVersion: false
-              extensionVisibility: 'public'
-              noWaitValidation:  true
-            
+            - task: PublishAzureDevOpsExtension@3
+              name: 'PublishProd'
+              inputs:
+                connectTo: 'VsTeam'
+                connectedServiceName: 'Marketplace'
+                fileType: 'vsix'
+                vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks.vsix'
+                publisherId: 'foxholenl'
+                extensionId: 'Gitleaks'
+                updateTasksVersion: false
+                extensionVisibility: 'public'
+                noWaitValidation:  true
+              
