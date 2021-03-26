@@ -1,0 +1,48 @@
+{
+  "name": "gitleaks",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-rel": "npm install --production && tsc index.ts",
+    "build-test": "npm install && tsc",
+    "clean": "rm -rf ./node_modules/ && rm -rf ./coverage/ && rm -rf ./.nyc_output/ && rm -rf test-results.xml && find . -name '*.js' -delete && find . -name '*.js.map' -delete && rm -f package-lock.json && find . -name '.taskkey' -delete",
+    "lint": "eslint . --ext .ts",
+    "test": "npm run lint && nyc mocha tests/_suite.js --timeout 10000 && rm -rf ./.nyc_output/",
+    "test-ci": "npm run lint && nyc --reporter=cobertura --reporter=html mocha tests/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml --timeout 10000"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "**/tests/*.ts"
+    ],
+    "all": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JoostVoskuil/azure-devops-gitleaks"
+  },
+  "author": "Joost Voskuil (joost@foxhole.nl)",
+  "license": "MIT",
+  "dependencies": {
+    "azure-pipelines-task-lib": "^3.1.0",
+    "azure-pipelines-tool-lib": "1.0.1",
+    "guid-typescript": "^1.0.9"
+  },
+  "devDependencies": {
+    "@types/mocha": "^8.2.2",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "mocha": "^8.3.2",
+    "mocha-junit-reporter": "^2.0.0",
+    "nyc": "^15.1.0",
+    "source-map-support": "^0.5.19",
+    "sync-request": "^6.1.0",
+    "typescript": "^4.2.3"
+  }
+}

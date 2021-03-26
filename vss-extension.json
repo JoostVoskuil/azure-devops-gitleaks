@@ -1,0 +1,51 @@
+{
+    "manifestVersion": 1,
+    "id": "Gitleaks",
+    "name": "Gitleaks",
+    "publisher": "foxholenl",
+    "description": "This extension provides scanning your repo's for leaks with gitleaks.",
+    "version": "0.0.11",
+    "public": false,
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "content": {
+        "details": {
+            "path": "README.md"
+        }
+    },
+    "icons": {
+        "default": "images/logo.png"
+    },
+    "links": {
+        "support": {
+            "uri": "https://github.com/JoostVoskuil/azure-devops-gitleaks"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/JoostVoskuil/azure-devops-gitleaks"
+    },
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "files": [
+        {
+            "path": "task"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "foxholenl-gitleaks",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "task"
+            }
+        }
+    ]
+}

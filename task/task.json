@@ -1,0 +1,102 @@
+{
+    "id": "11bd67d8-bfe7-497b-967d-e800eb673119",
+    "name": "Gitleaks",
+    "friendlyName": "Gitleaks scan",
+    "description": "Scan git repos (or files) for secrets using regex and entropy.",
+    "helpMarkDown": "[More information](https://github.com/JoostVoskuil/azure-devops-gitleaks)",
+    "category": "Utility",
+    "visibility": [
+        "Build"
+    ],
+    "runsOn": [
+        "Agent"
+    ],
+    "author": "Joost Voskuil (joost@foxhole.nl)",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 11
+    },
+    "minimumAgentVersion": "2.141.0",
+    "inputs": [
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Gitleaks version",
+            "defaultValue": "latest",
+            "required": true,
+            "helpMarkDown": "Specify the version of Gitleaks to use."
+        },
+        {
+            "name": "scanfolder",
+            "type": "string",
+            "label": "Scan Folder",
+            "defaultValue": "$(Build.SourcesDirectory)",
+            "required": true,
+            "helpMarkDown": "Specify the location to scan. Defaults to your sources directory."
+        },
+        {
+            "name": "configtype",
+            "type": "picklist",
+            "label": "Configuration Type",
+            "defaultValue": "default",
+            "required": true,
+            "options": {
+                "default": "default",
+                "predefined": "predefined",
+                "custom": "custom"
+            },
+            "helpMarkDown": "Specify if you want to use the default, predefined config or a custom config."
+        },
+        {
+            "name": "predefinedconfigfile",
+            "type": "picklist",
+            "label": "Predefined config file",
+            "defaultValue": "UDMSecretChecks.toml",
+            "required": true,
+            "options": {
+                "UDMSecretChecks.toml": "UDMSecretChecks.toml"
+            },
+            "helpMarkDown": "Select a predefined config file.",
+            "visibleRule": "configtype=predefined"
+        },
+        {
+            "name": "configfile",
+            "type": "string",
+            "label": "Config file",
+            "defaultValue": ".github/gitleaks.config",
+            "required": true,
+            "helpMarkDown": "Specify a custom config file inside your repo.",
+            "visibleRule": "configtype=custom"
+        },
+        {
+            "name": "nogit",
+            "type": "boolean",
+            "label": "No Git",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Treat git repos as plain directories and scan those files."
+        },
+        {
+            "name": "verbose",
+            "type": "boolean",
+            "label": "Verbose output",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check this option if you want extended logging enabled."
+        },
+        {
+            "name": "uploadresults",
+            "type": "boolean",
+            "label": "Upload results",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Check this option if you want to upload the results as an artifact."
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "index.js"
+        }
+    }
+}

@@ -1,0 +1,138 @@
+name: '0.1$(rev:.r)'
+
+trigger:
+- main
+- feature/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: 'Build'
+  displayName: 'Build'
+  jobs:
+  - job: 
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '10.x'
+      displayName: 'Install Node.js'
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'cd task && npm run build-test && npm run test-ci'
+      displayName: 'Run Build for Test and Execute tests'
+    
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/test-results.xml'
+    
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: '$(Build.SourcesDirectory)/task/coverage/cobertura-coverage.xml'
+        pathToSources: '$(Build.SourcesDirectory)/task/'
+    - task: WhiteSource Bolt@20
+      inputs:
+        cwd: '$(Build.SourcesDirectory)task/'
+   
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'cd task && npm run clean && npm run build-rel'
+      displayName: 'Run Build for Packaging'
+      
+    - task: TfxInstaller@3
+      displayName: 'Use Node CLI for Azure DevOps'
+      inputs:
+        version: '0.8.x'
+        checkLatest: true
+
+    - task: PackageAzureDevOpsExtension@3
+      displayName: 'Package Extension: $(Build.SourcesDirectory)'
+      name: 'packageStep'
+      inputs:
+        rootFolder: '$(Build.SourcesDirectory)'
+        outputPath: '$(Build.ArtifactStagingDirectory)/foxholenl-gitleaks.vsix'
+        publisherId: 'foxholenl'
+        extensionId: 'Gitleaks'
+        extensionName: 'Gitleaks'
+        extensionTag: '-build'
+        extensionVersion: '$(Build.BuildNumber)'
+        updateTasksVersion: true
+        updateTasksVersionType: patch
+        extensionVisibility: private
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish vsix'
+      inputs:
+        publishLocation: pipeline
+        targetPath: '$(packageStep.Extension.OutputPath)'
+        artifact: 'vsix'
+      condition: succeededOrFailed()
+
+- stage: Test
+  displayName: 'Publish to Marketplace (private)'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  dependsOn: 'Build'
+  jobs:
+    - deployment: 
+      environment: Test
+      strategy: 
+        runOnce:
+         deploy:
+          steps:
+
+          - task: TfxInstaller@3
+            displayName: 'Use Node CLI for Azure DevOps'
+            inputs:
+              version: '0.8.x'
+              checkLatest: true
+
+          - task: PublishAzureDevOpsExtension@3
+            name: 'PublishTest'
+            inputs:
+              connectTo: 'VsTeam'
+              connectedServiceName: 'Marketplace'
+              fileType: 'vsix'
+              vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks.vsix'
+              publisherId: 'foxholenl'
+              extensionId: 'Gitleaks'
+              extensionTag: '-dev'
+              updateTasksVersion: false
+              extensionVisibility: 'privatepreview'
+              shareWith: 'foxholenl'
+              noWaitValidation: true
+
+- stage: Production
+  displayName: 'Publish to Marketplace (Public)'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  dependsOn: 'Test'
+  jobs:
+    - deployment: 
+      environment: Production
+      strategy: 
+        runOnce:
+          deploy:
+          steps:
+          - task: TfxInstaller@3
+            displayName: 'Use Node CLI for Azure DevOps'
+            inputs:
+              version: '0.8.x'
+              checkLatest: true
+
+          - task: PublishAzureDevOpsExtension@3
+            name: 'PublishProd'
+            inputs:
+              connectTo: 'VsTeam'
+              connectedServiceName: 'Marketplace'
+              fileType: 'vsix'
+              vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks.vsix'
+              publisherId: 'foxholenl'
+              extensionId: 'Gitleaks'
+              updateTasksVersion: false
+              extensionVisibility: 'public'
+              noWaitValidation:  true
+            
