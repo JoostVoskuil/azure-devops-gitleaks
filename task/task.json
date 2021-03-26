@@ -31,7 +31,7 @@
             "type": "picklist",
             "label": "Configuration Type",
             "defaultValue": "default",
-            "required": true,
+            "required": false,
             "options": {
                 "default": "default",
                 "predefined": "predefined",

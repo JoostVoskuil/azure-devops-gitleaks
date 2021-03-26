@@ -14,7 +14,7 @@ async function run() {
 
                 const specifiedVersion = taskLib.getInput('version') || 'latest';
                 const scanfolder = getAzureDevOpsInput('scanfolder');
-                const configType = getAzureDevOpsInput('configtype');
+                const configType = taskLib.getInput('configtype') || 'default';
 
                 const predefinedConfigFile = taskLib.getInput('predefinedconfigfile');
                 const customConfigFile = taskLib.getInput('configfile');

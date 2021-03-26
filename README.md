@@ -11,9 +11,7 @@ This Azure DevOps task downloads and runs a basic gitleak scan on the specified 
 # Run Gitleaks on Source Repository
 - task: Gitleaks@1
   inputs:
-    version: 'latest'
     scanfolder: '$(Build.SourcesDirectory)'
-    configtype: 'default'
 ```
 
 ## Arguments
