@@ -13,9 +13,7 @@ This Azure DevOps task downloads and runs a basic gitleak scan on the specified 
   inputs:
     version: 'latest'
     scanfolder: '$(Build.SourcesDirectory)'
-    configtype: 'predefined'
-    predefinedconfigfile: 'gitleaks.toml'
-    verbose: true
+    configtype: 'default'
 ```
 
 ## Arguments
