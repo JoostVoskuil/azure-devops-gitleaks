@@ -20,7 +20,7 @@ This Azure DevOps task downloads gitleaks and runs a basic gitleak scan on the s
 Any feedback on the Azure configuration file ('UDMSecretChecks.toml') is welcome.
 See [Jesse Houwing's github repo](https://github.com/jessehouwing/gitleaks-azure)
 
-The configuration file isn't as good as creds can was before, it had a bunch of helper functions to rule out false positives that aren't (yet) possible with  gitleaks.
+The configuration file isn't as good as credscan was before, it had a bunch of helper functions to rule out false positives that aren't (yet) possible with gitleaks.
 
 ## Arguments
 
