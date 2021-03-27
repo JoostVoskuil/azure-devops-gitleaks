@@ -34,3 +34,7 @@ The configuration file isn't as good as credscan was before, it had a bunch of h
 | nogit |  When set to true, gitleaks will be executed with the --no-git option. |
 | uploadresults | When set to true, the results of gitleaks (in JSON) will be uploaded as an artifact to Azure DevOps. |
 | version | Version of Gitleaks to be used. See the gitleaks github page. Set to 'latest' to download the latest version of gitleaks. |
+
+## How do I remove a secret from git's history?
+
+[Github](https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository) has a great article on this using the [BFG Repo Cleaner](https://rtyley.github.io/bfg-repo-cleaner/).
