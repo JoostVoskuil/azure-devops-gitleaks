@@ -49,7 +49,6 @@ describe('Upload gitleaks results', function () {
         const tp = path.join(__dirname, 'UploadResults_ShouldNotUploadFileResultsWhenUploadIsOff');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout);
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.errorIssues.length, 1, "should have one error");
         assert.strictEqual(tr.stdout.indexOf('##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;]'), -1 , "Should not contain '##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;].'")
