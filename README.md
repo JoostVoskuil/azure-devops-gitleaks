@@ -4,6 +4,8 @@ Thanks to [Zachary Rice](https://github.com/zricethezav) for creating and mainta
 
 Thanks to [Jesse Houwing](https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.
 
+Thanks to John Lokkerse for providing feedback.
+
 This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specified location. It can only scan already checked-out repo's on the agent because it is currently not possible to scan Azure DevOps repo-urls. See [this github issue](https://github.com/zricethezav/gitleaks/issues/440) for more information.
 
 ## YAML Snippet
@@ -16,6 +18,8 @@ This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specifi
 ```
 
 ## Contributions
+
+Any feedback on gitleaks, please reach out to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining gitleaks.
 
 Any feedback on the Azure configuration file ('UDMSecretChecks.toml') is welcome.
 See [Jesse Houwing's github repo](https://github.com/jessehouwing/gitleaks-azure)

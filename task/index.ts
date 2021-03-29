@@ -48,13 +48,12 @@ async function run() {
 
 		const result: number = await toolRunner.exec(options);
 
-		if (taskLib.exist(reportPath) && taskLib.getBoolInput('uploadresults')) {
-			taskLib.uploadArtifact('gitleaks', reportPath, 'gitleaks');
-		}
-
 		if (result === 0) {
 			taskLib.setResult(taskLib.TaskResult.Succeeded, '');
 		} else {
+			if (taskLib.exist(reportPath) && taskLib.getBoolInput('uploadresults')) {
+				taskLib.uploadArtifact('gitleaks', reportPath, 'gitleaks');
+			}
 			taskLib.setResult(taskLib.TaskResult.Failed, 'Leaks or error encountered. See log and report for details.');
 		}
 	}

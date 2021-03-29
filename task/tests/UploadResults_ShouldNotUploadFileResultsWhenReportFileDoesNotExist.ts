@@ -1,5 +1,5 @@
 import * as mr from 'azure-pipelines-task-lib/mock-run';
-
+import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner';
 
 import path = require('path');
 import os = require('os');
@@ -23,13 +23,16 @@ const executable = 'gitleaks-darwin-amd64';
 helpers.BuildWithDefaultValues();
 
 tmr = helpers.BuildWithEmptyToolCache(tmr);
-
+tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr);
 tmr.setAnswers(<TaskLibAnswers>{
         exec: {
                 [helpers.createToolCall(executable)]: {
-                        'code': 0,
-                        'stdout': 'Gitleaks tool contsole output',
+                        'code': 1,
+                        'stdout': 'Gitleaks tool console output',
                 },
+        },
+        exist: {
+                [helpers.reportFile()]: false,
         },
 });
 tmr = helpers.BuildWithDefaultMocks(tmr);
