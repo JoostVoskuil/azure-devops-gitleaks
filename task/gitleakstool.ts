@@ -23,16 +23,19 @@ export class GitleaksTool {
 		return reportPath;
 	}
 
-	getGitLeaksConfigFileParameter(configType: string, predefinedConfigFile?: string, configFile?: string): string | undefined {
+	getGitLeaksConfigFileParameter(configType: string, nogit: boolean, predefinedConfigFile?: string, configFile?: string): string | undefined {
 		let configFileParameter: string;
 		if (configType.toLowerCase() === 'default') return undefined;
 		else if (configType.toLowerCase() === 'predefined' && predefinedConfigFile !== undefined) {
 			const fullPath = Path.join(__dirname, 'configs', predefinedConfigFile);
 			configFileParameter = `--config-path=${fullPath.replace(/\\/g, '/')}`;
 		}
-		else if (configType.toLowerCase() === 'custom' && configFile !== undefined) {
+		else if (configType.toLowerCase() === 'custom' && configFile !== undefined && !nogit) {
 			configFileParameter = `--repo-config-path=${configFile.replace(/\\/g, '/')}`;
 		}
+        else if (configType.toLowerCase() === 'custom' && configFile !== undefined && nogit) {
+            configFileParameter = `--config-path=${configFile.replace(/\\/g, '/')}`;
+        }
 		else throw new Error(`Incorrect configuration set.`);
 		taskLib.debug(`Config file parameter is set to ${configFileParameter} .`);
 		return configFileParameter;
