@@ -18,9 +18,10 @@ async function run() {
 
 		const predefinedConfigFile = taskLib.getInput('predefinedconfigfile');
 		const customConfigFile = taskLib.getInput('configfile');
+        const nogit = taskLib.getBoolInput('nogit');
 
 		const gitleaksTool: GitleaksTool = new GitleaksTool('gitleaks', specifiedVersion, operatingSystem, architecture);
-		const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, predefinedConfigFile, customConfigFile);
+		const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, nogit, predefinedConfigFile, customConfigFile);
 		const reportPath = gitleaksTool.getGitleaksReportPath(agentTempDirectory);
 
 		const cachedTool = await gitleaksTool.getTool();
@@ -34,7 +35,7 @@ async function run() {
 		toolRunner.arg([`--report=${reportPath.replace(/\\/g, '/')}`]);
 		if (configFileParameter) toolRunner.arg([`${configFileParameter}`]);
 
-		if (taskLib.getBoolInput('nogit')) toolRunner.arg([`--no-git`]);
+		if (nogit) toolRunner.arg([`--no-git`]);
 		if (taskLib.getBoolInput('verbose')) toolRunner.arg([`--verbose`]);
 
 		// Set options to run the toolRunner
