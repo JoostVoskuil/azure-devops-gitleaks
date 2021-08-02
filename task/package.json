@@ -29,20 +29,20 @@
   "author": "Joost Voskuil (joost@foxhole.nl)",
   "license": "MIT",
   "dependencies": {
-    "azure-pipelines-task-lib": "^3.1.0",
+    "azure-pipelines-task-lib": "^3.1.6",
     "azure-pipelines-tool-lib": "1.0.1",
     "guid-typescript": "^1.0.9"
   },
   "devDependencies": {
-    "@types/mocha": "^8.2.2",
-    "@typescript-eslint/eslint-plugin": "^4.19.0",
-    "@typescript-eslint/parser": "^4.19.0",
-    "eslint": "^7.22.0",
-    "mocha": "^8.3.2",
+    "@types/mocha": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
+    "eslint": "^7.32.0",
+    "mocha": "^9.0.3",
     "mocha-junit-reporter": "^2.0.0",
     "nyc": "^15.1.0",
     "source-map-support": "^0.5.19",
     "sync-request": "^6.1.0",
-    "typescript": "^4.2.3"
+    "typescript": "^4.3.5"
   }
 }
