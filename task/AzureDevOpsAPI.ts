@@ -18,7 +18,7 @@ export class AzureDevOpsAPI {
 		this.token = getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken');
 	}
 
-	public async getFirstCommitForThisBuild(): Promise<string> {
+	public async getBuildChanges(): Promise<string> {
 		// Get changes
 		const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token);
 		const buildApi: BuildApi = await connection.getBuildApi();

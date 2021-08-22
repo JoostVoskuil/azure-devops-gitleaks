@@ -37,19 +37,13 @@ async function run() {
 		toolRunner.arg([`--path=${scanfolder.replace(/\\/g, '/')}`]);
 		toolRunner.arg([`--report=${reportPath.replace(/\\/g, '/')}`]);
 		if (configFileParameter) toolRunner.arg([`${configFileParameter}`]);
-
 		if (nogit) toolRunner.arg([`--no-git`]);
+		if (taskLib.getBoolInput('verbose')) toolRunner.arg([`--verbose`]);
 		if (scanonlychanges) {
 			const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI();
-			const commits = await azureDevOpsAPI.getFirstCommitForThisBuild();
-			if (commits.length > 0) {
-				toolRunner.arg([`--commits=${commits}`]);
-			}
-			else { 
-				toolRunner.arg([`--commit="latest"`]);
-			}
+			const commits = await azureDevOpsAPI.getBuildChanges();
+			toolRunner.arg([`--commits=${commits}`]);
 		}
-		if (taskLib.getBoolInput('verbose')) toolRunner.arg([`--verbose`]);
 
 		// Set options to run the toolRunner
 		const options: tr.IExecOptions = {
