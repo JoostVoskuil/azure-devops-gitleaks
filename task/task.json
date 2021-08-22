@@ -82,7 +82,7 @@
             "label": "Verbose output",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Check this option if you want gitleaks to prints verbose output."
+            "helpMarkDown": "Check this option if you want gitleaks to print verbose output."
         },
         {
             "name": "uploadresults",
