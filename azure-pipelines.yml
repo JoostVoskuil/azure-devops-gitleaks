@@ -3,6 +3,7 @@ name: '1.0$(rev:.r)'
 trigger:
 - main
 - feature/*
+- features/*
 
 pool:
   vmImage: 'ubuntu-latest'

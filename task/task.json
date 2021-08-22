@@ -69,6 +69,14 @@
             "helpMarkDown": "Treat git repos as plain directories and scan those files."
         },
         {
+            "name": "scanonlychanges",
+            "type": "boolean",
+            "label": "Scan only changes since last build",
+            "defaultValue": "false",
+            "required": false,
+            "visibleRule": "nogit=false"
+        },
+        {
             "name": "verbose",
             "type": "boolean",
             "label": "Verbose output",

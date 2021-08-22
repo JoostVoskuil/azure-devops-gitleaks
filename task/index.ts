@@ -1,6 +1,8 @@
 import taskLib = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import { AzureDevOpsAPI } from './AzureDevOpsAPI';
 import { GitleaksTool } from './gitleakstool';
+import { getAzureDevOpsInput, getAzureDevOpsVariable } from './helpers';
 
 async function run() {
 	try {
@@ -18,10 +20,11 @@ async function run() {
 
 		const predefinedConfigFile = taskLib.getInput('predefinedconfigfile');
 		const customConfigFile = taskLib.getInput('configfile');
-        const nogit = taskLib.getBoolInput('nogit');
+		const nogit = taskLib.getBoolInput('nogit');
+		const scanonlychanges = taskLib.getBoolInput('scanonlychanges');
 
 		const gitleaksTool: GitleaksTool = new GitleaksTool('gitleaks', specifiedVersion, operatingSystem, architecture);
-		const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, nogit, predefinedConfigFile, customConfigFile);
+		const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, nogit, predefinedConfigFile, customConfigFile,);
 		const reportPath = gitleaksTool.getGitleaksReportPath(agentTempDirectory);
 
 		const cachedTool = await gitleaksTool.getTool();
@@ -36,6 +39,11 @@ async function run() {
 		if (configFileParameter) toolRunner.arg([`${configFileParameter}`]);
 
 		if (nogit) toolRunner.arg([`--no-git`]);
+		if (scanonlychanges) {
+			const az: AzureDevOpsAPI = new AzureDevOpsAPI();
+			const commits = az.getFirstCommitForThisBuild();
+			toolRunner.arg([` --commits=${commits}`]);
+		}
 		if (taskLib.getBoolInput('verbose')) toolRunner.arg([`--verbose`]);
 
 		// Set options to run the toolRunner
@@ -59,20 +67,8 @@ async function run() {
 		}
 	}
 	catch (err) {
-		taskLib.setResult(taskLib.TaskResult.Failed, err);
+		taskLib.setResult(taskLib.TaskResult.Failed, err as string);
 	}
 }
 
 run();
-
-function getAzureDevOpsVariable(name: string): string {
-	const value = taskLib.getVariable(name) || undefined;
-	if (value === undefined) throw Error(`Variable ${name} is empty`);
-	return value;
-}
-
-function getAzureDevOpsInput(name: string): string {
-	const value = taskLib.getInput(name) || undefined;
-	if (value === undefined) throw Error(`Input ${name} is empty`);
-	return value;
-}
