@@ -41,7 +41,7 @@ async function run() {
 		if (nogit) toolRunner.arg([`--no-git`]);
 		if (scanonlychanges) {
 			const az: AzureDevOpsAPI = new AzureDevOpsAPI();
-			const commits = az.getFirstCommitForThisBuild();
+			const commits = await az.getFirstCommitForThisBuild();
 			toolRunner.arg([` --commits=${commits}`]);
 		}
 		if (taskLib.getBoolInput('verbose')) toolRunner.arg([`--verbose`]);
