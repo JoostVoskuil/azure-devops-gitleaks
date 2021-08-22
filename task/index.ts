@@ -42,7 +42,12 @@ async function run() {
 		if (scanonlychanges) {
 			const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI();
 			const commits = await azureDevOpsAPI.getFirstCommitForThisBuild();
-			toolRunner.arg([`--commits=${commits}`]);
+			if (commits.length > 0) {
+				toolRunner.arg([`--commits=${commits}`]);
+			}
+			else { 
+				toolRunner.arg([`--commit="latest"`]);
+			}
 		}
 		if (taskLib.getBoolInput('verbose')) toolRunner.arg([`--verbose`]);
 
