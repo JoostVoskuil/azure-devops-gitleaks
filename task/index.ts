@@ -41,8 +41,8 @@ async function run() {
 		if (taskLib.getBoolInput('verbose')) toolRunner.arg([`--verbose`]);
 		if (scanonlychanges) {
 			const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI();
-			const commits = await azureDevOpsAPI.getBuildChanges();
-			toolRunner.arg([`--commits=${commits}`]);
+			const commitsFile = await azureDevOpsAPI.getBuildChangesInFile(agentTempDirectory);
+			toolRunner.arg([`--commits-file=${commitsFile}`]);
 		}
 
 		// Set options to run the toolRunner
