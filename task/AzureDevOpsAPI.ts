@@ -24,18 +24,24 @@ export class AzureDevOpsAPI {
 	public async getBuildChangesInFile(agentTempDirectory: string): Promise<string> {
 		//commitsFile
 		const commitsFile = Path.join(agentTempDirectory, `commits-${Guid.create()}.txt`);
+		console.debug(`CommitsFile is set to ${commitsFile}`);
 
 		// Get changes
 		const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token);
 		const buildApi: BuildApi = await connection.getBuildApi();
 		const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, Number(this.buildId));
 		const filteredChanges = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined));
-		
-		console.debug(`Detected ${filteredChanges.length} Git changes for this build.`);
-		const commitsArray = filteredChanges.map(o => o.id).join('\n');
-		//Writing File
-		console.debug(`CommitsFile is set to ${commitsFile}`);
-		fs.writeFileSync(commitsFile, commitsArray);
+
+		if (filteredChanges.length > 0) {
+			console.debug(`Detected ${filteredChanges.length} Git changes for this build.`);
+			const commitsArray = filteredChanges.map(o => o.id).join('\n');
+			//Writing File
+			fs.writeFileSync(commitsFile, commitsArray);
+		}
+		else {
+			console.debug(`Dit not detect any changes in this build.`);
+			fs.writeFileSync(commitsFile, "");
+		}
 		return commitsFile
 	}
 }
