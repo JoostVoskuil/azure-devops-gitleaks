@@ -36,7 +36,7 @@ The configuration file isn't as good as credscan was before, it had a bunch of h
 | configfile | Sets the custom configfile in your repo. Use a relative path within the scanfolder. Example: '.github/gitleaks.config' |
 | verbose | When set to true, gitleaks prints verbose output. |
 | nogit |  When set to true, gitleaks will be executed with the --no-git option. |
-| scanonlychanges |  When set to true, gitleaks will scan only the changes. |
+| scanonlychanges |  When set to true, gitleaks will scan only the changes for this Build. It fetches the changes between builds from the Azure DevOps API. |
 | uploadresults | When set to true, the results of gitleaks (in JSON) will be uploaded as an artifact to Azure DevOps. |
 | version | Version of Gitleaks to be used. See the gitleaks github page. Set to 'latest' to download the latest version of gitleaks. |
 
