@@ -32,16 +32,10 @@ export class AzureDevOpsAPI {
 		const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, Number(this.buildId));
 		const filteredChanges = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined));
 
-		if (filteredChanges.length > 0) {
-			console.debug(`Detected ${filteredChanges.length} Git changes for this build.`);
-			const commitsArray = filteredChanges.map(o => o.id).join('\n');
-			//Writing File
-			fs.writeFileSync(commitsFile, commitsArray);
-		}
-		else {
-			console.debug(`Dit not detect any changes in this build.`);
-			fs.writeFileSync(commitsFile, "");
-		}
+		console.debug(`Detected ${filteredChanges.length} Git changes for this build.`);
+		const commitsArray = filteredChanges.map(o => o.id).join('\n');
+		//Writing File
+		fs.writeFileSync(commitsFile, commitsArray);
 		return commitsFile
 	}
 }
