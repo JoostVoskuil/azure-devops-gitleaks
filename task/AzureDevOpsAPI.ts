@@ -29,7 +29,7 @@ export class AzureDevOpsAPI {
 		// Get changes
 		const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token);
 		const buildApi: BuildApi = await connection.getBuildApi();
-		const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, Number(this.buildId));
+		const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, Number(this.buildId), undefined, 1000);
 		const filteredChanges = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined));
 
 		console.debug(`Detected ${filteredChanges.length} Git changes for this build.`);
