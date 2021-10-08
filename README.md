@@ -38,6 +38,8 @@ The configuration file isn't as good as credscan was before, it had a bunch of h
 | nogit |  When set to true, gitleaks will be executed with the --no-git option. |
 | scanonlychanges |  When set to true, gitleaks will scan only the changes for this Build. It fetches the changes between builds from the Azure DevOps API. |
 | uploadresults | When set to true, the results of gitleaks (in JSON) will be uploaded as an artifact to Azure DevOps. |
+| redact | Redact secrets from log messages and leaks. |
+| arguments | Provide extra arguments to gitleaks. See [GitHub](https://github.com/zricethezav/gitleaks#usage-and-options) |
 | version | Version of Gitleaks to be used. See the gitleaks github page. Set to 'latest' to download the latest version of gitleaks. |
 
 ## How do I remove a secret from git's history?

@@ -1,4 +1,3 @@
-import taskLib = require('azure-pipelines-task-lib/task');
 import { Change } from 'azure-devops-node-api/interfaces/BuildInterfaces';
 import * as azdev from 'azure-devops-node-api/WebApi';
 import { BuildApi } from 'azure-devops-node-api/BuildApi';
