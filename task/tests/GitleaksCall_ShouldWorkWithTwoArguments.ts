@@ -37,7 +37,7 @@ tmr.run();
 
 
 function createToolCall(): string {
-	const toolCall = `/tool/${executable} --path=${__dirname} --report=${helpers.reportFile()} --arg1=value  --arg2`;
+	const toolCall = `/tool/${executable} --path=${__dirname} --report=${helpers.reportFile()} --arg1=value --arg2`;
 	console.log(toolCall);
 	return toolCall;
 }
