@@ -82,6 +82,31 @@ describe('Gitleaks parameter calls', function () {
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
     });
+    it('Should provide the --redact parameter to gitleaks when redact flag is on', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithRedactParameter');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        done();
+    });
+    it('Should provide the extra arguments to gitleaks when provided - One argument', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithOneArgument');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        done();
+    });
+    it('Should provide the extra arguments to gitleaks when provided - Two arguments', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithTwoArguments');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+
+        done();
+    }); 
 });
 
 describe('Provide Config files', function () {

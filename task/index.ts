@@ -17,6 +17,7 @@ async function run() {
 		const specifiedVersion = taskLib.getInput('version') || 'latest';
 		const scanfolder = getAzureDevOpsInput('scanfolder');
 		const configType = taskLib.getInput('configtype') || 'default';
+		const gitleaksArguments = taskLib.getInput('arguments');
 
 		const predefinedConfigFile = taskLib.getInput('predefinedconfigfile');
 		const customConfigFile = taskLib.getInput('configfile');
@@ -39,10 +40,21 @@ async function run() {
 		if (configFileParameter) toolRunner.arg([`${configFileParameter}`]);
 		if (nogit) toolRunner.arg([`--no-git`]);
 		if (taskLib.getBoolInput('verbose')) toolRunner.arg([`--verbose`]);
+		if (taskLib.getBoolInput('redact')) toolRunner.arg([`--redact`]);
 		if (scanonlychanges) {
 			const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI();
 			const commitsFile = await azureDevOpsAPI.getBuildChangesInFile(agentTempDirectory);
 			toolRunner.arg([`--commits-file=${commitsFile}`]);
+		}
+
+		// Process extra arguments
+		if (gitleaksArguments) {
+			// Split on argument delimiter
+			const argumentArray = gitleaksArguments.split('--');
+			argumentArray.shift();
+			for (const arg of argumentArray) {
+				toolRunner.arg([`--${arg.replace(/\\/g, '/').trim()}`]);	
+			}
 		}
 
 		// Set options to run the toolRunner

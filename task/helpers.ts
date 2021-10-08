@@ -26,7 +26,7 @@ export function getAzureDevOpsInput(name: string): string {
     return value;
 }
 
-export function getTime(date?: Date) {
+export function getTime(date?: Date): number {
     return date != null ? new Date(date).getTime() : 0;
 }
 

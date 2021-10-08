@@ -14,7 +14,7 @@
     "author": "Joost Voskuil (joost@foxhole.nl)",
     "version": {
         "Major": 1,
-        "Minor": 1,
+        "Minor": 2,
         "Patch": 0
     },
     "inputs": [
@@ -91,6 +91,22 @@
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "Check this option if you want to upload the results as an artifact."
+        },
+        {
+            "name": "redact",
+            "type": "boolean",
+            "label": "Redact",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Check this option if you want to redact secrets from log messages and leaks."
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Extra gitleaks arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify extra Gitleaks arguments."
         },
         {
             "name": "version",
