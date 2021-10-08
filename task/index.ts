@@ -53,7 +53,7 @@ async function run() {
 			const argumentArray = gitleaksArguments.split('--');
 			argumentArray.shift();
 			for (const arg of argumentArray) {
-				toolRunner.arg([`--${arg.replace(/\\/g, '/')}`]);	
+				toolRunner.arg([`--${arg.replace(/\\/g, '/').trim()}`]);	
 			}
 		}
 
