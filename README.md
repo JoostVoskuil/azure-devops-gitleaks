@@ -28,19 +28,26 @@ The configuration file isn't as good as credscan was before, it had a bunch of h
 
 ## Arguments
 
-| Name | Description |
-|-|-|
-| scanfolder | The location to be scanned. Defaults to $(Build.SourcesDirectory). This is passed to gitleaks as '--path=' |
-| configtype | Can be 'default', 'predefined' or 'custom'. 'default' is using the default gitleaks setup. When set to 'predefined' you can pass the argument 'predefinedconfigfile'. When set to 'custom' you need to pass the argument 'configfile' with the filename of your gitleaks config file. |
-| predefinedconfigfile | When set to 'UDMSecretChecks.toml' it uses the Credscan config file provided by Jesse Houwing. |
-| configfile | Sets the custom configfile in your repo. Use a relative path within the scanfolder. Example: '.github/gitleaks.config' |
-| verbose | When set to true, gitleaks prints verbose output. |
-| nogit |  When set to true, gitleaks will be executed with the --no-git option. |
-| scanonlychanges |  When set to true, gitleaks will scan only the changes for this Build. It fetches the changes between builds from the Azure DevOps API. |
-| uploadresults | When set to true, the results of gitleaks (in JSON) will be uploaded as an artifact to Azure DevOps. |
-| redact | Redact secrets from log messages and leaks. |
-| arguments | Provide extra arguments to gitleaks. See [GitHub](https://github.com/zricethezav/gitleaks#usage-and-options) |
-| version | Version of Gitleaks to be used. See the gitleaks github page. Set to 'latest' to download the latest version of gitleaks. |
+| Name                 | Description                                                                                                                                                                                                                                                                           |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| scanfolder           | The location to be scanned. Defaults to $(Build.SourcesDirectory). This is passed to gitleaks as '--path='                                                                                                                                                                            |
+| configtype           | Can be 'default', 'predefined' or 'custom'. 'default' is using the default gitleaks setup. When set to 'predefined' you can pass the argument 'predefinedconfigfile'. When set to 'custom' you need to pass the argument 'configfile' with the filename of your gitleaks config file. |
+| predefinedconfigfile | When set to 'UDMSecretChecks.toml' it uses the Credscan config file provided by Jesse Houwing.                                                                                                                                                                                        |
+| configfile           | Sets the custom configfile in your repo. Use a relative path within the scanfolder. Example: 'config/gitleaks.toml'                                                                                                                                                                   |
+| verbose              | When set to true, gitleaks prints verbose output.                                                                                                                                                                                                                                     |
+| nogit                | When set to true, gitleaks will be executed with the --no-git option.                                                                                                                                                                                                                 |
+| scanonlychanges      | When set to true, gitleaks will scan only the changes for this Build. It fetches the changes between builds from the Azure DevOps API.                                                                                                                                                |
+| depth                | Sets number of commits to scan. When set, gitleaks will be executed with the --depth # option.                                                                                                                                                                                        |
+| reportformat         | Sets gitleaks report format: JSON, CSV, SARIF (default: json)                                                                                                                                                                                                                         |
+| uploadresults        | When set to true, the results of gitleaks will be uploaded as an artifact to Azure DevOps.                                                                                                                                                                                            |
+| redact               | Redact secrets from log messages and leaks.                                                                                                                                                                                                                                           |
+| taskfail             | Sets the behavior of the task when secrets are detected. When set to `true`, fail the task. When set to `false` and secrets present end with warning.                                                                                                                                 |
+| arguments            | Provide extra arguments to gitleaks. See [GitHub](https://github.com/zricethezav/gitleaks#usage-and-options)                                                                                                                                                                          |
+| version              | Version of Gitleaks to be used. See the gitleaks github page. Set to 'latest' to download the latest version of gitleaks.                                                                                                                                                             |
+
+## SARIF display in Summary
+
+You can display gitleaks report nicely in your Pipeline run summary. To realize it set `reportformat` to `sarif` and make sure your Azure DevOps organization has [SARIF SAST Scans Tab](https://marketplace.visualstudio.com/items?itemName=sariftools.scans) extension installed.
 
 ## How do I remove a secret from git's history?
 

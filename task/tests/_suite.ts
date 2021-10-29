@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
-
 describe('Gitleaks Execution', function () {
     it('Should succeed when gitleaks find no leaks', function(done: Mocha.Done) {    
         const tp = path.join(__dirname, 'Execution_ShouldSucceedWhenGitLeaksReturnsExitCodeZero.js');
@@ -18,7 +17,17 @@ describe('Gitleaks Execution', function () {
         tr.run();
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.errorIssues.length, 1, "should have one error");
-        assert.strictEqual(tr.stdout.indexOf('Leaks or error encountered. See log and report for details.') >= 0, true, "Should contain 'Leaks or error encountered. See log and report for details.'")
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_ResultError') >= 0, true, "Should contain 'Leaks or error encountered. See log and report for details.'")
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        done();
+    });
+    it('Should succeed with warning when gitleaks find leaks', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'Execution_ShouldWarningWhenGitLeaksReturnsExitCodeOne.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.stdout.indexOf('SucceededWithIssues') >= 0, true, "Should contain 'SucceededWithIssues'")
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_ResultError') >= 0, true, "Should contain 'Leaks or error encountered. See log and report for details.'")
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
     });
@@ -32,6 +41,16 @@ describe('Upload gitleaks results', function () {
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.errorIssues.length, 1, "should have one error");
         assert.strictEqual(tr.stdout.indexOf('##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;]') >= 0, true, "Should contain '##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;].'")
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        done();
+    });
+    it('Should upload Sarif results when file exists and upload is set to true', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'UploadResults_ShouldUploadFileResultsSarif');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.failed, true, 'should have failed');
+        assert.strictEqual(tr.errorIssues.length, 1, "should have one error");
+        assert.strictEqual(tr.stdout.indexOf('##vso[artifact.upload containerfolder=CodeAnalysisLogs;artifactname=CodeAnalysisLogs;]') >= 0, true, "Should contain '##vso[artifact.upload containerfolder=CodeAnalysisLogs;artifactname=CodeAnalysisLogs;].'")
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
     });
@@ -104,7 +123,6 @@ describe('Gitleaks parameter calls', function () {
         tr.run();
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
-
         done();
     }); 
 });
@@ -141,7 +159,7 @@ describe('Provide Config files', function () {
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should be invoked 0 time');
         assert.strictEqual(tr.errorIssues.length, 1, "should have one error");
-        assert.strictEqual(tr.stdout.indexOf('Incorrect configuration set.') >= 0, true, "Should contain 'Incorrect configuration set.'")
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_IncorrectConfig') >= 0, true, "Should contain 'Incorrect configuration set.'")
         done();
     });
 });
@@ -222,7 +240,7 @@ describe('Gitleaks toolcache', function () {
         tr.run();
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
-        assert.strictEqual(tr.stdout.indexOf('gitleaks is not available in toolcache') >= 0, true, "Should contain 'gitleaks is not available in toolcache'.")
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_NoToolcacheDownloading') >= 0, true, "Should contain 'gitleaks is not available in toolcache'.")
         done();
     });
     it('Should not download when gitleaks version is in toolcache.', function(done: Mocha.Done) {    
@@ -231,7 +249,7 @@ describe('Gitleaks toolcache', function () {
         tr.run();
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
-        assert.strictEqual(tr.stdout.indexOf('gitleaks is already available in toolcache') >= 0, true, "gitleaks is already available in toolcache'")
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_AvailableInToolcache') >= 0, true, "gitleaks is already available in toolcache'")
         done();
     });
 });

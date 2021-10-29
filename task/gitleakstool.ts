@@ -16,10 +16,11 @@ export class GitleaksTool {
 		this.providedVersion = providedVersion;
 		this.operatingSystem = operatingSystem;
 		this.architecture = architecture;
+		taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
 	}
 
-	getGitleaksReportPath(tempDirectory: string): string {
-		const reportPath = Path.join(tempDirectory, `${this.name}-report-${Guid.create()}.json`);
+	getGitleaksReportPath(tempDirectory: string, reportformat = 'json'): string {
+		const reportPath = Path.join(tempDirectory, `${this.name}-report-${Guid.create()}.${reportformat}`);
 		return reportPath;
 	}
 
@@ -36,8 +37,8 @@ export class GitleaksTool {
         else if (configType.toLowerCase() === 'custom' && configFile !== undefined && nogit) {
             configFileParameter = `--config-path=${configFile.replace(/\\/g, '/')}`;
         }
-		else throw new Error(`Incorrect configuration set.`);
-		taskLib.debug(`Config file parameter is set to ${configFileParameter} .`);
+		else throw new Error(taskLib.loc('IncorrectConfig'));
+		taskLib.debug(taskLib.loc('ConfigFile', configFileParameter));
 		return configFileParameter;
 	}
 
@@ -50,10 +51,10 @@ export class GitleaksTool {
 			cachedToolExecutable = await this.downloadTool(version, toolExecutable);
 		}
 		else {
-			taskLib.debug(`${this.name} is already available in toolcache.`);
+			taskLib.debug(taskLib.loc('AvailableInToolcache', this.name));
 			cachedToolExecutable = Path.join(cachedToolDirectory, toolExecutable);
 		}
-		taskLib.debug(`Cached tool is ${cachedToolExecutable}`);
+		taskLib.debug(taskLib.loc('CachedTool', cachedToolExecutable));
 		return cachedToolExecutable;
 	}
 
@@ -70,22 +71,22 @@ export class GitleaksTool {
 	private cleanVersion(version): string {
 		version = toolLib.cleanVersion(version);
 		if (version) return version;
-		throw Error(`Cannot parse version ${version}`);
+		throw Error(taskLib.loc('CannotParseVersion', version));
 	}
 
 	private async getLatestVersionFromGitHub(): Promise<string> {
 		const githubAuthor = 'zricethezav';
 		const githubRepo = 'gitleaks';
 		const url = `https://api.github.com/repos/${githubAuthor}/${githubRepo}/releases/latest`;
-		taskLib.debug(`Getting ${url} to find latest version of ${this.name}`);
+		taskLib.debug(taskLib.loc('GettingUrl', url, this.name));
 		const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool');
 		const gitHubRelease = (await rest.get<GitHubRelease>(url)).result;
 
 		if (gitHubRelease) {
-			taskLib.debug(`Downloaded release info: ${gitHubRelease.name}`);
+			taskLib.debug(taskLib.loc('ReleaseInfo', gitHubRelease.name));
 			return gitHubRelease.name;
 		}
-		throw Error(`Cannot retreive version from ${url}`)
+		throw Error(taskLib.loc('CannotRetrieveVersion', url))
 	}
 
 	private getToolFileName(): string {
@@ -94,7 +95,7 @@ export class GitleaksTool {
 		else if ((this.operatingSystem === 'Darwin') && (this.architecture.toLowerCase() === 'x64')) return "gitleaks-darwin-amd64";
 		else if ((this.operatingSystem === 'Linux') && (this.architecture.toLowerCase() === 'x64')) return "gitleaks-linux-amd64";
 		else if ((this.operatingSystem === 'Linux') && (this.architecture.toLowerCase() === 'arm')) return "gitleaks-linux-arm";
-		else throw new Error(`OS '${this.operatingSystem}' and archtecture '${this.architecture}' is not supported by ${this.name}.`);
+		else throw new Error(taskLib.loc('OsArchNotSupported', this.operatingSystem, this.architecture, this.name));
 	}
 
 	private getDownloadSourceLocation(version: string): string {
@@ -103,13 +104,13 @@ export class GitleaksTool {
 		const githubRepo = 'gitleaks';
 
 		const downloadUri = `https://github.com/${githubAuthor}/${githubRepo}/releases/download/v${version}/${executable}`;
-		taskLib.debug(`${this.name} download uri is ${downloadUri}`);
+		taskLib.debug(taskLib.loc('CannotRetrieveVersion', this.name, downloadUri));
 		return downloadUri;
 	}
 
 	private async downloadTool(version: string, toolExecutable: string): Promise<string> {
 		const downloadUri = this.getDownloadSourceLocation(version);
-		taskLib.debug(`${this.name} is not available in toolcache. Downloading ${this.name} from ${downloadUri}`);
+		taskLib.debug(taskLib.loc('NoToolcacheDownloading', this.name, this.name, downloadUri));
 		const fileGUID = await toolLib.downloadTool(downloadUri);
 		const cachedToolDirectory = await toolLib.cacheFile(fileGUID, toolExecutable, this.name, version);
 		const cachedToolExecutable = Path.join(cachedToolDirectory, toolExecutable);
