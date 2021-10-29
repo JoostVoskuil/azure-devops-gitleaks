@@ -176,6 +176,5 @@
         "VariableEmpty": "Variable %s is empty",
         "InputEmpty": "Input %s is empty",
         "AdoConnectionError": "Connection cannot be made to Azure DevOps."
-
     }
 }

@@ -1,126 +1,121 @@
-import fs = require('fs');
-import Path = require('path');
-import * as toolLib from 'azure-pipelines-tool-lib/tool';
-import * as restClient from 'typed-rest-client/RestClient';
-import taskLib = require('azure-pipelines-task-lib/task');
-import { Guid } from "guid-typescript";
+import fs = require('fs')
+import Path = require('path')
+import * as toolLib from 'azure-pipelines-tool-lib/tool'
+import * as restClient from 'typed-rest-client/RestClient'
+import taskLib = require('azure-pipelines-task-lib/task')
+import { Guid } from 'guid-typescript'
 
 export class GitleaksTool {
-	private name: string;
-	private architecture: string;
-	private operatingSystem: string;
-	private providedVersion: string;
+  private readonly name: string
+  private readonly architecture: string
+  private readonly operatingSystem: string
+  private readonly providedVersion: string
 
-	constructor(name: string, providedVersion: string, operatingSystem: string, architecture: string) {
-		this.name = name;
-		this.providedVersion = providedVersion;
-		this.operatingSystem = operatingSystem;
-		this.architecture = architecture;
-		taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
-	}
+  constructor (name: string, providedVersion: string, operatingSystem: string, architecture: string) {
+    this.name = name
+    this.providedVersion = providedVersion
+    this.operatingSystem = operatingSystem
+    this.architecture = architecture
+    taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
+  }
 
-	getGitleaksReportPath(tempDirectory: string, reportformat = 'json'): string {
-		const reportPath = Path.join(tempDirectory, `${this.name}-report-${Guid.create()}.${reportformat}`);
-		return reportPath;
-	}
+  getGitleaksReportPath (tempDirectory: string, reportformat = 'json'): string {
+    const reportPath = Path.join(tempDirectory, `${this.name}-report-${Guid.create()}.${reportformat}`)
+    return reportPath
+  }
 
-	getGitLeaksConfigFileParameter(configType: string, nogit: boolean, predefinedConfigFile?: string, configFile?: string): string | undefined {
-		let configFileParameter: string;
-		if (configType.toLowerCase() === 'default') return undefined;
-		else if (configType.toLowerCase() === 'predefined' && predefinedConfigFile !== undefined) {
-			const fullPath = Path.join(__dirname, 'configs', predefinedConfigFile);
-			configFileParameter = `--config-path=${fullPath.replace(/\\/g, '/')}`;
-		}
-		else if (configType.toLowerCase() === 'custom' && configFile !== undefined && !nogit) {
-			configFileParameter = `--repo-config-path=${configFile.replace(/\\/g, '/')}`;
-		}
-        else if (configType.toLowerCase() === 'custom' && configFile !== undefined && nogit) {
-            configFileParameter = `--config-path=${configFile.replace(/\\/g, '/')}`;
-        }
-		else throw new Error(taskLib.loc('IncorrectConfig'));
-		taskLib.debug(taskLib.loc('ConfigFile', configFileParameter));
-		return configFileParameter;
-	}
+  getGitLeaksConfigFileParameter (configType: string, nogit: boolean, predefinedConfigFile?: string, configFile?: string): string | undefined {
+    let configFileParameter: string
+    if (configType.toLowerCase() === 'default') return undefined
+    else if (configType.toLowerCase() === 'predefined' && predefinedConfigFile !== undefined) {
+      const fullPath = Path.join(__dirname, 'configs', predefinedConfigFile)
+      configFileParameter = `--config-path=${fullPath.replace(/\\/g, '/')}`
+    } else if (configType.toLowerCase() === 'custom' && configFile !== undefined && !nogit) {
+      configFileParameter = `--repo-config-path=${configFile.replace(/\\/g, '/')}`
+    } else if (configType.toLowerCase() === 'custom' && configFile !== undefined && nogit) {
+      configFileParameter = `--config-path=${configFile.replace(/\\/g, '/')}`
+    } else throw new Error(taskLib.loc('IncorrectConfig'))
+    taskLib.debug(taskLib.loc('ConfigFile', configFileParameter))
+    return configFileParameter
+  }
 
-	async getTool(): Promise<string> {
-		const version = await this.getVersion(this.providedVersion);
-		const toolExecutable = this.getToolFileName();
-		const cachedToolDirectory = toolLib.findLocalTool(this.name, version);
-		let cachedToolExecutable;
-		if (!cachedToolDirectory) {
-			cachedToolExecutable = await this.downloadTool(version, toolExecutable);
-		}
-		else {
-			taskLib.debug(taskLib.loc('AvailableInToolcache', this.name));
-			cachedToolExecutable = Path.join(cachedToolDirectory, toolExecutable);
-		}
-		taskLib.debug(taskLib.loc('CachedTool', cachedToolExecutable));
-		return cachedToolExecutable;
-	}
+  async getTool (): Promise<string> {
+    const version = await this.getVersion(this.providedVersion)
+    const toolExecutable = this.getToolFileName()
+    const cachedToolDirectory = toolLib.findLocalTool(this.name, version)
+    let cachedToolExecutable
+    if (!cachedToolDirectory) {
+      cachedToolExecutable = await this.downloadTool(version, toolExecutable)
+    } else {
+      taskLib.debug(taskLib.loc('AvailableInToolcache', this.name))
+      cachedToolExecutable = Path.join(cachedToolDirectory, toolExecutable)
+    }
+    taskLib.debug(taskLib.loc('CachedTool', cachedToolExecutable))
+    return cachedToolExecutable
+  }
 
-	private async getVersion(inputVersion: string): Promise<string> {
-		if (inputVersion.toLowerCase() !== 'latest') {
-			return this.cleanVersion(inputVersion);
-		}
-		else {
-			const latestVersion = await this.getLatestVersionFromGitHub();
-			return this.cleanVersion(latestVersion);
-		}
-	}
+  private async getVersion (inputVersion: string): Promise<string> {
+    if (inputVersion.toLowerCase() !== 'latest') {
+      return this.cleanVersion(inputVersion)
+    } else {
+      const latestVersion = await this.getLatestVersionFromGitHub()
+      return this.cleanVersion(latestVersion)
+    }
+  }
 
-	private cleanVersion(version): string {
-		version = toolLib.cleanVersion(version);
-		if (version) return version;
-		throw Error(taskLib.loc('CannotParseVersion', version));
-	}
+  private cleanVersion (version): string {
+    version = toolLib.cleanVersion(version)
+    if (version) return version
+    throw Error(taskLib.loc('CannotParseVersion', version))
+  }
 
-	private async getLatestVersionFromGitHub(): Promise<string> {
-		const githubAuthor = 'zricethezav';
-		const githubRepo = 'gitleaks';
-		const url = `https://api.github.com/repos/${githubAuthor}/${githubRepo}/releases/latest`;
-		taskLib.debug(taskLib.loc('GettingUrl', url, this.name));
-		const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool');
-		const gitHubRelease = (await rest.get<GitHubRelease>(url)).result;
+  private async getLatestVersionFromGitHub (): Promise<string> {
+    const githubAuthor = 'zricethezav'
+    const githubRepo = 'gitleaks'
+    const url = `https://api.github.com/repos/${githubAuthor}/${githubRepo}/releases/latest`
+    taskLib.debug(taskLib.loc('GettingUrl', url, this.name))
+    const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool')
+    const gitHubRelease = (await rest.get<GitHubRelease>(url)).result
 
-		if (gitHubRelease) {
-			taskLib.debug(taskLib.loc('ReleaseInfo', gitHubRelease.name));
-			return gitHubRelease.name;
-		}
-		throw Error(taskLib.loc('CannotRetrieveVersion', url))
-	}
+    if (gitHubRelease != null) {
+      taskLib.debug(taskLib.loc('ReleaseInfo', gitHubRelease.name))
+      return gitHubRelease.name
+    }
+    throw Error(taskLib.loc('CannotRetrieveVersion', url))
+  }
 
-	private getToolFileName(): string {
-		if ((this.operatingSystem === 'Windows_NT') && (this.architecture.toLowerCase() === 'x64')) return "gitleaks-windows-amd64.exe";
-		else if ((this.operatingSystem === 'Windows_NT') && (this.architecture.toLowerCase() === 'x86')) return "gitleaks-windows-386.exe";
-		else if ((this.operatingSystem === 'Darwin') && (this.architecture.toLowerCase() === 'x64')) return "gitleaks-darwin-amd64";
-		else if ((this.operatingSystem === 'Linux') && (this.architecture.toLowerCase() === 'x64')) return "gitleaks-linux-amd64";
-		else if ((this.operatingSystem === 'Linux') && (this.architecture.toLowerCase() === 'arm')) return "gitleaks-linux-arm";
-		else throw new Error(taskLib.loc('OsArchNotSupported', this.operatingSystem, this.architecture, this.name));
-	}
+  private getToolFileName (): string {
+    if ((this.operatingSystem === 'Windows_NT') && (this.architecture.toLowerCase() === 'x64')) return 'gitleaks-windows-amd64.exe'
+    else if ((this.operatingSystem === 'Windows_NT') && (this.architecture.toLowerCase() === 'x86')) return 'gitleaks-windows-386.exe'
+    else if ((this.operatingSystem === 'Darwin') && (this.architecture.toLowerCase() === 'x64')) return 'gitleaks-darwin-amd64'
+    else if ((this.operatingSystem === 'Linux') && (this.architecture.toLowerCase() === 'x64')) return 'gitleaks-linux-amd64'
+    else if ((this.operatingSystem === 'Linux') && (this.architecture.toLowerCase() === 'arm')) return 'gitleaks-linux-arm'
+    else throw new Error(taskLib.loc('OsArchNotSupported', this.operatingSystem, this.architecture, this.name))
+  }
 
-	private getDownloadSourceLocation(version: string): string {
-		const executable = this.getToolFileName();
-		const githubAuthor = 'zricethezav';
-		const githubRepo = 'gitleaks';
+  private getDownloadSourceLocation (version: string): string {
+    const executable = this.getToolFileName()
+    const githubAuthor = 'zricethezav'
+    const githubRepo = 'gitleaks'
 
-		const downloadUri = `https://github.com/${githubAuthor}/${githubRepo}/releases/download/v${version}/${executable}`;
-		taskLib.debug(taskLib.loc('CannotRetrieveVersion', this.name, downloadUri));
-		return downloadUri;
-	}
+    const downloadUri = `https://github.com/${githubAuthor}/${githubRepo}/releases/download/v${version}/${executable}`
+    taskLib.debug(taskLib.loc('CannotRetrieveVersion', this.name, downloadUri))
+    return downloadUri
+  }
 
-	private async downloadTool(version: string, toolExecutable: string): Promise<string> {
-		const downloadUri = this.getDownloadSourceLocation(version);
-		taskLib.debug(taskLib.loc('NoToolcacheDownloading', this.name, this.name, downloadUri));
-		const fileGUID = await toolLib.downloadTool(downloadUri);
-		const cachedToolDirectory = await toolLib.cacheFile(fileGUID, toolExecutable, this.name, version);
-		const cachedToolExecutable = Path.join(cachedToolDirectory, toolExecutable);
-		taskLib.debug(`cachedToolExecutable: ${cachedToolExecutable}`);
-		//Set permissions
-		if (!(this.operatingSystem === 'Windows_NT')) fs.chmodSync(cachedToolExecutable, '777');
-		return cachedToolExecutable;
-	}
+  private async downloadTool (version: string, toolExecutable: string): Promise<string> {
+    const downloadUri = this.getDownloadSourceLocation(version)
+    taskLib.debug(taskLib.loc('NoToolcacheDownloading', this.name, this.name, downloadUri))
+    const fileGUID = await toolLib.downloadTool(downloadUri)
+    const cachedToolDirectory = await toolLib.cacheFile(fileGUID, toolExecutable, this.name, version)
+    const cachedToolExecutable = Path.join(cachedToolDirectory, toolExecutable)
+    taskLib.debug(`cachedToolExecutable: ${cachedToolExecutable}`)
+    // Set permissions
+    if (!(this.operatingSystem === 'Windows_NT')) fs.chmodSync(cachedToolExecutable, '777')
+    return cachedToolExecutable
+  }
 }
 
 interface GitHubRelease {
-	name: string,
+  name: string
 }
