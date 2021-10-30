@@ -1,12 +1,9 @@
 # Gitleaks
 
-Thanks to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining gitleaks.
-
-Thanks to [Jesse Houwing](https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.
-
-Thanks to John Lokerse for providing feedback.
-
 This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specified location. It can only scan already checked-out repo's on the agent because it is currently not possible to scan Azure DevOps repo-urls. See [this github issue](https://github.com/zricethezav/gitleaks/issues/440) for more information.
+
+- Thanks to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining gitleaks.
+- Thanks to [Jesse Houwing](https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.
 
 ## YAML Snippet
 
@@ -17,14 +14,18 @@ This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specifi
     scanfolder: '$(Build.SourcesDirectory)'
 ```
 
-## Contributions
+## Original Authors
 
 Any feedback on gitleaks, please reach out to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining gitleaks.
 
-Any feedback on the Azure configuration file ('UDMSecretChecks.toml') is welcome.
-See [Jesse Houwing's github repo](https://github.com/jessehouwing/gitleaks-azure)
+Any feedback on the Azure configuration file ('UDMSecretChecks.toml') is welcome. See [Jesse Houwing's github repo](https://github.com/jessehouwing/gitleaks-azure). 
+*The configuration file isn't as good as credscan was before, it had a bunch of helper functions to rule out false positives that aren't (yet) possible with gitleaks.*
 
-The configuration file isn't as good as credscan was before, it had a bunch of helper functions to rule out false positives that aren't (yet) possible with gitleaks.
+## Contributions
+
+Thanks to [Dariusz Porowski](https://github.com/DariuszPorowski) for contributing and making awesome adjustments!
+
+Thanks to John Lokerse for providing feedback on this extension.
 
 ## Arguments
 
@@ -36,8 +37,8 @@ The configuration file isn't as good as credscan was before, it had a bunch of h
 | configfile           | Sets the custom configfile in your repo. Use a relative path within the scanfolder. Example: 'config/gitleaks.toml'                                                                                                                                                                   |
 | verbose              | When set to true, gitleaks prints verbose output.                                                                                                                                                                                                                                     |
 | nogit                | When set to true, gitleaks will be executed with the --no-git option.                                                                                                                                                                                                                 |
-| scanonlychanges      | When set to true, gitleaks will scan only the changes for this Build. It fetches the changes between builds from the Azure DevOps API.                                                                                                                                                |
-| depth                | Sets number of commits to scan. When set, gitleaks will be executed with the --depth # option.                                                                                                                                                                                        |
+| scanonlychanges      | When set to true, gitleaks will scan only the changes for this Build. It fetches the changes between this build and the previous build from the Azure DevOps API.                                                                                                                                                |
+| depth                | Sets number of commits to scan. When set, gitleaks will be executed with the --depth option.                                                                                                                                                                                        |
 | reportformat         | Sets gitleaks report format: JSON, CSV, SARIF (default: json)                                                                                                                                                                                                                         |
 | uploadresults        | When set to true, the results of gitleaks will be uploaded as an artifact to Azure DevOps.                                                                                                                                                                                            |
 | redact               | Redact secrets from log messages and leaks.                                                                                                                                                                                                                                           |
@@ -52,3 +53,37 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
 ## How do I remove a secret from git's history?
 
 [Github](https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository) has a great article on this using the [BFG Repo Cleaner](https://rtyley.github.io/bfg-repo-cleaner/).
+
+## Changelog
+
+### 1.3
+
+- Merged Pullrequest from Dariusz Porowski:
+  - Bumped node packages to the latest
+  - Added tags to manifest
+  - Added ts-node to run locally for dev testing
+  - Moved strings to messages section to use with loc
+  - Added predefined - GitleaksUdmCombo.toml (Gitleaks defaults + UDM)
+  - Added support for report format
+  - If report format is sarif then upload to artifact to CodeAnalysisLogs - nice report presentation with SARIF SAST Scans Tab extension
+  - Added support for depth
+  - Added support for taskfail
+  - Fixed typo in tests contsole -> console
+  - Tests adjusted to report format
+  - Added tests for sarif report format upload and end with warring
+  - Codebase lint with ts-standard
+
+### 1.2
+
+- Added redact option to redact secrets from output
+- Added argument field to pass more options to gitleaks
+- Added option to scan only for changes between this build and the previous build
+- Bumped node packages to the latest
+
+### 1.1
+
+- First public release
+
+### 1.0
+
+- Initial version, not public

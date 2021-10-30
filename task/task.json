@@ -14,7 +14,7 @@
     "author": "Joost Voskuil (joost@foxhole.nl)",
     "version": {
         "Major": 1,
-        "Minor": 2,
+        "Minor": 3,
         "Patch": 0
     },
     "inputs": [
@@ -153,7 +153,7 @@
     "messages": {
         "ThanksToZacharyRice": "Thanks to Zachary Rice (https://github.com/zricethezav) for creating and maintaining gitleaks.",
         "ThanksToJesseHouwing": "Thanks to Jesse Houwing (https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.",
-        "ResultError": "Leaks or error encountered. See log and report for details.",
+        "ResultError": "Secrets found or error encountered when running Gitleaks. See log and report for details.",
         "ResultSuccess": "Good job! No leaks.",
         "ScanFolder": "Scan Folder is set to %s",
         "ReportPath": "Report path is set to %s",
