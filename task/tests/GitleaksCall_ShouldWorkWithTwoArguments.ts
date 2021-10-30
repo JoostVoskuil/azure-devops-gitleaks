@@ -20,24 +20,25 @@ tmr.setInput('uploadresults', 'false');
 tmr.setInput('arguments', '--arg1=value --arg2');
 
 const executable = 'gitleaks-darwin-amd64';
+const reportformat = 'json';
+
 helpers.BuildWithDefaultValues();
 tmr = helpers.BuildWithEmptyToolCache(tmr);
 tmr = helpers.BuildWithDefaultMocks(tmr);
 tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr);
+
 tmr.setAnswers(<TaskLibAnswers>{
         exec: {
-                [createToolCall()]: {
+                [createToolCall(reportformat)]: {
                         'code': 0,
-                        'stdout': 'Gitleaks tool contsole output',
+                        'stdout': 'Gitleaks tool console output',
                 },
         }
 });
 
 tmr.run();
 
-
-function createToolCall(): string {
-	const toolCall = `/tool/${executable} --path=${__dirname} --report=${helpers.reportFile()} --arg1=value --arg2`;
-	console.log(toolCall);
+function createToolCall(reportformat: string): string {
+	const toolCall = `/tool/${executable} --path=${__dirname} --report=${helpers.reportFile(reportformat)} --format=${reportformat} --arg1=value --arg2`;
 	return toolCall;
 }

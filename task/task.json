@@ -28,7 +28,7 @@
         },
         {
             "name": "configtype",
-            "type": "picklist",
+            "type": "pickList",
             "label": "Configuration Type",
             "defaultValue": "default",
             "required": false,
@@ -41,12 +41,13 @@
         },
         {
             "name": "predefinedconfigfile",
-            "type": "picklist",
+            "type": "pickList",
             "label": "Predefined config file",
             "defaultValue": "UDMSecretChecks.toml",
             "required": true,
             "options": {
-                "UDMSecretChecks.toml": "UDMSecretChecks.toml"
+                "UDMSecretChecks.toml": "UDMSecretChecks.toml",
+                "GitleaksUdmCombo.toml": "GitleaksUdmCombo.toml"
             },
             "helpMarkDown": "Select a predefined config file.",
             "visibleRule": "configtype=predefined"
@@ -55,7 +56,7 @@
             "name": "configfile",
             "type": "string",
             "label": "Config file",
-            "defaultValue": ".github/gitleaks.config",
+            "defaultValue": "config/gitleaks.toml",
             "required": true,
             "helpMarkDown": "Specify a custom config file inside your repo.",
             "visibleRule": "configtype=custom"
@@ -77,12 +78,32 @@
             "visibleRule": "nogit=false"
         },
         {
+            "name": "depth",
+            "type": "int",
+            "label": "Number of commits to scan",
+            "required": false,
+            "visibleRule": "nogit=false"
+        },
+        {
             "name": "verbose",
             "type": "boolean",
             "label": "Verbose output",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Check this option if you want gitleaks to print verbose output."
+        },
+        {
+            "name": "reportformat",
+            "type": "pickList",
+            "label": "Report format",
+            "defaultValue": "json",
+            "required": true,
+            "options": {
+                "json": "json",
+                "sarif": "sarif",
+                "csv": "csv"
+            },
+            "helpMarkDown": "Select a report format: json, sarif, csv (default: json)"
         },
         {
             "name": "uploadresults",
@@ -99,6 +120,13 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Check this option if you want to redact secrets from log messages and leaks."
+        },
+        {
+            "name": "taskfail",
+            "type": "boolean",
+            "label": "Fail the task if secrets founded",
+            "defaultValue": "true",
+            "required": false
         },
         {
             "name": "arguments",
@@ -121,5 +149,32 @@
         "Node10": {
             "target": "index.js"
         }
+    },
+    "messages": {
+        "ThanksToZacharyRice": "Thanks to Zachary Rice (https://github.com/zricethezav) for creating and maintaining gitleaks.",
+        "ThanksToJesseHouwing": "Thanks to Jesse Houwing (https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.",
+        "ResultError": "Leaks or error encountered. See log and report for details.",
+        "ResultSuccess": "Good job! No leaks.",
+        "ScanFolder": "Scan Folder is set to %s",
+        "ReportPath": "Report path is set to %s",
+        "IncorrectConfig": "Incorrect configuration set.",
+        "ConfigFile": "Config file parameter is set to %s",
+        "AvailableInToolcache": "%s is already available in toolcache.",
+        "CachedTool": "Cached tool is %s",
+        "CannotParseVersion": "Cannot parse version %s",
+        "DownloadUri": "%s download uri is %s",
+        "CannotRetrieveVersion": "Cannot retrieve version from %s",
+        "OsArchNotSupported": "OS '%s' and architecture '%s' is not supported by %s.",
+        "NoToolcacheDownloading": "%s is not available in toolcache. Downloading %s from %s",
+        "UploadResults": "Uploading report file to %s",
+        "GettingUrl": "Getting %s to find latest version of %s",
+        "ReleaseInfo": "Downloaded release info: %s",
+        "CommitsFile": "CommitsFile is set to  %s",
+        "DetectedChanges": "Detected %s Git changes for this build.",
+        "GetEndpointUrlEmpty": "GetEndpointUrl %s is empty",
+        "GetEndpointAuthorizationParameterEmpty": "GetEndpointAuthorizationParameter %s is empty",
+        "VariableEmpty": "Variable %s is empty",
+        "InputEmpty": "Input %s is empty",
+        "AdoConnectionError": "Connection cannot be made to Azure DevOps."
     }
 }

@@ -5,6 +5,12 @@
 node_modules/
 .nyc_output/
 package-lock.json
+gitleaks/
+gitleaks-report*
+coverage/
+.env
+test-results.xml
 
 ### VisualStudioCode ###
 .vscode/launch.json
+.vscode/settings.json

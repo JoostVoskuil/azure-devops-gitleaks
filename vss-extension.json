@@ -28,6 +28,15 @@
         "type": "git",
         "uri": "https://github.com/JoostVoskuil/azure-devops-gitleaks"
     },
+    "tags": [
+        "sast",
+        "gitleaks",
+        "detect-secrets",
+        "search-secrets",
+        "security-scanner",
+        "secrets-management",
+        "security"
+    ],
     "categories": [
         "Azure Pipelines"
     ],

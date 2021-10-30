@@ -63,13 +63,13 @@ export function BuildWithEmptyToolCache(taskMockRunner: mr.TaskMockRunner): mr.T
 	return taskMockRunner;
 }
 
-export function BuildWithSucceedingToolExecution(taskMockRunner: mr.TaskMockRunner, executable: string, configFile?: string, customConfigFile?: boolean): mr.TaskMockRunner {
+export function BuildWithSucceedingToolExecution(taskMockRunner: mr.TaskMockRunner, executable: string, configFile?: string, customConfigFile?: boolean, reportFormat?: string): mr.TaskMockRunner {
 	taskMockRunner.registerMock('azure-pipelines-task-lib/toolrunner', mtr);
 	taskMockRunner.setAnswers({
 		exec: {
-			[createToolCall(executable, configFile, customConfigFile)]: {
+			[createToolCall(executable, configFile, customConfigFile, reportFormat)]: {
 				'code': 0,
-				'stdout': 'Gitleaks tool contsole output',
+				'stdout': 'Gitleaks tool console output',
 			},
 		},
 		exist: {
@@ -79,14 +79,14 @@ export function BuildWithSucceedingToolExecution(taskMockRunner: mr.TaskMockRunn
 	return taskMockRunner;
 }
 
-export function reportFile(): string {
-	return `${__dirname}/gitleaks-report-guid.json`;
+export function reportFile(reportFormat = 'json'): string {
+	return `${__dirname}/gitleaks-report-guid.${reportFormat}`;
 }
 
-export function createToolCall(executable: string, configFile?: string, customConfigFile?: boolean): string {
+export function createToolCall(executable: string, configFile?: string, customConfigFile?: boolean, reportFormat = 'json'): string {
 	let toolCall;
-	if (!configFile) toolCall = `/tool/${executable} --path=${__dirname} --report=${reportFile()}`;
-	if (configFile && customConfigFile) toolCall = `/tool/${executable} --path=${__dirname} --report=${reportFile()} --repo-config-path=${configFile}`;
-	if (configFile && !customConfigFile) toolCall = `/tool/${executable} --path=${__dirname} --report=${reportFile()} --config-path=${configFile}`;
+	if (!configFile) toolCall = `/tool/${executable} --path=${__dirname} --report=${reportFile(reportFormat)} --format=${reportFormat}`;
+	if (configFile && customConfigFile) toolCall = `/tool/${executable} --path=${__dirname} --report=${reportFile(reportFormat)} --format=${reportFormat} --repo-config-path=${configFile}`;
+	if (configFile && !customConfigFile) toolCall = `/tool/${executable} --path=${__dirname} --report=${reportFile(reportFormat)} --format=${reportFormat} --config-path=${configFile}`;
 	return toolCall;
 }
