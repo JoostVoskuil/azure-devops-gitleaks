@@ -161,7 +161,7 @@
             "type": "pickList",
             "label": "Report format",
             "defaultValue": "json",
-            "required": true,
+            "required": false,
             "options": {
                 "json": "json",
                 "sarif": "sarif",
