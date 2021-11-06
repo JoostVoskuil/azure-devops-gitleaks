@@ -142,7 +142,7 @@
         {
             "name": "taskfail",
             "type": "boolean",
-            "label": "Fail the task if secrets founded",
+            "label": "Fail the task if secrets are found.",
             "defaultValue": "true",
             "required": false,
             "groupName": "behaviour"
