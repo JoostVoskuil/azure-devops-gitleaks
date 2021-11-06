@@ -34,15 +34,13 @@ export class GitleaksTool {
       taskLib.debug(taskLib.loc('ConfigFile', configFileParameter))
       return configFileParameter
     }
-    
+
     if (configFile === undefined) throw new Error(taskLib.loc('IncorrectConfig'))
     else if (configType.toLowerCase() === 'custom' && nogit) {
       configFileParameter = `--config-path=${configFile.replace(/\\/g, '/')}`
-      taskLib.warning(taskLib.loc('WarningBehaviourChangeGitleak8'))
     }
     else if (configType.toLowerCase() === 'custom' && !nogit) {
       configFileParameter = `--repo-config-path=${configFile.replace(/\\/g, '/')}`
-      taskLib.warning(taskLib.loc('WarningBehaviourChangeGitleak8'))
     }
     else throw new Error(taskLib.loc('IncorrectConfig'))
     taskLib.debug(taskLib.loc('ConfigFile', configFileParameter))
@@ -92,7 +90,6 @@ export class GitleaksTool {
 
   private cleanVersion(version): string {
     version = toolLib.cleanVersion(version)
-    console.log("Cleaned " + version)
     if (version) return version
     throw Error(taskLib.loc('CannotParseVersion', version))
   }
