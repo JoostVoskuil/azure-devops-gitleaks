@@ -57,11 +57,13 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
 ## Changelog
 ### 1.4
 
-- Add option for custom tool location
+- Add option for a custom tool location (so no download)
 - Task input parameters are grouped
-- Updated UDMSecretChecks.toml and GitleaksUdmCombo.toml to latest v7 structure
-- Deprecation warning of 'configtype' value custom. Use customfullpath instead
-- Fixed bug that scanonlychanges and depth cannot work together
+- Updated UDMSecretChecks.toml and GitleaksUdmCombo.toml to latest v7 structure (thanks to Dariusz Porowski)
+- Deprecation warning of 'configtype' value custom. Use customfullpath instead. This is due to upcomming gitleaks 8
+- Fixed bug that scanonlychanges (--commit-file) and depth cannot work together
+- Fixed bug that reportype was a mandatory parameter, will default in code to json
+
 ### 1.3
 
 - Merged Pullrequest from Dariusz Porowski:
@@ -78,6 +80,7 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
   - Tests adjusted to report format
   - Added tests for sarif report format upload and end with warring
   - Codebase lint with ts-standard
+  
 ### 1.2
 
 - Added redact option to redact secrets from output
