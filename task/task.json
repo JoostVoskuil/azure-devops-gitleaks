@@ -193,7 +193,7 @@
             "type": "string",
             "label": "Gitleaks custom tool location",
             "required": false,
-            "helpMarkDown": "Specify the custom location of Gitleaks, when provided, Gitleaks will not be downloaded.",
+            "helpMarkDown": "Specify the custom directory of Gitleaks, when provided, Gitleaks will not be downloaded.",
             "groupName": "gitleakstool"
         }
     ],
