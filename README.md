@@ -32,7 +32,7 @@ Thanks to John Lokerse for providing feedback on this extension.
 | Name                 | Description                                                                                                                                                                                                                                                                           |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | scanfolder           | The location to be scanned. Defaults to $(Build.SourcesDirectory). This is passed to gitleaks as '--path='                                                                                                                                                                            |
-| configtype           | Can be 'default', 'predefined', 'custom' or 'customfullpath'. 'default' is using the default gitleaks setup. When set to 'predefined' you can pass the argument 'predefinedconfigfile'. When set to 'customfullpath' you need to pass the argument 'configfile' with the filename of your gitleaks config file. The value 'custom'  will be deprecated since gitleaks v8 will not support it.|
+| configtype           | Can be 'default', 'predefined', 'custom'. 'default' is using the default gitleaks setup. When set to 'predefined' you can pass the argument 'predefinedconfigfile'. When set to 'custom' you need to pass the argument 'configfile' with the filename of your gitleaks config file.|
 | predefinedconfigfile | When set to 'UDMSecretChecks.toml' it uses the Credscan config file provided by Jesse Houwing.                                                                                                                                                                                        |
 | configfile           | Sets the custom configfile in your repo. Use a relative path within the scanfolder. Example: 'config/gitleaks.toml'                                                                                                                                                                   |
 | verbose              | When set to true, gitleaks prints verbose output.                                                                                                                                                                                                                                     |
@@ -60,10 +60,9 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
 - Add option for a custom tool location (so no download)
 - Task input parameters are grouped
 - Updated UDMSecretChecks.toml and GitleaksUdmCombo.toml to latest v7 structure (thanks to Dariusz Porowski)
-- Deprecation warning of 'configtype' value custom. Use customfullpath instead. This is due to upcomming gitleaks 8
 - Fixed bug that scanonlychanges (--commit-file) and depth cannot work together
 - Fixed bug that reportype was a mandatory parameter, will default in code to json
-- Protection against Gitleaks v8, Gitleaks v7 will be the latest version supported by this task. Gitleaks v8 will be a newer version of this task.
+- Protection against Gitleaks v8, Gitleaks v7 will be the latest version supported by this major version of this task. For Gitleaks v8 there will be a newer version of this task.
 
 ### 1.3
 

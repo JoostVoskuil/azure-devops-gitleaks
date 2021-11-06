@@ -219,7 +219,7 @@ describe('Gitleaks versions', function () {
         tr.run();
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
-        assert.strictEqual(tr.stdout.indexOf('https://github.com/zricethezav/gitleaks/releases/download/v10.0.0/') >= 0, true, "Should contain 'https://github.com/zricethezav/gitleaks/releases/download/v10.0.0/' (that is specified as latest)")
+        assert.strictEqual(tr.stdout.indexOf('https://github.com/zricethezav/gitleaks/releases/download/v7.0.0/') >= 0, true, "Should contain 'https://github.com/zricethezav/gitleaks/releases/download/v7.0.0/' (that is specified as latest)")
         done();
     });
     it('Should get version that is specified.', function(done: Mocha.Done) {    

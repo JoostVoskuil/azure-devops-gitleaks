@@ -14,11 +14,17 @@ export function BuildWithDefaultMocks(taskMockRunner: mr.TaskMockRunner): mr.Tas
 		RestClient: function () {
 			return {
 				get: async function (url, options) {
-					if (url != 'https://api.github.com/repos/zricethezav/gitleaks/releases/latest') {
+					if (url != 'https://api.github.com/repos/zricethezav/gitleaks/releases') {
 						throw new Error('Wrong latest releases url');
 					}
 					return {
-						result: { 'name': '10.0.0' }
+						result: [
+							{ 'name': 'v10.0.0' },
+							{ 'name': 'v9.0.0' },
+							{ 'name': 'v8.0.0' },
+							{ 'name': 'v7.0.0' },
+							{ 'name': 'v6.0.0' }
+						]
 					};
 				}
 			}
