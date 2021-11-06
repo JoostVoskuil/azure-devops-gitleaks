@@ -1,7 +1,6 @@
 import * as mr from 'azure-pipelines-task-lib/mock-run';
 import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner';
 import path = require('path');
-import os = require('os');
 import * as helpers from './MockHelper';
 import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
 
@@ -18,6 +17,8 @@ tmr.setInput('arguments', 'true');
 tmr.setInput('verbose', 'false');
 tmr.setInput('uploadresults', 'false');
 tmr.setInput('arguments', '--arg1=value --arg2');
+tmr.setInput('redact', 'false');
+tmr.setInput('taskfail', 'true');
 
 const executable = 'gitleaks-darwin-amd64';
 const reportformat = 'json';

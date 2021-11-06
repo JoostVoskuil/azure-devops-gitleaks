@@ -1,9 +1,7 @@
 import * as mr from 'azure-pipelines-task-lib/mock-run';
 import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner';
 
-
 import path = require('path');
-import os = require('os');
 import * as helpers from './MockHelper';
 import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
 
@@ -19,6 +17,7 @@ tmr.setInput('scanfolder', __dirname);
 tmr.setInput('nogit', 'false');
 tmr.setInput('verbose', 'false');
 tmr.setInput('uploadresults', 'false');
+tmr.setInput('taskfail', 'true');
 
 const executable = 'gitleaks-darwin-amd64';
 

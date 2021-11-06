@@ -1,8 +1,6 @@
 import * as mr from 'azure-pipelines-task-lib/mock-run';
 
-
 import path = require('path');
-import os = require('os');
 import * as helpers from './MockHelper';
 
 const taskPath = path.join(__dirname, '..', 'index.js');
@@ -16,6 +14,7 @@ tmr.setInput('scanfolder', __dirname);
 tmr.setInput('nogit', 'false');
 tmr.setInput('verbose', 'false');
 tmr.setInput('uploadresults', 'false');
+tmr.setInput('taskfail', 'true');
 
 // Agent settings
 process.env['AGENT_OS'] = 'Darwin';

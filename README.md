@@ -32,7 +32,7 @@ Thanks to John Lokerse for providing feedback on this extension.
 | Name                 | Description                                                                                                                                                                                                                                                                           |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | scanfolder           | The location to be scanned. Defaults to $(Build.SourcesDirectory). This is passed to gitleaks as '--path='                                                                                                                                                                            |
-| configtype           | Can be 'default', 'predefined' or 'custom'. 'default' is using the default gitleaks setup. When set to 'predefined' you can pass the argument 'predefinedconfigfile'. When set to 'custom' you need to pass the argument 'configfile' with the filename of your gitleaks config file. |
+| configtype           | Can be 'default', 'predefined', 'custom' or 'customfullpath'. 'default' is using the default gitleaks setup. When set to 'predefined' you can pass the argument 'predefinedconfigfile'. When set to 'customfullpath' you need to pass the argument 'configfile' with the filename of your gitleaks config file. The value 'custom'  will be deprecated since gitleaks v8 will not support it.|
 | predefinedconfigfile | When set to 'UDMSecretChecks.toml' it uses the Credscan config file provided by Jesse Houwing.                                                                                                                                                                                        |
 | configfile           | Sets the custom configfile in your repo. Use a relative path within the scanfolder. Example: 'config/gitleaks.toml'                                                                                                                                                                   |
 | verbose              | When set to true, gitleaks prints verbose output.                                                                                                                                                                                                                                     |
@@ -42,7 +42,7 @@ Thanks to John Lokerse for providing feedback on this extension.
 | reportformat         | Sets gitleaks report format: JSON, CSV, SARIF (default: json)                                                                                                                                                                                                                         |
 | uploadresults        | When set to true, the results of gitleaks will be uploaded as an artifact to Azure DevOps.                                                                                                                                                                                            |
 | redact               | Redact secrets from log messages and leaks.                                                                                                                                                                                                                                           |
-| taskfail             | Sets the behavior of the task when secrets are detected. When set to `true`, fail the task. When set to `false` and secrets present end with warning.                                                                                                                                 |
+| taskfail             | Sets the behavior of the task when secrets are detected. When set to `true`, fail the task. When set to `false` and secrets present end with warning. Default is true                                                                                                                                 |
 | arguments            | Provide extra arguments to gitleaks. See [GitHub](https://github.com/zricethezav/gitleaks#usage-and-options)                                                                                                                                                                          |
 | version              | Version of Gitleaks to be used. See the gitleaks github page. Set to 'latest' to download the latest version of gitleaks.                                                                                                                                                             |
 
@@ -55,6 +55,14 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
 [Github](https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository) has a great article on this using the [BFG Repo Cleaner](https://rtyley.github.io/bfg-repo-cleaner/).
 
 ## Changelog
+### 1.4
+
+- Add option for a custom tool location (so no download)
+- Task input parameters are grouped
+- Updated UDMSecretChecks.toml and GitleaksUdmCombo.toml to latest v7 structure (thanks to Dariusz Porowski)
+- Deprecation warning of 'configtype' value custom. Use customfullpath instead. This is due to upcomming gitleaks 8
+- Fixed bug that scanonlychanges (--commit-file) and depth cannot work together
+- Fixed bug that reportype was a mandatory parameter, will default in code to json
 
 ### 1.3
 
@@ -72,18 +80,16 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
   - Tests adjusted to report format
   - Added tests for sarif report format upload and end with warring
   - Codebase lint with ts-standard
-
+  
 ### 1.2
 
 - Added redact option to redact secrets from output
 - Added argument field to pass more options to gitleaks
 - Added option to scan only for changes between this build and the previous build
 - Bumped node packages to the latest
-
 ### 1.1
 
 - First public release
-
 ### 1.0
 
 - Initial version, not public
