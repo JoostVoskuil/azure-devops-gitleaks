@@ -35,7 +35,7 @@
         },
         {
             "name": "behaviour",
-            "displayName": "Behaviour",
+            "displayName": "Task Behaviour",
             "isExpanded": false
         },
         {
@@ -60,7 +60,7 @@
             "label": "No Git",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Treat git repos as plain directories and scan those files.",
+            "helpMarkDown": "Treat git repos as plain directories.",
             "groupName": "scanlocation"
         },
         {
@@ -106,6 +106,7 @@
             "name": "scanonlychanges",
             "type": "boolean",
             "label": "Scan only changes since last build",
+            "helpMarkDown": "Will fetch the commits since last succesful build from the Azure DevOps Api.",
             "defaultValue": "false",
             "required": false,
             "visibleRule": "nogit=false",
@@ -115,8 +116,9 @@
             "name": "depth",
             "type": "int",
             "label": "Number of commits to scan",
+            "helpMarkDown": "Limit the number of commits to scan.",
             "required": false,
-            "visibleRule": "nogit=false",
+            "visibleRule": "scanonlychanges=true",
             "groupName": "scanoptions"
         },
         {
@@ -189,7 +191,7 @@
         {
             "name": "customtoollocation",
             "type": "string",
-            "label": "Gitleaks custom tool locatiomn",
+            "label": "Gitleaks custom tool location",
             "required": false,
             "helpMarkDown": "Specify the custom location of Gitleaks, when provided, Gitleaks will not be downloaded.",
             "groupName": "gitleakstool"

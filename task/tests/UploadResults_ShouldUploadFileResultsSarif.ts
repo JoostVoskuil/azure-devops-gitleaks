@@ -17,6 +17,8 @@ tmr.setInput('nogit', 'false');
 tmr.setInput('verbose', 'false');
 tmr.setInput('uploadresults', 'true');
 tmr.setInput('reportformat', 'sarif');
+tmr.setInput('taskfail', 'true');
+
 const executable = 'gitleaks-darwin-amd64';
 
 helpers.BuildWithDefaultValues();

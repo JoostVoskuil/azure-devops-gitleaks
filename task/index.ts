@@ -28,10 +28,7 @@ async function run () {
     const nogit = taskLib.getBoolInput('nogit')
     const scanonlychanges = taskLib.getBoolInput('scanonlychanges')
     const reportformat = taskLib.getInput('reportformat') || 'json'
-
-    let taskfail = true
-    try { taskfail = taskLib.getBoolInput('taskfail', true) }
-    catch { taskfail = true }
+    const taskfail = taskLib.getBoolInput('taskfail')
     
     const gitleaksTool: GitleaksTool = new GitleaksTool(specifiedVersion, operatingSystem, architecture)
     const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, nogit, predefinedConfigFile, customConfigFile)

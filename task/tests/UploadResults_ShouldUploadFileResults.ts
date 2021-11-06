@@ -16,6 +16,8 @@ tmr.setInput('scanfolder', __dirname);
 tmr.setInput('nogit', 'false');
 tmr.setInput('verbose', 'false');
 tmr.setInput('uploadresults', 'true');
+tmr.setInput('taskfail', 'true');
+
 const executable = 'gitleaks-darwin-amd64';
 
 helpers.BuildWithDefaultValues();
