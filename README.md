@@ -63,6 +63,7 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
 - Deprecation warning of 'configtype' value custom. Use customfullpath instead. This is due to upcomming gitleaks 8
 - Fixed bug that scanonlychanges (--commit-file) and depth cannot work together
 - Fixed bug that reportype was a mandatory parameter, will default in code to json
+- Protection against Gitleaks v8, Gitleaks v7 will be the latest version supported by this task. Gitleaks v8 will be a newer version of this task.
 
 ### 1.3
 
