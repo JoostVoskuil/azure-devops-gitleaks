@@ -61,7 +61,7 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
 - Task input parameters are grouped
 - Updated UDMSecretChecks.toml and GitleaksUdmCombo.toml to latest v7 structure
 - Deprecation warning of 'configtype' value custom. Use customfullpath instead
-
+- Fixed bug that scanonlychanges and depth cannot work together
 ### 1.3
 
 - Merged Pullrequest from Dariusz Porowski:

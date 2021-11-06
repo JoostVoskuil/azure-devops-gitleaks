@@ -70,10 +70,10 @@
             "defaultValue": "default",
             "required": false,
             "options": {
-                "default": "default",
-                "predefined": "predefined",
+                "default": "Default",
+                "predefined": "Predefined",
                 "custom": "Custom configuration (will be deprecated)",
-                "customfullpath": "Full path to custom configuration"
+                "customfullpath": "Custom configuration (full path)"
             },
             "helpMarkDown": "Specify if you want to use the default, predefined config or a custom config.",
             "groupName": "scanconfiguration"
@@ -118,7 +118,7 @@
             "label": "Number of commits to scan",
             "helpMarkDown": "Limit the number of commits to scan.",
             "required": false,
-            "visibleRule": "scanonlychanges=true",
+            "visibleRule": "nogit=false && scanonlychanges=false",
             "groupName": "scanoptions"
         },
         {

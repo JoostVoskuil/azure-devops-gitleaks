@@ -53,9 +53,10 @@ async function run () {
       const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
       const commitsFile = await azureDevOpsAPI.getBuildChangesInFile(agentTempDirectory)
       toolRunner.arg([`--commits-file=${commitsFile}`])
-      const depth = taskLib.getInput('depth')
-      toolRunner.argIf(depth, [`--depth=${depth}`])
     }
+
+    const depth = taskLib.getInput('depth')
+    if (depth) toolRunner.argIf(depth, [`--depth=${depth}`])
 
     // Process extra arguments
     if (gitleaksArguments) {
