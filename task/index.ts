@@ -17,6 +17,8 @@ async function run () {
     const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
 
     const specifiedVersion = taskLib.getInput('version') || 'latest'
+    const customtoollocation = taskLib.getInput('customtoollocation', false)
+
     const scanfolder = getAzureDevOpsInput('scanfolder')
     const configType = taskLib.getInput('configtype') || 'default'
     const gitleaksArguments = taskLib.getInput('arguments')
@@ -26,17 +28,18 @@ async function run () {
     const nogit = taskLib.getBoolInput('nogit')
     const scanonlychanges = taskLib.getBoolInput('scanonlychanges')
     const reportformat = taskLib.getInput('reportformat') || 'json'
-    const taskfailString = taskLib.getInput('taskfail')
-    let taskfail = true
-    if (taskfailString === 'false') { taskfail = false }
 
-    const gitleaksTool: GitleaksTool = new GitleaksTool('gitleaks', specifiedVersion, operatingSystem, architecture)
+    let taskfail = true
+    try { taskfail = taskLib.getBoolInput('taskfail', true) }
+    catch { taskfail = true }
+    
+    const gitleaksTool: GitleaksTool = new GitleaksTool(specifiedVersion, operatingSystem, architecture)
     const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, nogit, predefinedConfigFile, customConfigFile)
     const reportPath = gitleaksTool.getGitleaksReportPath(agentTempDirectory, reportformat)
 
-    const cachedTool = await gitleaksTool.getTool()
+    const cachedTool = await gitleaksTool.getTool(customtoollocation)
     const toolRunner: tr.ToolRunner = new tr.ToolRunner(cachedTool)
-
+    
     taskLib.debug(taskLib.loc('ScanFolder', scanfolder))
     taskLib.debug(taskLib.loc('ReportPath', reportPath))
 
@@ -48,6 +51,7 @@ async function run () {
     if (nogit) toolRunner.arg(['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
+
     if (scanonlychanges) {
       const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
       const commitsFile = await azureDevOpsAPI.getBuildChangesInFile(agentTempDirectory)
@@ -74,7 +78,7 @@ async function run () {
       outStream: process.stdout,
       errStream: process.stderr
     }
-
+    
     const result: number = await toolRunner.exec(options)
 
     if (result === 0) {

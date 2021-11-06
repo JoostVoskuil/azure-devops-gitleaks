@@ -14,9 +14,36 @@
     "author": "Joost Voskuil (joost@foxhole.nl)",
     "version": {
         "Major": 1,
-        "Minor": 3,
+        "Minor": 4,
         "Patch": 0
     },
+    "groups": [
+        {
+            "name": "scanlocation",
+            "displayName": "Scan Location",
+            "isExpanded": true
+        },
+        {
+            "name": "scanconfiguration",
+            "displayName": "Scan configuration",
+            "isExpanded": true
+        },
+        {
+            "name": "scanoptions",
+            "displayName": "Scan options",
+            "isExpanded": true
+        },
+        {
+            "name": "behaviour",
+            "displayName": "Behaviour",
+            "isExpanded": false
+        },
+        {
+            "name": "gitleakstool",
+            "displayName": "Gitleaks Tool location and version",
+            "isExpanded": false
+        }
+    ],
     "inputs": [
         {
             "name": "scanfolder",
@@ -24,7 +51,17 @@
             "label": "Scan Folder",
             "defaultValue": "$(Build.SourcesDirectory)",
             "required": true,
-            "helpMarkDown": "Specify the location to scan. Defaults to your sources directory."
+            "helpMarkDown": "Specify the location to scan. Defaults to your sources directory.",
+            "groupName": "scanlocation"
+        },
+        {
+            "name": "nogit",
+            "type": "boolean",
+            "label": "No Git",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Treat git repos as plain directories and scan those files.",
+            "groupName": "scanlocation"
         },
         {
             "name": "configtype",
@@ -35,9 +72,11 @@
             "options": {
                 "default": "default",
                 "predefined": "predefined",
-                "custom": "custom"
+                "custom": "Custom configuration (will be deprecated)",
+                "customfullpath": "Full path to custom configuration"
             },
-            "helpMarkDown": "Specify if you want to use the default, predefined config or a custom config."
+            "helpMarkDown": "Specify if you want to use the default, predefined config or a custom config.",
+            "groupName": "scanconfiguration"
         },
         {
             "name": "predefinedconfigfile",
@@ -50,24 +89,18 @@
                 "GitleaksUdmCombo.toml": "GitleaksUdmCombo.toml"
             },
             "helpMarkDown": "Select a predefined config file.",
-            "visibleRule": "configtype=predefined"
+            "visibleRule": "configtype=predefined",
+            "groupName": "scanconfiguration"
         },
         {
             "name": "configfile",
             "type": "string",
             "label": "Config file",
-            "defaultValue": "config/gitleaks.toml",
+            "defaultValue": "$(Build.SourcesDirectory)/config/gitleaks.toml",
             "required": true,
-            "helpMarkDown": "Specify a custom config file inside your repo.",
-            "visibleRule": "configtype=custom"
-        },
-        {
-            "name": "nogit",
-            "type": "boolean",
-            "label": "No Git",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Treat git repos as plain directories and scan those files."
+            "helpMarkDown": "Specify a custom config file.",
+            "visibleRule": "configtype=custom || configtype=customfullpath",
+            "groupName": "scanconfiguration"
         },
         {
             "name": "scanonlychanges",
@@ -75,22 +108,51 @@
             "label": "Scan only changes since last build",
             "defaultValue": "false",
             "required": false,
-            "visibleRule": "nogit=false"
+            "visibleRule": "nogit=false",
+            "groupName": "scanoptions"
         },
         {
             "name": "depth",
             "type": "int",
             "label": "Number of commits to scan",
             "required": false,
-            "visibleRule": "nogit=false"
+            "visibleRule": "nogit=false",
+            "groupName": "scanoptions"
         },
         {
-            "name": "verbose",
+            "name": "redact",
             "type": "boolean",
-            "label": "Verbose output",
+            "label": "Redact",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Check this option if you want gitleaks to print verbose output."
+            "helpMarkDown": "Check this option if you want to redact secrets from log messages and leaks.",
+            "groupName": "scanoptions"
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Extra gitleaks arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify extra Gitleaks arguments.",
+            "groupName": "scanoptions"
+        },
+        {
+            "name": "taskfail",
+            "type": "boolean",
+            "label": "Fail the task if secrets founded",
+            "defaultValue": "true",
+            "required": false,
+            "groupName": "behaviour"
+        },
+        {
+            "name": "uploadresults",
+            "type": "boolean",
+            "label": "Upload results",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Check this option if you want to upload the results as an artifact.",
+            "groupName": "behaviour"
         },
         {
             "name": "reportformat",
@@ -103,38 +165,17 @@
                 "sarif": "sarif",
                 "csv": "csv"
             },
-            "helpMarkDown": "Select a report format: json, sarif, csv (default: json)"
+            "helpMarkDown": "Select a report format: json, sarif, csv (default: json)",
+            "groupName": "behaviour"
         },
         {
-            "name": "uploadresults",
+            "name": "verbose",
             "type": "boolean",
-            "label": "Upload results",
-            "defaultValue": "true",
-            "required": false,
-            "helpMarkDown": "Check this option if you want to upload the results as an artifact."
-        },
-        {
-            "name": "redact",
-            "type": "boolean",
-            "label": "Redact",
+            "label": "Verbose output",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Check this option if you want to redact secrets from log messages and leaks."
-        },
-        {
-            "name": "taskfail",
-            "type": "boolean",
-            "label": "Fail the task if secrets founded",
-            "defaultValue": "true",
-            "required": false
-        },
-        {
-            "name": "arguments",
-            "type": "string",
-            "label": "Extra gitleaks arguments",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Specify extra Gitleaks arguments."
+            "helpMarkDown": "Check this option if you want gitleaks to print verbose output.",
+            "groupName": "behaviour"
         },
         {
             "name": "version",
@@ -142,7 +183,16 @@
             "label": "Gitleaks version",
             "defaultValue": "latest",
             "required": false,
-            "helpMarkDown": "Specify the version of Gitleaks to use."
+            "helpMarkDown": "Specify the version of Gitleaks to use.",
+            "groupName": "gitleakstool"
+        },
+        {
+            "name": "customtoollocation",
+            "type": "string",
+            "label": "Gitleaks custom tool locatiomn",
+            "required": false,
+            "helpMarkDown": "Specify the custom location of Gitleaks, when provided, Gitleaks will not be downloaded.",
+            "groupName": "gitleakstool"
         }
     ],
     "execution": {
@@ -175,6 +225,8 @@
         "GetEndpointAuthorizationParameterEmpty": "GetEndpointAuthorizationParameter %s is empty",
         "VariableEmpty": "Variable %s is empty",
         "InputEmpty": "Input %s is empty",
-        "AdoConnectionError": "Connection cannot be made to Azure DevOps."
+        "AdoConnectionError": "Connection cannot be made to Azure DevOps.",
+        "GitLeaksNotFound": "Gitleaks cannot be found at %s",
+        "WarningBehaviourChangeGitleak8": "The behaviour will change in future releases of this task. Please set 'configtype' to 'customfullpath' and specify the full path to the Gitleask config file."
     }
 }

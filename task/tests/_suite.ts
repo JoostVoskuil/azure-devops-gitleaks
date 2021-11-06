@@ -233,6 +233,26 @@ describe('Gitleaks versions', function () {
     });
 });
 
+describe('Gitleaks custom location', function () {
+    it('Should fail when custom tool cannot be found', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksVersion_ShouldFailWhenCustomToolLocationCanNotBeFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, false, 'should have failed');
+        assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should be invoked 0 times');
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_GitLeaksNotFound') >= 0, true, "customLocation/gitleaks-darwin-amd64'");
+        done();
+    });
+    it('Should succeed with custom tool', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksVersion_ShouldSucceedWithCustomLocation.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        done();
+    });
+});
+
 describe('Gitleaks toolcache', function () {
     it('Should download when gitleaks version is not in toolcache', function(done: Mocha.Done) {    
         const tp = path.join(__dirname, 'GitleaksRelease_ShouldDownloadWhenNotInToolCache');

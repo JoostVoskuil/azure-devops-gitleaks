@@ -11,42 +11,68 @@ export class GitleaksTool {
   private readonly operatingSystem: string
   private readonly providedVersion: string
 
-  constructor (name: string, providedVersion: string, operatingSystem: string, architecture: string) {
-    this.name = name
+  constructor(providedVersion: string, operatingSystem: string, architecture: string) {
+    this.name = 'gitleaks'
     this.providedVersion = providedVersion
     this.operatingSystem = operatingSystem
     this.architecture = architecture
     taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
   }
 
-  getGitleaksReportPath (tempDirectory: string, reportformat = 'json'): string {
+  getGitleaksReportPath(tempDirectory: string, reportformat = 'json'): string {
     const reportPath = Path.join(tempDirectory, `${this.name}-report-${Guid.create()}.${reportformat}`)
     return reportPath
   }
 
-  getGitLeaksConfigFileParameter (configType: string, nogit: boolean, predefinedConfigFile?: string, configFile?: string): string | undefined {
+  getGitLeaksConfigFileParameter(configType: string, nogit: boolean, predefinedConfigFile?: string, configFile?: string): string | undefined {
     let configFileParameter: string
     if (configType.toLowerCase() === 'default') return undefined
-    else if (configType.toLowerCase() === 'predefined' && predefinedConfigFile !== undefined) {
+
+    if (configType.toLowerCase() === 'predefined' && predefinedConfigFile !== undefined) {
       const fullPath = Path.join(__dirname, 'configs', predefinedConfigFile)
       configFileParameter = `--config-path=${fullPath.replace(/\\/g, '/')}`
-    } else if (configType.toLowerCase() === 'custom' && configFile !== undefined && !nogit) {
-      configFileParameter = `--repo-config-path=${configFile.replace(/\\/g, '/')}`
-    } else if (configType.toLowerCase() === 'custom' && configFile !== undefined && nogit) {
+      taskLib.debug(taskLib.loc('ConfigFile', configFileParameter))
+      return configFileParameter
+    }
+
+    if (configFile === undefined) throw new Error(taskLib.loc('IncorrectConfig'))
+    else if (configType.toLowerCase() === 'customfullpath') {
       configFileParameter = `--config-path=${configFile.replace(/\\/g, '/')}`
-    } else throw new Error(taskLib.loc('IncorrectConfig'))
+    }
+    // This behaviour is inconsistent implemented in the task
+    // --repo-config-path will dissapear in Gitleaks8
+    // Warn users of change of behaviour. Should use the customfullpath option.
+    else if (configType.toLowerCase() === 'custom' && nogit) {
+      configFileParameter = `--config-path=${configFile.replace(/\\/g, '/')}`
+      taskLib.warning(taskLib.loc('WarningBehaviourChangeGitleak8'))
+    }
+    else if (configType.toLowerCase() === 'custom' && !nogit) {
+      configFileParameter = `--repo-config-path=${configFile.replace(/\\/g, '/')}`
+      taskLib.warning(taskLib.loc('WarningBehaviourChangeGitleak8'))
+    }
+    else throw new Error(taskLib.loc('IncorrectConfig'))
     taskLib.debug(taskLib.loc('ConfigFile', configFileParameter))
     return configFileParameter
   }
 
-  async getTool (): Promise<string> {
+  async getTool(customToolLocation?: string): Promise<string> {
+    if (customToolLocation === undefined) {
+      return await this.getToolForAgent();
+    }
+    else {
+      return await this.getToolFromCustomLocation(customToolLocation);
+    }
+  }
+
+  private async getToolForAgent(): Promise<string> {
     const version = await this.getVersion(this.providedVersion)
-    const toolExecutable = this.getToolFileName()
     const cachedToolDirectory = toolLib.findLocalTool(this.name, version)
+    const toolExecutable = this.getToolFileName()
     let cachedToolExecutable
     if (!cachedToolDirectory) {
       cachedToolExecutable = await this.downloadTool(version, toolExecutable)
-    } else {
+    }
+    else {
       taskLib.debug(taskLib.loc('AvailableInToolcache', this.name))
       cachedToolExecutable = Path.join(cachedToolDirectory, toolExecutable)
     }
@@ -54,7 +80,14 @@ export class GitleaksTool {
     return cachedToolExecutable
   }
 
-  private async getVersion (inputVersion: string): Promise<string> {
+  private async getToolFromCustomLocation(customToolLocation: string): Promise<string> {
+    const toolExecutable = this.getToolFileName()
+    const toolLocation = Path.join(customToolLocation, toolExecutable)
+    if (taskLib.exist(toolLocation)) return toolLocation
+    throw new Error(taskLib.loc('GitLeaksNotFound', toolLocation))
+  }
+
+  private async getVersion(inputVersion: string): Promise<string> {
     if (inputVersion.toLowerCase() !== 'latest') {
       return this.cleanVersion(inputVersion)
     } else {
@@ -63,13 +96,13 @@ export class GitleaksTool {
     }
   }
 
-  private cleanVersion (version): string {
+  private cleanVersion(version): string {
     version = toolLib.cleanVersion(version)
     if (version) return version
     throw Error(taskLib.loc('CannotParseVersion', version))
   }
 
-  private async getLatestVersionFromGitHub (): Promise<string> {
+  private async getLatestVersionFromGitHub(): Promise<string> {
     const githubAuthor = 'zricethezav'
     const githubRepo = 'gitleaks'
     const url = `https://api.github.com/repos/${githubAuthor}/${githubRepo}/releases/latest`
@@ -84,7 +117,7 @@ export class GitleaksTool {
     throw Error(taskLib.loc('CannotRetrieveVersion', url))
   }
 
-  private getToolFileName (): string {
+  private getToolFileName(): string {
     if ((this.operatingSystem === 'Windows_NT') && (this.architecture.toLowerCase() === 'x64')) return 'gitleaks-windows-amd64.exe'
     else if ((this.operatingSystem === 'Windows_NT') && (this.architecture.toLowerCase() === 'x86')) return 'gitleaks-windows-386.exe'
     else if ((this.operatingSystem === 'Darwin') && (this.architecture.toLowerCase() === 'x64')) return 'gitleaks-darwin-amd64'
@@ -93,7 +126,7 @@ export class GitleaksTool {
     else throw new Error(taskLib.loc('OsArchNotSupported', this.operatingSystem, this.architecture, this.name))
   }
 
-  private getDownloadSourceLocation (version: string): string {
+  private getDownloadSourceLocation(version: string): string {
     const executable = this.getToolFileName()
     const githubAuthor = 'zricethezav'
     const githubRepo = 'gitleaks'
@@ -103,7 +136,7 @@ export class GitleaksTool {
     return downloadUri
   }
 
-  private async downloadTool (version: string, toolExecutable: string): Promise<string> {
+  private async downloadTool(version: string, toolExecutable: string): Promise<string> {
     const downloadUri = this.getDownloadSourceLocation(version)
     taskLib.debug(taskLib.loc('NoToolcacheDownloading', this.name, this.name, downloadUri))
     const fileGUID = await toolLib.downloadTool(downloadUri)

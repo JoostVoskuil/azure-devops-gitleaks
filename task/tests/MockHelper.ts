@@ -1,6 +1,5 @@
 import * as mr from 'azure-pipelines-task-lib/mock-run';
 import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner';
-import path = require('path');
 
 export function BuildWithDefaultValues(): void {
 	process.env['AGENT_TOOLSDIRECTORY'] = __dirname;
