@@ -36,19 +36,11 @@ export class GitleaksTool {
     }
 
     if (configFile === undefined) throw new Error(taskLib.loc('IncorrectConfig'))
-    else if (configType.toLowerCase() === 'customfullpath') {
-      configFileParameter = `--config-path=${configFile.replace(/\\/g, '/')}`
-    }
-    // This behaviour is inconsistent implemented in the task
-    // --repo-config-path will dissapear in Gitleaks8
-    // Warn users of change of behaviour. Should use the customfullpath option.
     else if (configType.toLowerCase() === 'custom' && nogit) {
       configFileParameter = `--config-path=${configFile.replace(/\\/g, '/')}`
-      taskLib.warning(taskLib.loc('WarningBehaviourChangeGitleak8'))
     }
     else if (configType.toLowerCase() === 'custom' && !nogit) {
       configFileParameter = `--repo-config-path=${configFile.replace(/\\/g, '/')}`
-      taskLib.warning(taskLib.loc('WarningBehaviourChangeGitleak8'))
     }
     else throw new Error(taskLib.loc('IncorrectConfig'))
     taskLib.debug(taskLib.loc('ConfigFile', configFileParameter))
@@ -105,16 +97,22 @@ export class GitleaksTool {
   private async getLatestVersionFromGitHub(): Promise<string> {
     const githubAuthor = 'zricethezav'
     const githubRepo = 'gitleaks'
-    const url = `https://api.github.com/repos/${githubAuthor}/${githubRepo}/releases/latest`
+    const latestAllowedMajorRelease = 'v7'
+    const url = `https://api.github.com/repos/${githubAuthor}/${githubRepo}/releases`
     taskLib.debug(taskLib.loc('GettingUrl', url, this.name))
-    const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool')
-    const gitHubRelease = (await rest.get<GitHubRelease>(url)).result
 
-    if (gitHubRelease != null) {
-      taskLib.debug(taskLib.loc('ReleaseInfo', gitHubRelease.name))
-      return gitHubRelease.name
-    }
-    throw Error(taskLib.loc('CannotRetrieveVersion', url))
+    const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool')
+    const gitHubReleases = (await rest.get<GitHubRelease[]>(url)).result
+    
+    if (gitHubReleases === null) throw Error(taskLib.loc('CannotRetrieveVersion', url))
+    // filter allowed latest major release
+    const allowedReleases = gitHubReleases.filter(a=>a.name.startsWith(latestAllowedMajorRelease))
+    if (allowedReleases === null) throw Error(taskLib.loc('CannotRetrieveVersion', url))
+    
+    // sort releases
+    allowedReleases.sort((a, b) => (a.name > b.name) ? -1 : 1)
+    taskLib.debug(taskLib.loc('ReleaseInfo', allowedReleases[0].name))
+    return allowedReleases[0].name.substr(1,allowedReleases[0].name.length)
   }
 
   private getToolFileName(): string {
