@@ -105,14 +105,19 @@ export class GitleaksTool {
   private async getLatestVersionFromGitHub(): Promise<string> {
     const githubAuthor = 'zricethezav'
     const githubRepo = 'gitleaks'
-    const url = `https://api.github.com/repos/${githubAuthor}/${githubRepo}/releases/latest`
+    const latestMajorRelease = "v7"
+    const url = `https://api.github.com/repos/${githubAuthor}/${githubRepo}/releases`
     taskLib.debug(taskLib.loc('GettingUrl', url, this.name))
     const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool')
-    const gitHubRelease = (await rest.get<GitHubRelease>(url)).result
+    const gitHubReleases = (await rest.get<GitHubRelease[]>(url)).result
+    // filter allowed latest major release
+    const allowedReleases = gitHubReleases?.filter(a=>a.name.startsWith(latestMajorRelease))
+    // sort releases
+    allowedReleases?.sort((a, b) => (a.name > b.name) ? -1 : 1)
 
-    if (gitHubRelease != null) {
-      taskLib.debug(taskLib.loc('ReleaseInfo', gitHubRelease.name))
-      return gitHubRelease.name
+    if (allowedReleases != null) {
+      taskLib.debug(taskLib.loc('ReleaseInfo', allowedReleases[0].name))
+      return allowedReleases[0].name
     }
     throw Error(taskLib.loc('CannotRetrieveVersion', url))
   }
