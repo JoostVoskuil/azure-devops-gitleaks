@@ -117,7 +117,7 @@
             "label": "Number of commits to scan",
             "helpMarkDown": "Limit the number of commits to scan.",
             "required": false,
-            "visibleRule": "nogit=false && scanonlychanges=false",
+            "visibleRule": "nogit=false",
             "groupName": "scanoptions"
         },
         {

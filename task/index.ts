@@ -49,14 +49,16 @@ async function run () {
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
 
+    const depth = taskLib.getInput('depth')
+
     if (scanonlychanges) {
       const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
-      const commitsFile = await azureDevOpsAPI.getBuildChangesInFile(agentTempDirectory)
+      let numberOfCommits = 1000;
+      if (depth) numberOfCommits = Number(depth);
+      const commitsFile = await azureDevOpsAPI.getBuildChangesInFile(agentTempDirectory, numberOfCommits)
       toolRunner.arg([`--commits-file=${commitsFile}`])
     }
-
-    const depth = taskLib.getInput('depth')
-    if (depth) toolRunner.argIf(depth, [`--depth=${depth}`])
+    else if (depth) toolRunner.argIf(depth, [`--depth=${depth}`])
 
     // Process extra arguments
     if (gitleaksArguments) {
