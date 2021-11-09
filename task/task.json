@@ -72,7 +72,7 @@
             "options": {
                 "default": "Default",
                 "predefined": "Predefined",
-                "custom": "Custom configuration (will be deprecated)"
+                "custom": "Custom configuration"
             },
             "helpMarkDown": "Specify if you want to use the default, predefined config or a custom config.",
             "groupName": "scanconfiguration"
