@@ -22,7 +22,7 @@ export class AzureDevOpsAPI {
     taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
   }
 
-  public async getBuildChangesInFile (agentTempDirectory: string): Promise<string> {
+  public async getBuildChangesInFile (agentTempDirectory: string, numberOfCommits: number): Promise<string> {
     // commitsFile
     const commitsFile = Path.join(agentTempDirectory, `commits-${Guid.create()}.txt`)
     taskLib.debug(taskLib.loc('CommitsFile', commitsFile))
@@ -30,7 +30,7 @@ export class AzureDevOpsAPI {
     // Get changes
     const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
     const buildApi: BuildApi = await connection.getBuildApi()
-    const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, Number(this.buildId), undefined, 1000)
+    const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, Number(this.buildId), undefined, numberOfCommits)
     const filteredChanges = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined))
 
     taskLib.debug(taskLib.loc('DetectedChanges', filteredChanges.length))
