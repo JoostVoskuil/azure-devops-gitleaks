@@ -10,6 +10,7 @@ let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath);
 const executable = 'gitleaks-darwin-amd64';
 tmr.setInput('version', 'latest');
 tmr.setInput('configType', 'default');
+tmr.setInput('reportformat', 'json');
 
 tmr.setInput('scanfolder', __dirname);
 

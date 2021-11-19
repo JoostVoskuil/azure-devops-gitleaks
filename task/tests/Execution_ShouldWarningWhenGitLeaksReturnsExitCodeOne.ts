@@ -11,7 +11,7 @@ let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath);
 // Inputs
 tmr.setInput('version', 'latest');
 tmr.setInput('configType', 'default');
-
+tmr.setInput('reportformat', 'json');
 tmr.setInput('scanfolder', __dirname);
 
 tmr.setInput('nogit', 'false');

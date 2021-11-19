@@ -15,6 +15,7 @@ tmr.setInput('configType', 'custom');
 
 tmr.setInput('scanfolder', __dirname);
 tmr.setInput('configfile', configFile);
+tmr.setInput('reportformat', 'json');
 
 tmr.setInput('nogit', 'false');
 tmr.setInput('verbose', 'false');

@@ -13,21 +13,22 @@ async function run() {
     console.log()
 
     const buildReason = getAzureDevOpsVariable('Build.Reason')
+    console.log(taskLib.loc('RunMode', buildReason))
     const specifiedVersion = getAzureDevOpsInput('version')
     const customtoollocation = taskLib.getInput('customtoollocation', false)
 
     const scanfolder = getAzureDevOpsInput('scanfolder')
-    const configType = taskLib.getInput('configtype') || 'default'
+    const configType = getAzureDevOpsInput('configtype')
     const gitleaksArguments = taskLib.getInput('arguments')
 
     const predefinedConfigFile = taskLib.getInput('predefinedconfigfile')
     const customConfigFile = taskLib.getInput('configfile')
-    const reportformat = taskLib.getInput('reportformat') || 'json'
+    const reportformat = getAzureDevOpsInput('reportformat')
     const nogit = taskLib.getBoolInput('nogit')
     const scanonlychanges = taskLib.getBoolInput('scanonlychanges')
     const taskfail = taskLib.getBoolInput('taskfail')
 
-    console.log(taskLib.loc('RunMode', buildReason))
+
 
     const gitleaksTool: GitleaksTool = new GitleaksTool(specifiedVersion)
     const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, nogit, predefinedConfigFile, customConfigFile)

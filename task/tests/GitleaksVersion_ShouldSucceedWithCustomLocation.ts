@@ -12,6 +12,7 @@ let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath);
 // Inputs
 tmr.setInput('customtoollocation', '/customtoollocation');
 tmr.setInput('configType', 'default');
+tmr.setInput('version', 'latest');
 
 tmr.setInput('scanfolder', __dirname);
 
@@ -22,6 +23,7 @@ tmr.setInput('taskfail', 'true');
 
 const executable = 'gitleaks-darwin-amd64';
 const reportformat = 'json';
+tmr.setInput('reportformat', reportformat);
 
 helpers.BuildWithDefaultValues();
 tmr = helpers.BuildWithEmptyToolCache(tmr);

@@ -1,4 +1,4 @@
-import { Change } from 'azure-devops-node-api/interfaces/BuildInterfaces'
+
 import * as azdev from 'azure-devops-node-api/WebApi'
 import { BuildApi } from 'azure-devops-node-api/BuildApi'
 import { GitApi } from 'azure-devops-node-api/GitApi'
@@ -9,6 +9,7 @@ import taskLib = require('azure-pipelines-task-lib/task')
 
 import { getAzureDevOpsConnection, getAzureDevOpsVariable, getEndpointAuthorizationParameter, getEndpointUrl } from './helpers'
 import { GitCommitRef } from 'azure-devops-node-api/interfaces/GitInterfaces'
+import { Change } from 'azure-devops-node-api/interfaces/BuildInterfaces'
 
 export class AzureDevOpsAPI {
   private readonly teamProject: string
