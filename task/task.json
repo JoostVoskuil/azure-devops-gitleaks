@@ -227,6 +227,9 @@
         "VariableEmpty": "Variable %s is empty",
         "InputEmpty": "Input %s is empty",
         "AdoConnectionError": "Connection cannot be made to Azure DevOps.",
-        "GitLeaksNotFound": "Gitleaks cannot be found at %s"
+        "GitLeaksNotFound": "Gitleaks cannot be found at %s",
+        "BuildReason": "The build reason is $s",
+        "BuildReasonPullRequest": "This build is run as pre-validation. Only commits belonging to this pullRequest are scanned.",
+        "BuildReasonPullRequestWarning": "Scanonlyforchanges and depth are ignored."
     }
 }

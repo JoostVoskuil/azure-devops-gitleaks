@@ -12,27 +12,27 @@ async function run () {
     console.log(taskLib.loc('ThanksToJesseHouwing'))
     console.log()
 
-    const operatingSystem = getAzureDevOpsVariable('Agent.OS')
-    const architecture = getAzureDevOpsVariable('Agent.OSArchitecture')
-    const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
 
-    const specifiedVersion = taskLib.getInput('version') || 'latest'
+    const buildReason = getAzureDevOpsVariable('Build.Reason')
+    const specifiedVersion = getAzureDevOpsInput('version')
     const customtoollocation = taskLib.getInput('customtoollocation', false)
 
     const scanfolder = getAzureDevOpsInput('scanfolder')
-    const configType = taskLib.getInput('configtype') || 'default'
+    const configType = getAzureDevOpsInput('configtype')
     const gitleaksArguments = taskLib.getInput('arguments')
 
-    const predefinedConfigFile = taskLib.getInput('predefinedconfigfile')
-    const customConfigFile = taskLib.getInput('configfile')
+    const predefinedConfigFile = getAzureDevOpsInput('predefinedconfigfile')
+    const customConfigFile = getAzureDevOpsInput('configfile')
+    const reportformat = getAzureDevOpsInput('reportformat')
     const nogit = taskLib.getBoolInput('nogit')
     const scanonlychanges = taskLib.getBoolInput('scanonlychanges')
-    const reportformat = taskLib.getInput('reportformat') || 'json'
     const taskfail = taskLib.getBoolInput('taskfail')
+
+    console.log(taskLib.loc('RunMode', buildReason))
     
-    const gitleaksTool: GitleaksTool = new GitleaksTool(specifiedVersion, operatingSystem, architecture)
+    const gitleaksTool: GitleaksTool = new GitleaksTool(specifiedVersion)
     const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, nogit, predefinedConfigFile, customConfigFile)
-    const reportPath = gitleaksTool.getGitleaksReportPath(agentTempDirectory, reportformat)
+    const reportPath = gitleaksTool.getGitleaksReportPath(reportformat)
 
     const cachedTool = await gitleaksTool.getTool(customtoollocation)
     const toolRunner: tr.ToolRunner = new tr.ToolRunner(cachedTool)
@@ -50,15 +50,25 @@ async function run () {
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
 
     const depth = taskLib.getInput('depth')
+    const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
 
-    if (scanonlychanges) {
-      const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
-      let numberOfCommits = 1000;
-      if (depth) numberOfCommits = Number(depth);
-      const commitsFile = await azureDevOpsAPI.getBuildChangesInFile(agentTempDirectory, numberOfCommits)
+    if (buildReason === 'PullRequest') {
+      console.log(taskLib.loc('BuildReasonPullRequest'))
+      const commitsFile = await azureDevOpsAPI.getPullRequestCommits()
       toolRunner.arg([`--commits-file=${commitsFile}`])
+
+      if (scanonlychanges || depth) {
+        console.warn(taskLib.loc('BuildReasonPullRequestWarning'))
     }
-    else if (depth) toolRunner.argIf(depth, [`--depth=${depth}`])
+    else {
+      if (scanonlychanges) {
+        let numberOfCommits = 1000;
+        if (depth) numberOfCommits = Number(depth);
+        const commitsFile = await azureDevOpsAPI.getBuildChangesCommits(numberOfCommits)
+        toolRunner.arg([`--commits-file=${commitsFile}`])
+      }
+      else if (depth) toolRunner.argIf(depth, [`--depth=${depth}`])
+    }
 
     // Process extra arguments
     if (gitleaksArguments) {

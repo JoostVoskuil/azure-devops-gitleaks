@@ -4,18 +4,15 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool'
 import * as restClient from 'typed-rest-client/RestClient'
 import taskLib = require('azure-pipelines-task-lib/task')
 import { Guid } from 'guid-typescript'
+import { getAzureDevOpsVariable } from './helpers'
 
 export class GitleaksTool {
   private readonly name: string
-  private readonly architecture: string
-  private readonly operatingSystem: string
   private readonly providedVersion: string
 
-  constructor(providedVersion: string, operatingSystem: string, architecture: string) {
+  constructor(providedVersion: string) {
     this.name = 'gitleaks'
     this.providedVersion = providedVersion
-    this.operatingSystem = operatingSystem
-    this.architecture = architecture
     taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
   }
 
@@ -116,12 +113,15 @@ export class GitleaksTool {
   }
 
   private getToolFileName(): string {
-    if ((this.operatingSystem === 'Windows_NT') && (this.architecture.toLowerCase() === 'x64')) return 'gitleaks-windows-amd64.exe'
-    else if ((this.operatingSystem === 'Windows_NT') && (this.architecture.toLowerCase() === 'x86')) return 'gitleaks-windows-386.exe'
-    else if ((this.operatingSystem === 'Darwin') && (this.architecture.toLowerCase() === 'x64')) return 'gitleaks-darwin-amd64'
-    else if ((this.operatingSystem === 'Linux') && (this.architecture.toLowerCase() === 'x64')) return 'gitleaks-linux-amd64'
-    else if ((this.operatingSystem === 'Linux') && (this.architecture.toLowerCase() === 'arm')) return 'gitleaks-linux-arm'
-    else throw new Error(taskLib.loc('OsArchNotSupported', this.operatingSystem, this.architecture, this.name))
+    const operatingSystem = getAzureDevOpsVariable('Agent.OS')
+    const architecture = getAzureDevOpsVariable('Agent.OSArchitecture')
+
+    if ((operatingSystem === 'Windows_NT') && (architecture.toLowerCase() === 'x64')) return 'gitleaks-windows-amd64.exe'
+    else if ((operatingSystem === 'Windows_NT') && (architecture.toLowerCase() === 'x86')) return 'gitleaks-windows-386.exe'
+    else if ((operatingSystem === 'Darwin') && (architecture.toLowerCase() === 'x64')) return 'gitleaks-darwin-amd64'
+    else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'x64')) return 'gitleaks-linux-amd64'
+    else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'arm')) return 'gitleaks-linux-arm'
+    else throw new Error(taskLib.loc('OsArchNotSupported', operatingSystem, architecture, this.name))
   }
 
   private getDownloadSourceLocation(version: string): string {
@@ -135,6 +135,7 @@ export class GitleaksTool {
   }
 
   private async downloadTool(version: string, toolExecutable: string): Promise<string> {
+    const operatingSystem = getAzureDevOpsVariable('Agent.OS')
     const downloadUri = this.getDownloadSourceLocation(version)
     taskLib.debug(taskLib.loc('NoToolcacheDownloading', this.name, this.name, downloadUri))
     const fileGUID = await toolLib.downloadTool(downloadUri)
@@ -142,7 +143,7 @@ export class GitleaksTool {
     const cachedToolExecutable = Path.join(cachedToolDirectory, toolExecutable)
     taskLib.debug(`cachedToolExecutable: ${cachedToolExecutable}`)
     // Set permissions
-    if (!(this.operatingSystem === 'Windows_NT')) fs.chmodSync(cachedToolExecutable, '777')
+    if (!(operatingSystem === 'Windows_NT')) fs.chmodSync(cachedToolExecutable, '777')
     return cachedToolExecutable
   }
 }
