@@ -8,7 +8,7 @@ export function BuildWithDefaultValues(): void {
 	process.env['AGENT_OSARCHITECTURE'] = 'x64';
 	process.env['BUILD_REASON'] = 'Manual';
 }
-
+/* eslint-disable no-unused-vars */
 export function BuildWithDefaultMocks(taskMockRunner: mr.TaskMockRunner): mr.TaskMockRunner {
 	// Mock RESTClient for Version information
 	taskMockRunner.registerMock('typed-rest-client/RestClient', {
@@ -32,7 +32,7 @@ export function BuildWithDefaultMocks(taskMockRunner: mr.TaskMockRunner): mr.Tas
 		}
 	});
 	taskMockRunner.registerMock('fs', {
-		chmodSync: function (filePath, rights) { },
+		chmodSync: function (filePath, rights) { return },
 	});
 	taskMockRunner.registerMock('guid-typescript', {
 		Guid: {
@@ -68,6 +68,7 @@ export function BuildWithEmptyToolCache(taskMockRunner: mr.TaskMockRunner): mr.T
 	});
 	return taskMockRunner;
 }
+/* eslint-enable no-unused-vars */
 
 export function BuildWithSucceedingToolExecution(taskMockRunner: mr.TaskMockRunner, executable: string, configFile?: string, customConfigFile?: boolean, reportFormat?: string): mr.TaskMockRunner {
 	taskMockRunner.registerMock('azure-pipelines-task-lib/toolrunner', mtr);
