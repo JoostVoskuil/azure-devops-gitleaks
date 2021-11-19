@@ -6,6 +6,7 @@ export function BuildWithDefaultValues(): void {
 	process.env['AGENT_TEMPDIRECTORY'] = __dirname;
 	process.env['AGENT_OS'] = 'Darwin';
 	process.env['AGENT_OSARCHITECTURE'] = 'x64';
+	process.env['BUILD_REASON'] = 'Manual';
 }
 
 export function BuildWithDefaultMocks(taskMockRunner: mr.TaskMockRunner): mr.TaskMockRunner {

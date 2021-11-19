@@ -16,8 +16,9 @@ export class GitleaksTool {
     taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
   }
 
-  getGitleaksReportPath(tempDirectory: string, reportformat = 'json'): string {
-    const reportPath = Path.join(tempDirectory, `${this.name}-report-${Guid.create()}.${reportformat}`)
+  getGitleaksReportPath(reportformat = 'json'): string {
+    const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
+    const reportPath = Path.join(agentTempDirectory, `${this.name}-report-${Guid.create()}.${reportformat}`)
     return reportPath
   }
 
