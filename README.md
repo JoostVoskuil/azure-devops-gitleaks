@@ -55,6 +55,11 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
 [Github](https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository) has a great article on this using the [BFG Repo Cleaner](https://rtyley.github.io/bfg-repo-cleaner/).
 
 ## Changelog
+
+### 1.5
+
+- Added 'Pre-Validation' Build mode. When the build is run as part of a pull request ony the commits for the pull request are scanned
+
 ### 1.4
 
 - Add option for a custom tool location (so no download)
