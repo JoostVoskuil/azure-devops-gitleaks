@@ -92,19 +92,21 @@ async function run() {
 
     if (result === 0) {
       taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('ResultSuccess'))
-    } else {
+    }
+    else {
+      console.warn(taskLib.loc('HelpOnSecretsFound'))
       if (taskLib.exist(reportPath) && taskLib.getBoolInput('uploadresults')) {
         let containerFolder = 'gitleaks'
         if (reportformat === 'sarif') {
           containerFolder = 'CodeAnalysisLogs'
         }
-
         taskLib.debug(taskLib.loc('UploadResults', containerFolder))
         taskLib.uploadArtifact(containerFolder, reportPath, containerFolder)
       }
       if (taskfail) {
         taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('ResultError'))
-      } else {
+      }
+      else {
         taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultError'))
       }
     }

@@ -31,22 +31,22 @@
   "author": "Joost Voskuil (joost@foxhole.nl)",
   "license": "MIT",
   "dependencies": {
-    "azure-devops-node-api": "^11.0.1",
+    "azure-devops-node-api": "^11.1.0",
     "azure-pipelines-task-lib": "^3.1.10",
     "azure-pipelines-tool-lib": "^1.0.1",
     "guid-typescript": "^1.0.9"
   },
   "devDependencies": {
     "@types/mocha": "^9.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
-    "eslint": "^7.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "eslint": "^8.2.0",
     "mocha": "^9.1.3",
     "mocha-junit-reporter": "^2.0.2",
     "nyc": "^15.1.0",
-    "source-map-support": "^0.5.20",
+    "source-map-support": "^0.5.21",
     "sync-request": "^6.1.0",
     "ts-node": "^10.4.0",
-    "typescript": "^4.4.4"
+    "typescript": "^4.5.2"
   }
 }
