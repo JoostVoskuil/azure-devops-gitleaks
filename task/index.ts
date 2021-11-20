@@ -49,7 +49,6 @@ async function run() {
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
 
     const depth = taskLib.getInput('depth')
-    console.log(taskLib.loc('BuildReason', buildReason))
 
     if (buildReason === 'PullRequest') {
       console.log(taskLib.loc('BuildReasonPullRequest'))
