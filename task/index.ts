@@ -13,7 +13,7 @@ async function run() {
     console.log()
 
     const buildReason = getAzureDevOpsVariable('Build.Reason')
-    console.log(taskLib.loc('RunMode', buildReason))
+
     const specifiedVersion = getAzureDevOpsInput('version')
     const customtoollocation = taskLib.getInput('customtoollocation', false)
 
@@ -28,14 +28,13 @@ async function run() {
     const scanonlychanges = taskLib.getBoolInput('scanonlychanges')
     const taskfail = taskLib.getBoolInput('taskfail')
 
-
-
     const gitleaksTool: GitleaksTool = new GitleaksTool(specifiedVersion)
     const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, nogit, predefinedConfigFile, customConfigFile)
     const reportPath = gitleaksTool.getGitleaksReportPath(reportformat)
 
     const cachedTool = await gitleaksTool.getTool(customtoollocation)
     const toolRunner: tr.ToolRunner = new tr.ToolRunner(cachedTool)
+    console.log()
 
     taskLib.debug(taskLib.loc('ScanFolder', scanfolder))
     taskLib.debug(taskLib.loc('ReportPath', reportPath))
@@ -50,6 +49,7 @@ async function run() {
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
 
     const depth = taskLib.getInput('depth')
+    console.log(taskLib.loc('BuildReason', buildReason))
 
     if (buildReason === 'PullRequest') {
       console.log(taskLib.loc('BuildReasonPullRequest'))
@@ -85,9 +85,7 @@ async function run() {
     const options: tr.IExecOptions = {
       failOnStdErr: false,
       ignoreReturnCode: true,
-      silent: false,
-      outStream: process.stdout,
-      errStream: process.stderr
+      silent: false
     }
 
     const result: number = await toolRunner.exec(options)

@@ -14,7 +14,7 @@
     "author": "Joost Voskuil (joost@foxhole.nl)",
     "version": {
         "Major": 1,
-        "Minor": 4,
+        "Minor": 5,
         "Patch": 0
     },
     "groups": [
@@ -229,7 +229,7 @@
         "AdoConnectionError": "Connection cannot be made to Azure DevOps.",
         "GitLeaksNotFound": "Gitleaks cannot be found at %s",
         "BuildReason": "The build reason is $s",
-        "BuildReasonPullRequest": "This build is run as pre-validation. Only commits belonging to this pullRequest are scanned.",
+        "BuildReasonPullRequest": "This build is run as pre-validation. Only commits belonging to this Pull Request are scanned.",
         "BuildReasonPullRequestWarning": "Scanonlyforchanges and depth are ignored."
     }
 }
