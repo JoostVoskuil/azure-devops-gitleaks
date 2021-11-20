@@ -12,6 +12,7 @@ async function run() {
     console.log(taskLib.loc('ThanksToJesseHouwing'))
     console.log()
 
+    //Get inputs on Task Behaviour
     const buildReason = getAzureDevOpsVariable('Build.Reason')
 
     const specifiedVersion = getAzureDevOpsInput('version')
@@ -27,6 +28,7 @@ async function run() {
     const nogit = taskLib.getBoolInput('nogit')
     const scanonlychanges = taskLib.getBoolInput('scanonlychanges')
     const taskfail = taskLib.getBoolInput('taskfail')
+    const depth = taskLib.getInput('depth')
 
     const gitleaksTool: GitleaksTool = new GitleaksTool()
     const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, nogit, predefinedConfigFile, customConfigFile)
@@ -46,8 +48,6 @@ async function run() {
     if (nogit) toolRunner.arg(['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
-
-    const depth = taskLib.getInput('depth')
 
     if (buildReason === 'PullRequest') {
       console.log(taskLib.loc('BuildReasonPullRequest'))
