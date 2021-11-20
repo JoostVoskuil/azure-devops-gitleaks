@@ -7,18 +7,13 @@ import { Guid } from 'guid-typescript'
 import { getAzureDevOpsVariable } from './helpers'
 
 export class GitleaksTool {
-  private readonly name: string
-  private readonly providedVersion: string
-
-  constructor(providedVersion: string) {
-    this.name = 'gitleaks'
-    this.providedVersion = providedVersion
+  constructor() {
     taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
   }
 
-  getGitleaksReportPath(reportformat = 'json'): string {
+  getGitleaksReportPath(reportFormat: string): string {
     const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
-    const reportPath = Path.join(agentTempDirectory, `${this.name}-report-${Guid.create()}.${reportformat}`)
+    const reportPath = Path.join(agentTempDirectory, `gitleaks-report-${Guid.create()}.${reportFormat}`)
     return reportPath
   }
 
@@ -45,25 +40,25 @@ export class GitleaksTool {
     return configFileParameter
   }
 
-  async getTool(customToolLocation?: string): Promise<string> {
+  async getTool(providedVersion: string, customToolLocation?: string): Promise<string> {
     if (customToolLocation === undefined) {
-      return await this.getToolForAgent();
+      return await this.getToolForAgent(providedVersion);
     }
     else {
       return await this.getToolFromCustomLocation(customToolLocation);
     }
   }
 
-  private async getToolForAgent(): Promise<string> {
-    const version = await this.getVersion(this.providedVersion)
-    const cachedToolDirectory = toolLib.findLocalTool(this.name, version)
+  private async getToolForAgent(providedVersion: string): Promise<string> {
+    const version = await this.getVersion(providedVersion)
+    const cachedToolDirectory = toolLib.findLocalTool('gitleaks', version)
     const toolExecutable = this.getToolFileName()
     let cachedToolExecutable
     if (!cachedToolDirectory) {
       cachedToolExecutable = await this.downloadTool(version, toolExecutable)
     }
     else {
-      taskLib.debug(taskLib.loc('AvailableInToolcache', this.name))
+      taskLib.debug(taskLib.loc('AvailableInToolcache', 'gitleaks'))
       cachedToolExecutable = Path.join(cachedToolDirectory, toolExecutable)
     }
     taskLib.debug(taskLib.loc('CachedTool', cachedToolExecutable))
@@ -97,7 +92,7 @@ export class GitleaksTool {
     const githubRepo = 'gitleaks'
     const latestAllowedMajorRelease = 'v7'
     const url = `https://api.github.com/repos/${githubAuthor}/${githubRepo}/releases`
-    taskLib.debug(taskLib.loc('GettingUrl', url, this.name))
+    taskLib.debug(taskLib.loc('GettingUrl', url, 'gitleaks'))
 
     const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool')
     const gitHubReleases = (await rest.get<GitHubRelease[]>(url)).result
@@ -122,7 +117,7 @@ export class GitleaksTool {
     else if ((operatingSystem === 'Darwin') && (architecture.toLowerCase() === 'x64')) return 'gitleaks-darwin-amd64'
     else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'x64')) return 'gitleaks-linux-amd64'
     else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'arm')) return 'gitleaks-linux-arm'
-    else throw new Error(taskLib.loc('OsArchNotSupported', operatingSystem, architecture, this.name))
+    else throw new Error(taskLib.loc('OsArchNotSupported', operatingSystem, architecture, 'gitleaks'))
   }
 
   private getDownloadSourceLocation(version: string): string {
@@ -131,16 +126,16 @@ export class GitleaksTool {
     const githubRepo = 'gitleaks'
 
     const downloadUri = `https://github.com/${githubAuthor}/${githubRepo}/releases/download/v${version}/${executable}`
-    taskLib.debug(taskLib.loc('CannotRetrieveVersion', this.name, downloadUri))
+    taskLib.debug(taskLib.loc('CannotRetrieveVersion', 'gitleaks', downloadUri))
     return downloadUri
   }
 
   private async downloadTool(version: string, toolExecutable: string): Promise<string> {
     const operatingSystem = getAzureDevOpsVariable('Agent.OS')
     const downloadUri = this.getDownloadSourceLocation(version)
-    taskLib.debug(taskLib.loc('NoToolcacheDownloading', this.name, this.name, downloadUri))
+    taskLib.debug(taskLib.loc('NoToolcacheDownloading', 'gitleaks', 'gitleaks', downloadUri))
     const fileGUID = await toolLib.downloadTool(downloadUri)
-    const cachedToolDirectory = await toolLib.cacheFile(fileGUID, toolExecutable, this.name, version)
+    const cachedToolDirectory = await toolLib.cacheFile(fileGUID, toolExecutable, 'gitleaks', version)
     const cachedToolExecutable = Path.join(cachedToolDirectory, toolExecutable)
     taskLib.debug(`cachedToolExecutable: ${cachedToolExecutable}`)
     // Set permissions

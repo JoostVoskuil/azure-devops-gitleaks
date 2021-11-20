@@ -28,11 +28,11 @@ async function run() {
     const scanonlychanges = taskLib.getBoolInput('scanonlychanges')
     const taskfail = taskLib.getBoolInput('taskfail')
 
-    const gitleaksTool: GitleaksTool = new GitleaksTool(specifiedVersion)
+    const gitleaksTool: GitleaksTool = new GitleaksTool()
     const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, nogit, predefinedConfigFile, customConfigFile)
     const reportPath = gitleaksTool.getGitleaksReportPath(reportformat)
 
-    const cachedTool = await gitleaksTool.getTool(customtoollocation)
+    const cachedTool = await gitleaksTool.getTool(specifiedVersion, customtoollocation)
     const toolRunner: tr.ToolRunner = new tr.ToolRunner(cachedTool)
     console.log()
 
