@@ -9,6 +9,7 @@ let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath);
 tmr.setInput('version', 'latest');
 tmr.setInput('configType', 'default');
 tmr.setInput('scanfolder', __dirname);
+tmr.setInput('reportformat', 'json');
 
 tmr.setInput('nogit', 'false');
 tmr.setInput('verbose', 'false');

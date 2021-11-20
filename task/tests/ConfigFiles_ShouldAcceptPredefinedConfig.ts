@@ -9,7 +9,7 @@ let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath);
 tmr.setInput('version', 'latest');
 tmr.setInput('configType', 'predefined');
 tmr.setInput('predefinedconfigfile', 'UDMSecretChecks.toml');
-
+tmr.setInput('reportformat', 'json');
 tmr.setInput('scanfolder', __dirname);
 
 tmr.setInput('nogit', 'false');
