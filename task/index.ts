@@ -81,6 +81,9 @@ async function run() {
       }
     }
 
+    console.log()
+    console.log(taskLib.loc('GitleaksOutput'))
+
     // Set options to run the toolRunner
     const options: tr.IExecOptions = {
       failOnStdErr: false,

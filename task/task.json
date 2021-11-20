@@ -231,6 +231,7 @@
         "BuildReason": "The build reason is %s",
         "BuildReasonPullRequest": "This build is run as pre-validation. Only commits belonging to this Pull Request are scanned.",
         "BuildReasonPullRequestWarning": "Scanonlyforchanges and depth are ignored.",
-        "HelpOnSecretsFound": "See https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository for information how to remove secrets."
+        "HelpOnSecretsFound": "See https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository for information how to remove secrets.",
+        "GitleaksOutput": "Gitleaks console output:"
     }
 }
