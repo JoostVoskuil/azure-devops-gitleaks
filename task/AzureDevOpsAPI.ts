@@ -26,7 +26,6 @@ export class AzureDevOpsAPI {
   public async getBuildChangesCommits (numberOfCommits: number): Promise<string> {
     // variablen
     const buildId = Number(getAzureDevOpsVariable('Build.BuildId'))
-    const commitsFile = this.getCommitsFilePath()
 
     // Get changes
     const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
@@ -36,17 +35,13 @@ export class AzureDevOpsAPI {
 
     taskLib.debug(taskLib.loc('DetectedChanges', filteredChanges.length))
     const commitsArray = filteredChanges.map(o => o.id).join('\n')
-    
-    // Writing File
-    fs.writeFileSync(commitsFile, commitsArray)
-    return commitsFile
+    return this.writeCommitFile(commitsArray)
   }
 
   public async getPullRequestCommits (): Promise<string> {
     // variablen
     const repositoryId = getAzureDevOpsVariable('Build.Repository.ID')
     const pullRequestId = Number(getAzureDevOpsVariable('System.PullRequest.PullRequestId'))
-    const commitsFile = this.getCommitsFilePath()
 
     // Get changes
     const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
@@ -56,16 +51,14 @@ export class AzureDevOpsAPI {
 
     taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length))
     const commitsArray = filteredCommits.map(o => o.commitId).join('\n')
-    
-    // Writing File
-    fs.writeFileSync(commitsFile, commitsArray)
-    return commitsFile
+    return this.writeCommitFile(commitsArray)
   }
 
-  private getCommitsFilePath(): string {
+  private writeCommitFile(commitsArray: string): string {
     const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
     const commitsFilePath = Path.join(agentTempDirectory, `commits-${Guid.create()}.txt`)
     taskLib.debug(taskLib.loc('CommitsFile', commitsFilePath))
-    return commitsFilePath
+    fs.writeFileSync(commitsFilePath, commitsArray)
+    return commitsFilePath  
   }
 }
