@@ -34,7 +34,6 @@ async function run() {
 
     const cachedTool = await gitleaksTool.getTool(specifiedVersion, customtoollocation)
     const toolRunner: tr.ToolRunner = new tr.ToolRunner(cachedTool)
-    console.log()
 
     taskLib.debug(taskLib.loc('ScanFolder', scanfolder))
     taskLib.debug(taskLib.loc('ReportPath', reportPath))
