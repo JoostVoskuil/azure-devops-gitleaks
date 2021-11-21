@@ -247,5 +247,6 @@
         "AvailableInToolcache": "Version %s of gitleaks is already available in toolcache.",
         "DownloadFromGitHub": "Downloading %s from GitHub.",
         "CachedVersions": "Cached versions of Gitleaks on the agent are: %s"
+        "GitleaksOutput": "Gitleaks console output:"
     }
 }
