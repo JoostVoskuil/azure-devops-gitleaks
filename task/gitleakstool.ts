@@ -31,6 +31,7 @@ export class GitleaksTool {
 
   private async findToolVersionOnAgent(version: string): Promise<string | undefined> {
     const cachedVersionsbyAgent = toolLib.findLocalToolVersions('gitleaks')
+    console.log("Cached: " + cachedVersionsbyAgent)
     if (cachedVersionsbyAgent === undefined) return undefined
     if (version.toLowerCase() === 'latest') {
       return (cachedVersionsbyAgent.sort((one, two) => (one > two ? -1 : 1))).indexOf[0];
@@ -138,7 +139,7 @@ export class GitleaksTool {
     let result: IHttpClientResponse
     try {
       const http: httpClient.HttpClient = new httpClient.HttpClient('vsts-node-tool', undefined, getRequestOptions())
-      result  = (await http.get('https://github.com'))
+      result  = await http.get('https://github.com')
       if (result.message.statusCode && result.message.statusCode >= 200 && result.message.statusCode < 300) return true;
       return false;
     }
