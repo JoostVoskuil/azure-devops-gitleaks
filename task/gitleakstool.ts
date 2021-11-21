@@ -31,8 +31,7 @@ export class GitleaksTool {
 
   private async findToolVersionOnAgent(version: string): Promise<string | undefined> {
     const cachedVersionsbyAgent = toolLib.findLocalToolVersions('gitleaks')
-    console.log("Cached: " + cachedVersionsbyAgent)
-    if (cachedVersionsbyAgent === undefined) return undefined
+    if (cachedVersionsbyAgent.length === 0) return undefined
     if (version.toLowerCase() === 'latest') {
       return (cachedVersionsbyAgent.sort((one, two) => (one > two ? -1 : 1))).indexOf[0];
     }
