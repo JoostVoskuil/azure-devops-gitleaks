@@ -3,7 +3,9 @@ import taskLib = require('azure-pipelines-task-lib/task')
 import tr = require('azure-pipelines-task-lib/toolrunner')
 import { AzureDevOpsAPI } from './AzureDevOpsAPI'
 import { GitleaksTool } from './gitleakstool'
-import { getAzureDevOpsInput, getAzureDevOpsVariable } from './helpers'
+import { getAzureDevOpsInput, getAzureDevOpsVariable, replacePathSlashes } from './helpers'
+import Path = require('path')
+import { Guid } from 'guid-typescript'
 
 async function run() {
   try {
@@ -13,61 +15,27 @@ async function run() {
     console.log()
 
     //Get inputs on Task Behaviour
-    const buildReason = getAzureDevOpsVariable('Build.Reason')
-
-    const specifiedVersion = getAzureDevOpsInput('version')
-    const customtoollocation = taskLib.getInput('customtoollocation', false)
-
-    const scanfolder = getAzureDevOpsInput('scanfolder')
-    const configType = getAzureDevOpsInput('configtype')
+    const scanFolderPath = getAzureDevOpsInput('scanfolder')
     const gitleaksArguments = taskLib.getInput('arguments')
+    const reportFormat = getAzureDevOpsInput('reportformat')
+    const depth = Number(taskLib.getInput('depth'))
 
-    const predefinedConfigFile = taskLib.getInput('predefinedconfigfile')
-    const customConfigFile = taskLib.getInput('configfile')
-    const reportformat = getAzureDevOpsInput('reportformat')
-    const nogit = taskLib.getBoolInput('nogit')
-    const scanonlychanges = taskLib.getBoolInput('scanonlychanges')
-    const taskfail = taskLib.getBoolInput('taskfail')
-    const depth = taskLib.getInput('depth')
+    const reportPath = getReportPath(reportFormat)
+    const commitsFile = await getCommitsFileFromAzureDevOpsAPI();
 
-    const gitleaksTool: GitleaksTool = new GitleaksTool()
-    const configFileParameter = gitleaksTool.getGitLeaksConfigFileParameter(configType, nogit, predefinedConfigFile, customConfigFile)
-    const reportPath = gitleaksTool.getGitleaksReportPath(reportformat)
+    // Get Tool
+    const gitleaksTool = await new GitleaksTool().getGitLeaksTool()
+    const toolRunner: tr.ToolRunner = new tr.ToolRunner(gitleaksTool)
 
-    const cachedTool = await gitleaksTool.getTool(specifiedVersion, customtoollocation)
-    const toolRunner: tr.ToolRunner = new tr.ToolRunner(cachedTool)
-
-    taskLib.debug(taskLib.loc('ScanFolder', scanfolder))
-    taskLib.debug(taskLib.loc('ReportPath', reportPath))
-
-    // Replaces Windows \ because of bug in TOML Loader
-    toolRunner.arg([`--path=${scanfolder.replace(/\\/g, '/')}`])
-    toolRunner.arg([`--report=${reportPath.replace(/\\/g, '/')}`])
-    toolRunner.arg([`--format=${reportformat}`])
-    if (configFileParameter) toolRunner.arg([`${configFileParameter}`])
-    if (nogit) toolRunner.arg(['--no-git'])
+    toolRunner.argIf(scanFolderPath, [`--path=${replacePathSlashes(scanFolderPath)}`])
+    toolRunner.argIf(reportPath, [`--report=${replacePathSlashes(reportPath)}`])
+    toolRunner.argIf(reportPath, [`--format=${reportFormat}`])
+    toolRunner.argIf((getConfigPathType() !== undefined), [`${getConfigPathType()}=${getConfigFilePath()}`])
+    toolRunner.argIf(taskLib.getBoolInput('nogit'), ['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
-
-    if (buildReason === 'PullRequest') {
-      console.log(taskLib.loc('BuildReasonPullRequest'))
-      const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
-      const commitsFile = await azureDevOpsAPI.getPullRequestCommits()
-      toolRunner.arg([`--commits-file=${commitsFile}`])
-
-      if (scanonlychanges || depth) {
-        console.warn(taskLib.loc('BuildReasonPullRequestWarning'))
-      }
-    }
-    else {
-      if (scanonlychanges) {
-        const numberOfCommits = (depth !== undefined) ? Number(depth) : 1000
-        const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
-        const commitsFile = await azureDevOpsAPI.getBuildChangesCommits(numberOfCommits)
-        toolRunner.arg([`--commits-file=${commitsFile}`])
-      }
-      else if (depth) toolRunner.argIf(depth, [`--depth=${depth}`])
-    }
+    toolRunner.argIf((commitsFile !== undefined), [`--commits-file=${replacePathSlashes(commitsFile)}`])
+    toolRunner.argIf(depth, [`--depth=${depth}`])
 
     // Process extra arguments
     if (gitleaksArguments) {
@@ -75,14 +43,12 @@ async function run() {
       const argumentArray = gitleaksArguments.split('--')
       argumentArray.shift()
       for (const arg of argumentArray) {
-        toolRunner.arg([`--${arg.replace(/\\/g, '/').trim()}`])
+        toolRunner.arg([`--${replacePathSlashes(arg).trim()}`])
       }
     }
 
     console.log()
     console.log(taskLib.loc('GitleaksOutput'))
-
-    // Set options to run the toolRunner
     const options: tr.IExecOptions = {
       failOnStdErr: false,
       ignoreReturnCode: true,
@@ -90,30 +56,89 @@ async function run() {
     }
 
     const result: number = await toolRunner.exec(options)
-
-    if (result === 0) {
-      taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('ResultSuccess'))
-    }
-    else {
-      console.warn(taskLib.loc('HelpOnSecretsFound'))
-      if (taskLib.exist(reportPath) && taskLib.getBoolInput('uploadresults')) {
-        let containerFolder = 'gitleaks'
-        if (reportformat === 'sarif') {
-          containerFolder = 'CodeAnalysisLogs'
-        }
-        taskLib.debug(taskLib.loc('UploadResults', containerFolder))
-        taskLib.uploadArtifact(containerFolder, reportPath, containerFolder)
-      }
-      if (taskfail) {
-        taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('ResultError'))
-      }
-      else {
-        taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultError'))
-      }
-    }
-  } catch (err) {
-    taskLib.setResult(taskLib.TaskResult.Failed, err as string)
+    await setTaskOutcomeBasedOnGitLeaksResult(result, reportPath, reportFormat)
+  }
+  catch (err) {
+    const taskfailonexecutionerror = taskLib.getBoolInput('taskfailonexecutionerror')
+    if (taskfailonexecutionerror) { taskLib.setResult(taskLib.TaskResult.Failed, err.message) }
+    else { taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, err.message) }
   }
 }
 
 run()
+
+async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath: string, reportformat: string): Promise<void> {
+  const taskfail = taskLib.getBoolInput('taskfail')
+  const uploadResult = taskLib.getBoolInput('uploadresults')
+
+  if (exitCode === 0) { taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('ResultSuccess')) }
+  else {
+    if (uploadResult) { await uploadResultsToAzureDevOps(reportPath, reportformat) }
+    if (taskfail) { taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('ResultError')) }
+    else { taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultError')) }
+    console.warn(taskLib.loc('HelpOnSecretsFound'))
+  }
+}
+
+async function uploadResultsToAzureDevOps(reportPath: string, reportFormat: string): Promise<void> {
+  let containerFolder
+  if (taskLib.exist(reportPath)) {
+    if (reportFormat === 'sarif') { containerFolder = 'CodeAnalysisLogs' }
+    else { containerFolder = 'gitleaks' }
+    taskLib.debug(taskLib.loc('UploadResults', containerFolder))
+    taskLib.uploadArtifact(containerFolder, reportPath, containerFolder)
+  }
+}
+
+async function getCommitsFileFromAzureDevOpsAPI(): Promise<string> {
+  const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
+  const buildReason = getAzureDevOpsVariable('Build.Reason')
+  const scanonlychanges = taskLib.getBoolInput('scanonlychanges')
+  const depth = Number(taskLib.getInput('depth'))
+
+  let commitsFile
+  if (buildReason === 'PullRequest') {
+    console.log(taskLib.loc('BuildReasonPullRequest'))
+    commitsFile = await azureDevOpsAPI.getPullRequestCommits()
+
+    if (scanonlychanges || depth) { console.warn(taskLib.loc('BuildReasonPullRequestWarning')) }
+  }
+  else if (scanonlychanges) {
+    const numberOfCommits = (depth !== undefined) ? Number(depth) : 1000
+    const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
+    commitsFile = await azureDevOpsAPI.getBuildChangesCommits(numberOfCommits)
+  }
+  return commitsFile
+}
+
+function getReportPath(reportFormat: string): string {
+  const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
+  const reportPath = Path.join(agentTempDirectory, `gitleaks-report-${Guid.create()}.${reportFormat}`)
+  return reportPath
+}
+
+function getConfigPathType(): string | undefined {
+  const nogit = taskLib.getBoolInput('nogit')
+  const configType = getAzureDevOpsInput('configtype')
+
+  if (configType.toLowerCase() === 'default') return undefined
+  if (configType.toLowerCase() === 'custom' && !nogit) {
+    return `--repo-config-path`
+  }
+  else return `--config-path`
+}
+
+function getConfigFilePath(): string | undefined {
+  const configType = getAzureDevOpsInput('configtype')
+  const predefinedConfigFile = taskLib.getInput('predefinedconfigfile')
+  const configfile = taskLib.getInput('configfile')
+  
+  if (configType.toLowerCase() === 'default') return undefined
+  else if (configType.toLowerCase() === 'predefined' && predefinedConfigFile !== undefined) {
+    return replacePathSlashes(Path.join(__dirname, 'configs', predefinedConfigFile))
+  }
+  else if (configType.toLowerCase() === 'custom' && configfile !== undefined) {
+    return replacePathSlashes(configfile)
+  }
+  else throw new Error(taskLib.loc('IncorrectConfig'))
+}

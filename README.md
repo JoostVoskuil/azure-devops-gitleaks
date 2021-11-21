@@ -43,6 +43,8 @@ Thanks to John Lokerse for providing feedback on this extension.
 | uploadresults        | When set to true, the results of gitleaks will be uploaded as an artifact to Azure DevOps.                                                                                                                                                                                            |
 | redact               | Redact secrets from log messages and leaks.                                                                                                                                                                                                                                           |
 | taskfail             | Sets the behavior of the task when secrets are detected. When set to `true`, fail the task. When set to `false` and secrets present end with warning. Default is true                                                                                                                                 |
+| taskfailonexecutionerror             | Sets the behavior of the task when execution errors occurs. When set to `true`, fail the task. When set to `false` and the tasks fails to execute the task is SuccededWithWarnings. Default is true                                                                                                                                 |
+
 | arguments            | Provide extra arguments to gitleaks. See [GitHub](https://github.com/zricethezav/gitleaks#usage-and-options)                                                                                                                                                                          |
 | version              | Version of Gitleaks to be used. See the gitleaks github page. Set to 'latest' to download the latest version of gitleaks.                                                                                                                                                             |
 
@@ -55,6 +57,13 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
 [Github](https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository) has a great article on this using the [BFG Repo Cleaner](https://rtyley.github.io/bfg-repo-cleaner/).
 
 ## Changelog
+
+### 1.6
+
+- Refactored all the code, sorry if that introduced some bugs
+- Downloading from GitHub is now proxy aware
+- Can handle agents with no internet connection; searches in toolcache
+- Made boolean input 'taskfailonexecutionerror' if the task should fail when there is an execution error.
 
 ### 1.5
 

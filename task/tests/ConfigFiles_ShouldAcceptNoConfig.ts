@@ -19,6 +19,7 @@ tmr.setInput('verbose', 'false');
 tmr.setInput('uploadresults', 'false');
 tmr.setInput('redact', 'false');
 tmr.setInput('taskfail', 'true');
+tmr.setInput('taskfailonexecutionerror', 'true');
 
 helpers.BuildWithDefaultValues();
 

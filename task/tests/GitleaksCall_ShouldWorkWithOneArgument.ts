@@ -19,6 +19,7 @@ tmr.setInput('uploadresults', 'false');
 tmr.setInput('arguments', '--arg1=value');
 tmr.setInput('redact', 'false');
 tmr.setInput('taskfail', 'true');
+tmr.setInput('taskfailonexecutionerror', 'true');
 
 const executable = 'gitleaks-darwin-amd64';
 const reportformat = 'json';

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "strict": true,
+    "useUnknownInCatchVariables": false,
     "module": "commonjs",
     "target": "es2020",
     "noImplicitAny": false,

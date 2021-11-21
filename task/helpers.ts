@@ -5,6 +5,12 @@ import { IProxyConfiguration, IRequestOptions } from 'azure-devops-node-api/inte
 
 taskLib.setResourcePath(path.join(__dirname, 'task.json'), true)
 
+// Replaces Windows \ because of bug in TOML Loader
+export function replacePathSlashes(filePath: string): string  {
+  if (filePath === undefined) return ''
+  return filePath.replace(/\\/g, '/');
+}
+
 export function getEndpointUrl (name: string): string {
   const value = taskLib.getEndpointUrl(name, true) || undefined
   if (value === undefined) throw Error(taskLib.loc('GetEndpointUrlEmpty', name))
@@ -33,8 +39,7 @@ export function getTime (date?: Date): number {
   return date != null ? new Date(date).getTime() : 0
 }
 
-export async function getAzureDevOpsConnection (collectionUri: string, token: string): Promise<azdev.WebApi> {
-  const accessTokenHandler = azdev.getPersonalAccessTokenHandler(token)
+export function getRequestOptions(): IRequestOptions {
   const requestOptions: IRequestOptions = {
     socketTimeout: 10000,
     allowRetries: true,
@@ -53,8 +58,12 @@ export async function getAzureDevOpsConnection (collectionUri: string, token: st
     }
     requestOptions.proxy = proxyConfiguration
   }
+  return requestOptions
+}
 
-  const connection = new azdev.WebApi(collectionUri, accessTokenHandler, requestOptions)
+export async function getAzureDevOpsConnection (collectionUri: string, token: string): Promise<azdev.WebApi> {
+  const accessTokenHandler = azdev.getPersonalAccessTokenHandler(token)
+  const connection = new azdev.WebApi(collectionUri, accessTokenHandler, getRequestOptions())
   if (!connection) throw Error(taskLib.loc('AdoConnectionError'))
   return connection
 }
