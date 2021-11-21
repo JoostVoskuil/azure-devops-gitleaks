@@ -21,11 +21,14 @@ async function run() {
     const depth = Number(taskLib.getInput('depth'))
 
     const reportPath = getReportPath(reportFormat)
-    const commitsFile = await getCommitsFileFromAzureDevOpsAPI();
 
     // Get Tool
     const gitleaksTool = await new GitleaksTool().getGitLeaksTool()
     const toolRunner: tr.ToolRunner = new tr.ToolRunner(gitleaksTool)
+    
+    // Get Commits
+    console.log()
+    const commitsFile = await getCommitsFileFromAzureDevOpsAPI();
 
     toolRunner.argIf(scanFolderPath, [`--path=${replacePathSlashes(scanFolderPath)}`])
     toolRunner.argIf(reportPath, [`--report=${replacePathSlashes(reportPath)}`])
