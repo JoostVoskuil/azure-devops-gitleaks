@@ -242,7 +242,7 @@
         "GitleaksOutput": "Gitleaks console output:",
         "OfflineAgent": "The agent has no internet connection, searching for toolversion to use on the agent.",
         "OfflineAgentToolNotAvailable": "The agent has no internet connection and the specified Gitleaks tool version is not available on the agent.",
-        "OnlineAgentHasLatestVersion": "The latest version of the tool is available in the toolcache. Version is %1s",
+        "OnlineAgentHasLatestVersion": "The latest version of the tool is available in the toolcache. Version is %s",
         "OnlineAgentHasNotTheLatestVersion": "The latest version of the tool is not available in the toolcache. Version is %1s and needs to be downloaded.",
         "NoToolcacheDownloading": "Version %s is not available in toolcache. Downloading version %s.",
         "AvailableInToolcache": "Version %s of gitleaks is already available in toolcache.",

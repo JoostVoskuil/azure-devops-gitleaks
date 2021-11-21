@@ -138,10 +138,8 @@ export class GitleaksTool {
   private async detectIfGitHubIsReachable(): Promise<boolean> {
     let result: IHttpClientResponse
     try {
-      //const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool', undefined, undefined, getRequestOptions())
       const http: httpClient.HttpClient = new httpClient.HttpClient('vsts-node-tool', undefined, getRequestOptions())
       result  = (await http.get('https://github.com'))
-      console.log(result)
       if (result.message.statusCode && result.message.statusCode >= 200 && result.message.statusCode < 300) return true;
       return false;
     }
