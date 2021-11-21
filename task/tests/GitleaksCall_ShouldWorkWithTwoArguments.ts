@@ -20,6 +20,7 @@ tmr.setInput('uploadresults', 'false');
 tmr.setInput('arguments', '--arg1=value --arg2');
 tmr.setInput('redact', 'false');
 tmr.setInput('taskfail', 'true');
+tmr.setInput('taskfailonexecutionerror', 'true');
 
 const executable = 'gitleaks-darwin-amd64';
 const reportformat = 'json';
@@ -42,5 +43,5 @@ tmr.run();
 
 function createToolCall(reportformat: string): string {
 	const toolCall = `/tool/${executable} --path=${__dirname} --report=${helpers.reportFile(reportformat)} --format=${reportformat} --arg1=value --arg2`;
-	return toolCall;
+        return toolCall;
 }

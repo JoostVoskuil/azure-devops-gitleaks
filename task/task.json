@@ -194,6 +194,14 @@
             "required": false,
             "helpMarkDown": "Specify the custom directory of Gitleaks, when provided, Gitleaks will not be downloaded.",
             "groupName": "gitleakstool"
+        },
+        {
+            "name": "taskfailonexecutionerror",
+            "type": "boolean",
+            "label": "Fail the task if an execution error or download error occurs.",
+            "defaultValue": "true",
+            "required": false,
+            "groupName": "gitleakstool"
         }
     ],
     "execution": {
@@ -210,13 +218,13 @@
         "ReportPath": "Report path is set to %s",
         "IncorrectConfig": "Incorrect configuration set.",
         "ConfigFile": "Config file parameter is set to %s",
-        "AvailableInToolcache": "%s is already available in toolcache.",
         "CachedTool": "Cached tool is %s",
         "CannotParseVersion": "Cannot parse version %s",
         "DownloadUri": "%s download uri is %s",
         "CannotRetrieveVersion": "Cannot retrieve version from %s",
+        "CannotDownloadUri": "Cannot retreive download from url %s",
         "OsArchNotSupported": "OS '%s' and architecture '%s' is not supported by %s.",
-        "NoToolcacheDownloading": "%s is not available in toolcache. Downloading %s from %s",
+
         "UploadResults": "Uploading report file to %s",
         "GettingUrl": "Getting %s to find latest version of %s",
         "ReleaseInfo": "Downloaded release info: %s",
@@ -231,6 +239,13 @@
         "BuildReasonPullRequest": "This build is run as pre-validation. Only commits belonging to this Pull Request are scanned.",
         "BuildReasonPullRequestWarning": "Scanonlyforchanges and depth are ignored.",
         "HelpOnSecretsFound": "See https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository for information how to remove secrets.",
-        "GitleaksOutput": "Gitleaks console output:"
+        "GitleaksOutput": "Gitleaks console output:",
+        "OfflineAgent": "The agent has no internet connection, searching for toolversion to use on the agent.",
+        "OfflineAgentToolNotAvailable": "The agent has no internet connection and the specified Gitleaks tool version is not available on the agent.",
+        "OnlineAgentHasLatestVersion": "The latest version of the tool is available in the toolcache. Version is %1s",
+        "OnlineAgentHasNotTheLatestVersion": "The latest version of the tool is not available in the toolcache. Version is %1s and needs to be downloaded.",
+        "NoToolcacheDownloading": "Version %s is not available in toolcache. Downloading version %s.",
+        "AvailableInToolcache": "Version %s of gitleaks is already available in toolcache.",
+        "DownloadFromGitHub": "Downloading %s from GitHub."
     }
 }

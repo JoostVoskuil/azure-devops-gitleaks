@@ -228,7 +228,7 @@ describe('Gitleaks versions', function () {
         tr.run();
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
-        assert.strictEqual(tr.stdout.indexOf('https://github.com/zricethezav/gitleaks/releases/download/v9.0.0/') >= 0, true, "Should contain 'https://github.com/zricethezav/gitleaks/releases/download/v9.0.0/'")
+        assert.strictEqual(tr.stdout.indexOf('https://github.com/zricethezav/gitleaks/releases/download/v6.0.0/') >= 0, true, "Should contain 'https://github.com/zricethezav/gitleaks/releases/download/v9.0.0/'")
         done();
     });
 });
@@ -260,7 +260,7 @@ describe('Gitleaks toolcache', function () {
         tr.run();
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
-        assert.strictEqual(tr.stdout.indexOf('loc_mock_NoToolcacheDownloading') >= 0, true, "Should contain 'gitleaks is not available in toolcache'.")
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_OnlineAgentHasNotTheLatestVersion') >= 0, true, "Should contain 'gitleaks is not available in toolcache'.")
         done();
     });
     it('Should not download when gitleaks version is in toolcache.', function(done: Mocha.Done) {    

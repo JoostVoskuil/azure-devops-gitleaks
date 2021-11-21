@@ -17,6 +17,7 @@ tmr.setInput('verbose', 'false');
 tmr.setInput('uploadresults', 'false');
 tmr.setInput('redact', 'false');
 tmr.setInput('taskfail', 'true');
+tmr.setInput('taskfailonexecutionerror', 'true');
 
 const executable = 'gitleaks-darwin-amd64';
 const configFile = `${path.join(__dirname, '../')}configs/UDMSecretChecks.toml`

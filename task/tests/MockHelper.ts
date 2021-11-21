@@ -7,6 +7,12 @@ export function BuildWithDefaultValues(): void {
 	process.env['AGENT_OS'] = 'Darwin';
 	process.env['AGENT_OSARCHITECTURE'] = 'x64';
 	process.env['BUILD_REASON'] = 'Manual';
+	process.env['SYSTEM_TEAMPROJECT'] = 'TESTTP';
+	process.env['SYSTEMVSSCONNECTION'] = 'VSSCONNECTION';
+	process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = 'VSSCONNECTION';
+	process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = 'URL';
+	process.env['ENDPOINT_AUTH_SCHEME_SYSTEMVSSCONNECTION'] = 'SCHEME';
+	process.env['ENDPOINT_AUTH_PARAMETER_SYSTEMVSSCONNECTION_ACCESSTOKEN'] = 'ACCESSTOKEN';
 }
 /* eslint-disable no-unused-vars */
 export function BuildWithDefaultMocks(taskMockRunner: mr.TaskMockRunner): mr.TaskMockRunner {
@@ -15,18 +21,25 @@ export function BuildWithDefaultMocks(taskMockRunner: mr.TaskMockRunner): mr.Tas
 		RestClient: function () {
 			return {
 				get: async function (url, options) {
-					if (url != 'https://api.github.com/repos/zricethezav/gitleaks/releases') {
-						throw new Error('Wrong latest releases url');
+					if (url === 'https://api.github.com/repos/zricethezav/gitleaks/releases') {
+						return {
+							result: [
+								{ 'name': 'v10.0.0' },
+								{ 'name': 'v9.0.0' },
+								{ 'name': 'v8.0.0' },
+								{ 'name': 'v7.0.0' },
+								{ 'name': 'v6.0.0' }
+							],
+							statusCode: 200
+						}
 					}
-					return {
-						result: [
-							{ 'name': 'v10.0.0' },
-							{ 'name': 'v9.0.0' },
-							{ 'name': 'v8.0.0' },
-							{ 'name': 'v7.0.0' },
-							{ 'name': 'v6.0.0' }
-						]
-					};
+					if (url === 'https://github.com') {
+						return {
+							result: 'hello',
+							statusCode: 200
+						}
+					}
+					else throw Error ('Wrong url')
 				}
 			}
 		}
@@ -36,11 +49,11 @@ export function BuildWithDefaultMocks(taskMockRunner: mr.TaskMockRunner): mr.Tas
 	});
 	taskMockRunner.registerMock('guid-typescript', {
 		Guid: {
-				create: function () {
-					return 'guid';
-				}
+			create: function () {
+				return 'guid';
 			}
 		}
+	}
 	);
 	return taskMockRunner;
 }
@@ -51,6 +64,12 @@ export function BuildWithEmptyToolCache(taskMockRunner: mr.TaskMockRunner): mr.T
 			return '/tool';
 		},
 		findLocalTool: function (toolName, versionSpec) {
+			if (toolName != 'gitleaks') {
+				throw new Error('Searching for wrong tool');
+			}
+			return undefined;
+		},
+		findLocalToolVersions: function (toolName) {
 			if (toolName != 'gitleaks') {
 				throw new Error('Searching for wrong tool');
 			}

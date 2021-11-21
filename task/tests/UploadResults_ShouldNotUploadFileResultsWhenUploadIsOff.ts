@@ -18,6 +18,7 @@ tmr.setInput('nogit', 'false');
 tmr.setInput('verbose', 'false');
 tmr.setInput('uploadresults', 'false');
 tmr.setInput('taskfail', 'true');
+tmr.setInput('taskfailonexecutionerror', 'true');
 
 const executable = 'gitleaks-darwin-amd64';
 
