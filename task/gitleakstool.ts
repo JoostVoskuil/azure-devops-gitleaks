@@ -2,8 +2,10 @@ import fs = require('fs')
 import Path = require('path')
 import * as toolLib from 'azure-pipelines-tool-lib/tool'
 import * as restClient from 'typed-rest-client/RestClient'
+import * as httpClient from 'typed-rest-client/HttpClient'
 import taskLib = require('azure-pipelines-task-lib/task')
 import { getAzureDevOpsInput, getAzureDevOpsVariable, getRequestOptions } from './helpers'
+import { IHttpClientResponse } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces'
 export class GitleaksTool {
   constructor() {
     taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
@@ -134,16 +136,16 @@ export class GitleaksTool {
   }
 
   private async detectIfGitHubIsReachable(): Promise<boolean> {
-    let result
+    let result: IHttpClientResponse
     try {
-      const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool', undefined, undefined, getRequestOptions())
-      result = (await rest.get<unknown>('https://github.com'))
+      //const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool', undefined, undefined, getRequestOptions())
+      const http: httpClient.HttpClient = new httpClient.HttpClient('vsts-node-tool', undefined, getRequestOptions())
+      result  = (await http.get('https://github.com'))
       console.log(result)
-      if (result.statusCode >= 200 && result.statusCode < 300) return true;
+      if (result.message.statusCode && result.message.statusCode >= 200 && result.message.statusCode < 300) return true;
       return false;
     }
     catch (err) { 
-      console.log(result) 
       return false; 
     }
   }
