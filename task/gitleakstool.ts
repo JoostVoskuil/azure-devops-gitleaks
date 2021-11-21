@@ -76,7 +76,7 @@ export class GitleaksTool {
       return Path.join(cachedToolDirectory, toolExecutable)
     }
     else {
-      console.log(taskLib.loc('NoToolcacheDownloading', version))
+      console.log(taskLib.loc('NoToolcacheDownloading', version, version))
       return await this.downloadGitLeaks(toolLib.cleanVersion(version), toolExecutable)
     }
   }
