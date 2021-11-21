@@ -147,6 +147,14 @@
             "groupName": "behaviour"
         },
         {
+            "name": "taskfailonexecutionerror",
+            "type": "boolean",
+            "label": "Fail the task if an execution error or download error occurs.",
+            "defaultValue": "true",
+            "required": false,
+            "groupName": "gitleakstool"
+        },
+        {
             "name": "uploadresults",
             "type": "boolean",
             "label": "Upload results",
@@ -193,14 +201,6 @@
             "label": "Gitleaks custom tool location",
             "required": false,
             "helpMarkDown": "Specify the custom directory of Gitleaks, when provided, Gitleaks will not be downloaded.",
-            "groupName": "gitleakstool"
-        },
-        {
-            "name": "taskfailonexecutionerror",
-            "type": "boolean",
-            "label": "Fail the task if an execution error or download error occurs.",
-            "defaultValue": "true",
-            "required": false,
             "groupName": "gitleakstool"
         }
     ],

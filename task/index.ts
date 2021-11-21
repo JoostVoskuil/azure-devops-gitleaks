@@ -61,7 +61,7 @@ async function run() {
   catch (err) {
     const taskfailonexecutionerror = taskLib.getBoolInput('taskfailonexecutionerror')
     if (taskfailonexecutionerror) { taskLib.setResult(taskLib.TaskResult.Failed, err.message) }
-    else { taskLib.setResult(taskLib.TaskResult.Skipped, err.message) }
+    else { taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, err.message) }
   }
 }
 
