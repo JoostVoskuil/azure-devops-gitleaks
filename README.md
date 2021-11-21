@@ -60,9 +60,9 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
 
 ### 1.6
 
-- Refactored all the code
+- Refactored all the code, sorry if that introduced some bugs
 - Downloading from GitHub is now proxy aware
-- Can handle agents with no internet connection
+- Can handle agents with no internet connection; searches in toolcache
 - Made boolean input 'taskfailonexecutionerror' if the task should fail when there is an execution error.
 
 ### 1.5

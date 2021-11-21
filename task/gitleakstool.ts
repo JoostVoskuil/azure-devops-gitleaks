@@ -137,7 +137,7 @@ export class GitleaksTool {
     try {
       const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool', undefined, undefined, getRequestOptions())
       const result = (await rest.get<unknown>('https://github.com'))
-      if (result.statusCode === 200) return true;
+      if (result.statusCode >= 200 && result.statusCode < 300) return true;
       return false;
     }
     catch (err) { return false; }
