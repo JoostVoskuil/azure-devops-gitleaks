@@ -224,7 +224,6 @@
         "CannotRetrieveVersion": "Cannot retrieve version from %s",
         "CannotDownloadUri": "Cannot retreive download from url %s",
         "OsArchNotSupported": "OS '%s' and architecture '%s' is not supported by %s.",
-
         "UploadResults": "Uploading report file to %s",
         "GettingUrl": "Getting %s to find latest version of %s",
         "ReleaseInfo": "Downloaded release info: %s",
