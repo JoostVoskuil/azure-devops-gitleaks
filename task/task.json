@@ -245,6 +245,7 @@
         "OnlineAgentHasNotTheLatestVersion": "The latest version of the tool is not available in the toolcache. Version is %1s and needs to be downloaded.",
         "NoToolcacheDownloading": "Version %s is not available in toolcache. Downloading version %s.",
         "AvailableInToolcache": "Version %s of gitleaks is already available in toolcache.",
-        "DownloadFromGitHub": "Downloading %s from GitHub."
+        "DownloadFromGitHub": "Downloading %s from GitHub.",
+        "CachedVersions": "Cached versions of Gitleaks on the agent are: %s"
     }
 }
