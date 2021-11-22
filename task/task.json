@@ -238,7 +238,7 @@
         "GettingUrl": "Getting %s to find latest version of %s",
         "ReleaseInfo": "Downloaded release info: %s",
         "CommitsFile": "CommitsFile is set to  %s",
-        "DetectedChanges": "Detected %s Git changes for this build.",
+        "DetectedChanges": "Detected %s Git change(s) for this build.",
         "GetEndpointUrlEmpty": "GetEndpointUrl %s is empty",
         "GetEndpointAuthorizationParameterEmpty": "GetEndpointAuthorizationParameter %s is empty",
         "VariableEmpty": "Variable %s is empty",
