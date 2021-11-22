@@ -35,7 +35,7 @@ export class AzureDevOpsAPI {
 
     taskLib.debug(taskLib.loc('DetectedChanges: ', filteredChanges.length))
     const commitsArray = filteredChanges.map(o => o.id).join('\n')
-    taskLib.debug(commitsArray)
+    console.debug(commitsArray)
     return this.writeCommitFile(commitsArray)
   }
 
