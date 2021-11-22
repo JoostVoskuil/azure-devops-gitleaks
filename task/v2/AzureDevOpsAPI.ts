@@ -38,7 +38,7 @@ export class AzureDevOpsAPI {
     return this.writeCommitFile(commitsArray)
   }
 
-  public async getPullRequestCommits (): Promise<Commit> {
+  public async getPullRequestCommits (): Promise<CommitDiff> {
     // variablen
     const repositoryId = getAzureDevOpsVariable('Build.Repository.ID')
     const pullRequestId = Number(getAzureDevOpsVariable('System.PullRequest.PullRequestId'))
@@ -51,15 +51,15 @@ export class AzureDevOpsAPI {
 
     taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length))
 
-    return new Commit() {
-      firstCommit: filteredCommits[0]
-
+    const commitDiff: CommitDiff = {
+      firstCommit: filteredCommits[0].commitId
+      lastCommit: filteredCommits[length-1].commitId
     }
-    return this.writeCommitFile(commitsArray)
+    return commitDiff
   }
 }
 
-export class Commit {
-  firstCommit
-  lastCommit
+export interface CommitDiff {
+  firstCommit: string
+  lastCommit: string
 }

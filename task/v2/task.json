@@ -216,7 +216,7 @@
     ],
     "execution": {
         "Node10": {
-            "target": "index.js"
+            "target": "v2/index.js"
         }
     },
     "messages": {
