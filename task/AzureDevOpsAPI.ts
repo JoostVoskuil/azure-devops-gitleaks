@@ -33,8 +33,9 @@ export class AzureDevOpsAPI {
     const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, buildId, undefined, numberOfCommits)
     const filteredChanges = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined))
 
-    taskLib.debug(taskLib.loc('DetectedChanges', filteredChanges.length))
+    taskLib.debug(taskLib.loc('DetectedChanges: ', filteredChanges.length))
     const commitsArray = filteredChanges.map(o => o.id).join('\n')
+    taskLib.debug(commitsArray)
     return this.writeCommitFile(commitsArray)
   }
 
