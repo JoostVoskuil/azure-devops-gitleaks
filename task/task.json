@@ -112,6 +112,16 @@
             "groupName": "scanoptions"
         },
         {
+            "name": "prevalidationbuild",
+            "type": "boolean",
+            "label": "Enable pre-validation pipelines",
+            "helpMarkDown": "When true and when the build is run as a pull request it only scans the commits that are merged from the pullrequest.",
+            "defaultValue": "true",
+            "required": false,
+            "visibleRule": "nogit=false",
+            "groupName": "scanoptions"
+        },
+        {
             "name": "depth",
             "type": "int",
             "label": "Number of commits to scan",
@@ -228,7 +238,8 @@
         "GettingUrl": "Getting %s to find latest version of %s",
         "ReleaseInfo": "Downloaded release info: %s",
         "CommitsFile": "CommitsFile is set to  %s",
-        "DetectedChanges": "Detected %s Git changes for this build.",
+        "DetectedChanges": "Detected %s Git change(s) for this build.",
+        "Commits": "The following commits will be scanned: %s",
         "GetEndpointUrlEmpty": "GetEndpointUrl %s is empty",
         "GetEndpointAuthorizationParameterEmpty": "GetEndpointAuthorizationParameter %s is empty",
         "VariableEmpty": "Variable %s is empty",

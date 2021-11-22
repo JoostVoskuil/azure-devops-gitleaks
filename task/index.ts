@@ -37,7 +37,8 @@ async function run() {
     toolRunner.argIf(taskLib.getBoolInput('nogit'), ['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
-    toolRunner.argIf((commitsFile !== undefined), [`--commits-file=${replacePathSlashes(commitsFile)}`])
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    toolRunner.argIf(commitsFile, [`--commits-file=${replacePathSlashes(commitsFile!)}`])
     toolRunner.argIf(depth, [`--depth=${depth}`])
 
     // Process extra arguments
@@ -93,25 +94,26 @@ async function uploadResultsToAzureDevOps(reportPath: string, reportFormat: stri
   }
 }
 
-async function getCommitsFileFromAzureDevOpsAPI(): Promise<string> {
+async function getCommitsFileFromAzureDevOpsAPI(): Promise<string | undefined> {
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   const buildReason = getAzureDevOpsVariable('Build.Reason')
   const scanonlychanges = taskLib.getBoolInput('scanonlychanges')
+  const prevalidationbuild = taskLib.getBoolInput('prevalidationbuild')
+
   const depth = Number(taskLib.getInput('depth'))
-
-  let commitsFile
-  if (buildReason === 'PullRequest') {
+  if (prevalidationbuild && buildReason === 'PullRequest') {
     console.log(taskLib.loc('BuildReasonPullRequest'))
-    commitsFile = await azureDevOpsAPI.getPullRequestCommits()
-
+    const commitsFile = await azureDevOpsAPI.getPullRequestCommits()
     if (scanonlychanges || depth) { console.warn(taskLib.loc('BuildReasonPullRequestWarning')) }
+    return commitsFile
   }
   else if (scanonlychanges) {
     const numberOfCommits = (depth !== undefined) ? Number(depth) : 1000
     const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
-    commitsFile = await azureDevOpsAPI.getBuildChangesCommits(numberOfCommits)
+    const commitsFile = await azureDevOpsAPI.getBuildChangesCommits(numberOfCommits)
+    return commitsFile
   }
-  return commitsFile
+  return undefined
 }
 
 function getReportPath(reportFormat: string): string {
