@@ -22,7 +22,6 @@ export class AzureDevOpsAPI {
   }
 
   public async getBuildChangesCommits (numberOfCommits: number): Promise<CommitDiff> {
-    // variablen
     const buildId = Number(getAzureDevOpsVariable('Build.BuildId'))
 
     // Get changes
@@ -40,7 +39,6 @@ export class AzureDevOpsAPI {
   }
 
   public async getPullRequestCommits (): Promise<CommitDiff> {
-    // variablen
     const repositoryId = getAzureDevOpsVariable('Build.Repository.ID')
     const pullRequestId = Number(getAzureDevOpsVariable('System.PullRequest.PullRequestId'))
 

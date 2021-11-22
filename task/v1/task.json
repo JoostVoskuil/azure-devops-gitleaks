@@ -216,7 +216,7 @@
     ],
     "execution": {
         "Node10": {
-            "target": "$(currentDirectory)\\index.js"
+            "target": "$(currentDirectory)/index.js"
         }
     },
     "messages": {
