@@ -23,7 +23,7 @@ stages:
     - task: Bash@3
       inputs:
         targetType: 'inline'
-        script: 'cd task && npm run build-test && npm run test-ci'
+        script: 'cd task/taskv1 && npm run build-test && npm run test-ci'
       displayName: 'Run Build for Test and Execute tests'
     
     - task: PublishTestResults@2
@@ -34,8 +34,8 @@ stages:
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: 'Cobertura'
-        summaryFileLocation: '$(Build.SourcesDirectory)/task/coverage/cobertura-coverage.xml'
-        pathToSources: '$(Build.SourcesDirectory)/task/'
+        summaryFileLocation: '$(Build.SourcesDirectory)/task/taskv1/coverage/cobertura-coverage.xml'
+        pathToSources: '$(Build.SourcesDirectory)/task/taskv1'
     - task: WhiteSource Bolt@20
       inputs:
         cwd: '$(Build.SourcesDirectory)task/'
@@ -43,7 +43,7 @@ stages:
     - task: Bash@3
       inputs:
         targetType: 'inline'
-        script: 'cd task && npm run clean && npm run build-rel'
+        script: 'cd task/taskv1 && npm run clean && npm run build-rel'
       displayName: 'Run Build for Packaging'
       
     - task: TfxInstaller@3
