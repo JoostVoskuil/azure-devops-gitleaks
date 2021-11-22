@@ -83,6 +83,14 @@ export class GitleaksTool {
 
   private async getToolFromAgent(specifiedVersion: string): Promise<string> {
     const isGitHubAvailable = await this.detectIfGitHubIsReachable()
+
+    // Detect minimal version of Gitleaks supported is version 8
+    if (specifiedVersion.toLowerCase() !== 'latest') {
+      const version = toolLib.cleanVersion(specifiedVersion)
+      const semver = version.split('.')
+      if (Number(semver[0]) < 8) throw Error(taskLib.loc('MinimalAllowdVersion', version))
+    }
+
     if (!isGitHubAvailable) {
       return await this.getToolFromOfflineAgent(specifiedVersion)
     }
@@ -111,7 +119,7 @@ export class GitleaksTool {
     const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool', undefined, undefined, getRequestOptions())
     const gitHubReleases = (await rest.get<GitHubRelease[]>(url)).result
     if (gitHubReleases === null) throw new Error(taskLib.loc('CannotRetrieveVersion', url))
-    
+
     // sort releases
     gitHubReleases.sort((a, b) => (a.name > b.name) ? -1 : 1)
     // Get first release
@@ -136,12 +144,12 @@ export class GitleaksTool {
     let result: IHttpClientResponse
     try {
       const http: httpClient.HttpClient = new httpClient.HttpClient('vsts-node-tool', undefined, getRequestOptions())
-      result  = await http.get('https://github.com')
+      result = await http.get('https://github.com')
       if (result.message.statusCode && result.message.statusCode >= 200 && result.message.statusCode < 300) return true;
       return false;
     }
-    catch (err) { 
-      return false; 
+    catch (err) {
+      return false;
     }
   }
 }
