@@ -3,7 +3,7 @@ parameters:
     type: string
   - name: name
     type: string
-    
+
 steps:
 - task: Bash@3
   inputs:
@@ -15,7 +15,7 @@ steps:
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/test-results.xml'
-    testRunTitle: name
+    testRunTitle: ${{ parameters.name }}
 
 - task: PublishCodeCoverageResults@1
   inputs:

@@ -1,5 +1,3 @@
-name: '1.6$(rev:.r)'
-
 trigger:
 - main
 - feature/*
@@ -28,7 +26,7 @@ stages:
     - task: TfxInstaller@3
       displayName: 'Use Node CLI for Azure DevOps'
       inputs:
-        version: '0.8.x'
+        version: '0.9.x'
         checkLatest: true
 
     - task: PackageAzureDevOpsExtension@3
