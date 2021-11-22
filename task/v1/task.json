@@ -15,7 +15,7 @@
     "version": {
         "Major": 1,
         "Minor": 6,
-        "Patch": 29
+        "Patch": 30
     },
     "groups": [
         {
@@ -216,7 +216,7 @@
     ],
     "execution": {
         "Node10": {
-            "target": "v1/index.js"
+            "target": "$(currentDirectory)\\index.js"
         }
     },
     "messages": {

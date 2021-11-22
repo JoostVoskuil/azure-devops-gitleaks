@@ -2,9 +2,7 @@
 import * as azdev from 'azure-devops-node-api/WebApi'
 import { BuildApi } from 'azure-devops-node-api/BuildApi'
 import { GitApi } from 'azure-devops-node-api/GitApi'
-import fs = require('fs')
 import Path = require('path')
-import { Guid } from 'guid-typescript'
 import taskLib = require('azure-pipelines-task-lib/task')
 
 import { getAzureDevOpsConnection, getAzureDevOpsVariable, getEndpointAuthorizationParameter, getEndpointUrl } from './helpers'
@@ -23,7 +21,7 @@ export class AzureDevOpsAPI {
     taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
   }
 
-  public async getBuildChangesCommits (numberOfCommits: number): Promise<string> {
+  public async getBuildChangesCommits (numberOfCommits: number): Promise<CommitDiff> {
     // variablen
     const buildId = Number(getAzureDevOpsVariable('Build.BuildId'))
 
@@ -33,9 +31,12 @@ export class AzureDevOpsAPI {
     const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, buildId, undefined, numberOfCommits)
     const filteredCommits = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined))
 
-    taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length))
-    const commitsArray = filteredCommits.map(o => o.id).join('\n')
-    return this.writeCommitFile(commitsArray)
+    const commitDiff: CommitDiff = {
+      firstCommit: filteredCommits[0].id,
+      lastCommit: filteredCommits[length-1].id
+    }
+    taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
+    return commitDiff
   }
 
   public async getPullRequestCommits (): Promise<CommitDiff> {
@@ -49,17 +50,16 @@ export class AzureDevOpsAPI {
     const commits: GitCommitRef[] = await gitApi.getPullRequestCommits(repositoryId, pullRequestId, this.teamProject)
     const filteredCommits = commits.filter((x => x.commitId !== undefined))
 
-    taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length))
-
     const commitDiff: CommitDiff = {
-      firstCommit: filteredCommits[0].commitId
+      firstCommit: filteredCommits[0].commitId,
       lastCommit: filteredCommits[length-1].commitId
     }
+    taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
     return commitDiff
   }
 }
 
 export interface CommitDiff {
-  firstCommit: string
-  lastCommit: string
+  firstCommit: string | undefined
+  lastCommit: string | undefined
 }

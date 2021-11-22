@@ -216,7 +216,7 @@
     ],
     "execution": {
         "Node10": {
-            "target": "v2/index.js"
+            "target": "$(currentDirectory)\\index.js"
         }
     },
     "messages": {
@@ -238,7 +238,7 @@
         "GettingUrl": "Getting %s to find latest version of %s",
         "ReleaseInfo": "Downloaded release info: %s",
         "CommitsFile": "CommitsFile is set to  %s",
-        "DetectedChanges": "Detected %s Git change(s) for this build.",
+        "DetectedChanges": "Detected %s Git change(s) for this build. First commit is %s, Last commit is %s",
         "Commits": "The following commits will be scanned: %s",
         "GetEndpointUrlEmpty": "GetEndpointUrl %s is empty",
         "GetEndpointAuthorizationParameterEmpty": "GetEndpointAuthorizationParameter %s is empty",
