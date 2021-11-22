@@ -40,8 +40,6 @@ stages:
         extensionName: 'Gitleaks'
         extensionTag: '-build'
         extensionVersion: '$(Build.BuildNumber)'
-        updateTasksVersion: true
-        updateTasksVersionType: patch
         extensionVisibility: private
 
     - task: PublishPipelineArtifact@1
