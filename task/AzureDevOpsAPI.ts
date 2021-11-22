@@ -55,7 +55,7 @@ export class AzureDevOpsAPI {
   }
 
   private writeCommitFile(commitsArray: string): string {
-    taskLib.debug(commitsArray)
+    taskLib.debug(taskLib.loc('Commits', commitsArray))
     const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
     const commitsFilePath = Path.join(agentTempDirectory, `commits-${Guid.create()}.txt`)
     taskLib.debug(taskLib.loc('CommitsFile', commitsFilePath))
