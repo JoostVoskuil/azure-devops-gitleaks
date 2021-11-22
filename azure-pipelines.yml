@@ -22,7 +22,7 @@ stages:
     
     - template: build-and-test.yml
       parameters:
-        path: task/taskv1
+        path: task/v1
         name: Gitleaks V1
   
     - task: TfxInstaller@3
