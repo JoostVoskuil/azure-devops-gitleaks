@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "groups": [
         {
@@ -71,7 +71,7 @@
             "name": "predefinedconfigfile",
             "type": "pickList",
             "label": "Predefined config file",
-            "defaultValue": "UDMSecretChecks.toml",
+            "defaultValue": "GitleaksUdmCombo.toml",
             "required": true,
             "options": {
                 "UDMSecretChecks.toml": "UDMSecretChecks.toml",
@@ -108,10 +108,9 @@
         },
         {
             "name": "logoptions",
-            "type": "boolean",
+            "type": "string",
             "label": "--log-opts parameters",
             "helpMarkDown": "Provide log-opts arguments to Gitleaks",
-            "defaultValue": "false",
             "required": false,
             "groupName": "scanoptions"
         },
@@ -186,7 +185,7 @@
             "label": "Gitleaks version",
             "defaultValue": "latest",
             "required": false,
-            "helpMarkDown": "Specify the version of Gitleaks to use. Must be minimal major version 8",
+            "helpMarkDown": "Specify the version of Gitleaks to use. Must be minimal major version 8. Use 'latest' for latest version.",
             "groupName": "gitleakstool"
         },
         {
