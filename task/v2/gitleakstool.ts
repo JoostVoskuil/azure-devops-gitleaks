@@ -23,7 +23,7 @@ export class GitleaksTool {
   }
 
   private async getToolFromCustomLocation(customToolLocation: string): Promise<string> {
-    const toolExecutable = this.getToolFileName('')
+    const toolExecutable = this.getGitleaksFileName()
     const toolLocation = Path.join(customToolLocation, toolExecutable)
     if (taskLib.exist(toolLocation)) return toolLocation
     throw new Error(taskLib.loc('GitLeaksNotFound', toolLocation))
@@ -44,7 +44,7 @@ export class GitleaksTool {
   }
 
   private async getToolFromOfflineAgent(version: string): Promise<string> {
-    const toolExecutable = this.getToolFileName(version)
+    const toolExecutable = this.getGitleaksFileName()
     console.log(taskLib.loc('OfflineAgent'))
     const latestVersionAvailableOnAgent = await this.findToolVersionOnAgent(version)
     if (!latestVersionAvailableOnAgent) throw new Error(taskLib.loc('OfflineAgentToolNotAvailable'))
@@ -54,7 +54,7 @@ export class GitleaksTool {
 
   private async getToolFromOnlineAgentBasedOnLatest(version): Promise<string> {
     const latestVersionAvailableOnGitHub = await this.getLatestToolVersionFromGitHub()
-    const toolExecutable = this.getToolFileName(latestVersionAvailableOnGitHub)
+    const toolExecutable = this.getGitleaksFileName()
     const versionOnAgent = await this.findToolVersionOnAgent(version)
     if (versionOnAgent && versionOnAgent === latestVersionAvailableOnGitHub) {
       console.log(taskLib.loc('OnlineAgentHasLatestVersion', latestVersionAvailableOnGitHub))
@@ -63,12 +63,12 @@ export class GitleaksTool {
     }
     else {
       console.log(taskLib.loc('OnlineAgentHasNotTheLatestVersion', latestVersionAvailableOnGitHub))
-      return await this.downloadGitLeaks(latestVersionAvailableOnGitHub, toolExecutable)
+      return await this.downloadGitLeaks(latestVersionAvailableOnGitHub)
     }
   }
 
   private async getToolFromOnlineAgentBasedOnVersion(version): Promise<string> {
-    const toolExecutable = this.getToolFileName(version)
+    const toolExecutable = this.getGitleaksFileName()
     const versionOnAgent = await this.findToolVersionOnAgent(version)
     if (versionOnAgent && versionOnAgent == toolLib.cleanVersion(version)) {
       console.log(taskLib.loc('AvailableInToolcache', version))
@@ -77,7 +77,7 @@ export class GitleaksTool {
     }
     else {
       console.log(taskLib.loc('NoToolcacheDownloading', version, version))
-      return await this.downloadGitLeaks(toolLib.cleanVersion(version), toolExecutable)
+      return await this.downloadGitLeaks(toolLib.cleanVersion(version))
     }
   }
 
@@ -102,13 +102,13 @@ export class GitleaksTool {
     }
   }
 
-  private getToolFileName(version: string): string {
+  private getDownloadFileName(version: string): string {
     const operatingSystem = getAzureDevOpsVariable('Agent.OS')
     const architecture = getAzureDevOpsVariable('Agent.OSArchitecture')
     
-    if ((operatingSystem === 'Windows_NT') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_windows_x64`
-    else if ((operatingSystem === 'Darwin') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_darwin_x64`
-    else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_linux_x64`
+    if ((operatingSystem === 'Windows_NT') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_windows_x64.zip`
+    else if ((operatingSystem === 'Darwin') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_darwin_x64.tar.gz`
+    else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_linux_x64.tar.gz`
     else throw new Error(taskLib.loc('OsArchNotSupported', operatingSystem, architecture, 'gitleaks'))
   }
 
@@ -126,24 +126,24 @@ export class GitleaksTool {
     return version
   }
 
-  private determineDownloadExtension(): string {
+  private getGitleaksFileName(): string {
     const operatingSystem = getAzureDevOpsVariable('Agent.OS')
-    if (operatingSystem === 'Windows_NT') return 'zip'
-    else return '.tar.gz'
+    if (operatingSystem === 'Windows_NT') return 'gitleaks.exe'
+    else return 'gitleaks'
   }
 
-  private async downloadGitLeaks(version: string, executable: string): Promise<string> {
-    const url = `https://github.com/zricethezav/gitleaks/releases/download/v${version}/${executable}${this.determineDownloadExtension()}`
+  private async downloadGitLeaks(version: string): Promise<string> {
+    const url = `https://github.com/zricethezav/gitleaks/releases/download/v${version}/${this.getDownloadFileName(version)}`
     const temp = await toolLib.downloadTool(url);
-    const fileGUID = await toolLib.extractTar(temp);
+    const location = Path.join(await toolLib.extractTar(temp), this.getGitleaksFileName());
 
-    const cachedToolDirectory = await toolLib.cacheFile(fileGUID, executable, 'gitleaks', version)
-    const cachedToolPullPath = Path.join(cachedToolDirectory, executable)
-    taskLib.debug(`cachedToolExecutable: ${cachedToolPullPath}`)
+    const cachedToolDirectory = await toolLib.cacheFile(location, this.getGitleaksFileName(), 'gitleaks', version)
+    const cachedToolFullPath = Path.join(cachedToolDirectory, this.getGitleaksFileName())
+    taskLib.debug(`cachedToolExecutable: ${cachedToolFullPath}`)
     // Set permissions
     const operatingSystem = getAzureDevOpsVariable('Agent.OS')
-    if (!(operatingSystem === 'Windows_NT')) fs.chmodSync(cachedToolPullPath, '777')
-    return cachedToolPullPath
+    if (!(operatingSystem === 'Windows_NT')) fs.chmodSync(cachedToolFullPath, '777')
+    return cachedToolFullPath
   }
 
   private async detectIfGitHubIsReachable(): Promise<boolean> {
