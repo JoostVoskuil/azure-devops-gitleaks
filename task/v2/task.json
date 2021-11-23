@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "groups": [
         {
@@ -51,7 +51,7 @@
             "label": "Scan Folder",
             "defaultValue": "$(Build.SourcesDirectory)",
             "required": true,
-            "helpMarkDown": "Specify the location to scan. Defaults to your sources directory.",
+            "helpMarkDown": "Specify the location to scan. Defaults to your sources directory."
         },
         {
             "name": "configtype",
