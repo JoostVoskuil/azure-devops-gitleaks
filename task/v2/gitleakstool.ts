@@ -134,7 +134,9 @@ export class GitleaksTool {
 
   private async downloadGitLeaks(version: string, executable: string): Promise<string> {
     const url = `https://github.com/zricethezav/gitleaks/releases/download/v${version}/${executable}${this.determineDownloadExtension()}`
-    const fileGUID = await toolLib.downloadTool(url)
+    const temp = await toolLib.downloadTool(url);
+    const fileGUID = await toolLib.extractTar(temp);
+
     const cachedToolDirectory = await toolLib.cacheFile(fileGUID, executable, 'gitleaks', version)
     const cachedToolPullPath = Path.join(cachedToolDirectory, executable)
     taskLib.debug(`cachedToolExecutable: ${cachedToolPullPath}`)
