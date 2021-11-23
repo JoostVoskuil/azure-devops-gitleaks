@@ -24,7 +24,7 @@ async function run() {
     const gitleaksTool = await new GitleaksTool().getGitLeaksTool()
     const toolRunner: tr.ToolRunner = new tr.ToolRunner(gitleaksTool)
 
-    toolRunner.arg['detect']
+    toolRunner.line['detect']
     toolRunner.argIf((getConfigFilePath() !== undefined), [`--config ${getConfigFilePath()}`])
     toolRunner.arg([`--log-level ${logLevel}`])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
@@ -38,7 +38,7 @@ async function run() {
     toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
 
-    console.log()
+    console.log(toolRunner)
     console.log(taskLib.loc('GitleaksOutput'))
     const options: tr.IExecOptions = {
       failOnStdErr: false,
