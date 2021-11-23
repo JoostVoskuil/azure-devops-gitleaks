@@ -19,11 +19,6 @@
     },
     "groups": [
         {
-            "name": "scanlocation",
-            "displayName": "Scan Location",
-            "isExpanded": true
-        },
-        {
             "name": "scanconfiguration",
             "displayName": "Scan configuration",
             "isExpanded": true
@@ -31,6 +26,11 @@
         {
             "name": "scanoptions",
             "displayName": "Scan options",
+            "isExpanded": false
+        },
+        {
+            "name": "reporting",
+            "displayName": "Reporting",
             "isExpanded": false
         },
         {
@@ -52,7 +52,6 @@
             "defaultValue": "$(Build.SourcesDirectory)",
             "required": true,
             "helpMarkDown": "Specify the location to scan. Defaults to your sources directory.",
-            "groupName": "scanlocation"
         },
         {
             "name": "configtype",
@@ -131,7 +130,7 @@
             "label": "Fail the task if secrets are found.",
             "defaultValue": "true",
             "required": false,
-            "groupName": "behaviour"
+            "groupName": "reporting"
         },
         {
             "name": "uploadresults",
@@ -140,21 +139,21 @@
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "Check this option if you want to upload the results as an artifact.",
-            "groupName": "behaviour"
+            "groupName": "reporting"
         },
         {
             "name": "reportformat",
             "type": "pickList",
             "label": "Report format",
-            "defaultValue": "json",
+            "defaultValue": "sarif",
             "required": false,
             "options": {
                 "json": "json",
                 "sarif": "sarif",
                 "csv": "csv"
             },
-            "helpMarkDown": "Select a report format: json, sarif, csv (default: json)",
-            "groupName": "behaviour"
+            "helpMarkDown": "Select a report format: json, sarif, csv (default: sarif)",
+            "groupName": "reporting"
         },
         {
             "name": "loglevel",
@@ -182,20 +181,12 @@
             "groupName": "behaviour"
         },
         {
-            "name": "taskfailonexecutionerror",
-            "type": "boolean",
-            "label": "Fail the task if an execution error or download error occurs.",
-            "defaultValue": "true",
-            "required": false,
-            "groupName": "gitleakstool"
-        },
-        {
             "name": "version",
             "type": "string",
             "label": "Gitleaks version",
             "defaultValue": "latest",
             "required": false,
-            "helpMarkDown": "Specify the version of Gitleaks to use.",
+            "helpMarkDown": "Specify the version of Gitleaks to use. Must be minimal major version 8",
             "groupName": "gitleakstool"
         },
         {
@@ -204,6 +195,14 @@
             "label": "Gitleaks custom tool location",
             "required": false,
             "helpMarkDown": "Specify the custom directory of Gitleaks, when provided, Gitleaks will not be downloaded.",
+            "groupName": "gitleakstool"
+        },
+        {
+            "name": "taskfailonexecutionerror",
+            "type": "boolean",
+            "label": "Fail the task if a task (this wrapper) error occurs.",
+            "defaultValue": "true",
+            "required": false,
             "groupName": "gitleakstool"
         }
     ],
@@ -220,10 +219,6 @@
         "LogOptionsFound": "Log options is set as input, scanmode is ignored",
         "BuildReasonPullRequest": "This build is run as pre-validation. Only commits belonging to this Pull Request are scanned.",
         "PreValidationBuildInvallid": "Scanmode is prevalidation, however, this task is not run as part of a pull request.",
-
-
-
-        
         "ResultError": "Secrets found or error encountered when running Gitleaks. See log and report for details.",
         "ResultSuccess": "Good job! No leaks.",
         "ScanFolder": "Scan Folder is set to %s",
@@ -240,7 +235,6 @@
         "GettingUrl": "Getting %s to find latest version of %s",
         "ReleaseInfo": "Downloaded release info: %s",
         "CommitsFile": "CommitsFile is set to  %s",
-
         "Commits": "The following commits will be scanned: %s",
         "GetEndpointUrlEmpty": "GetEndpointUrl %s is empty",
         "GetEndpointAuthorizationParameterEmpty": "GetEndpointAuthorizationParameter %s is empty",
@@ -248,7 +242,6 @@
         "InputEmpty": "Input %s is empty",
         "AdoConnectionError": "Connection cannot be made to Azure DevOps.",
         "GitLeaksNotFound": "Gitleaks cannot be found at %s",
-
         "HelpOnSecretsFound": "See https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository for information how to remove secrets.",
         "GitleaksOutput": "Gitleaks console output:",
         "OfflineAgent": "The agent has no internet connection, searching for toolversion to use on the agent.",
