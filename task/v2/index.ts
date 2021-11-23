@@ -1,7 +1,7 @@
 import * as path from 'path'
 import taskLib = require('azure-pipelines-task-lib/task')
 import tr = require('azure-pipelines-task-lib/toolrunner')
-import { AzureDevOpsAPI } from './AzureDevOpsAPI'
+import { AzureDevOpsAPI, CommitDiff } from './AzureDevOpsAPI'
 import { GitleaksTool } from './gitleakstool'
 import { getAzureDevOpsInput, getAzureDevOpsVariable, replacePathSlashes } from './helpers'
 import Path = require('path')
@@ -16,40 +16,27 @@ async function run() {
 
     //Get inputs on Task Behaviour
     const scanFolderPath = getAzureDevOpsInput('scanfolder')
-    const gitleaksArguments = taskLib.getInput('arguments')
+    const logLevel = getAzureDevOpsInput('loglevel')
     const reportFormat = getAzureDevOpsInput('reportformat')
-    const depth = Number(taskLib.getInput('depth'))
-
     const reportPath = getReportPath(reportFormat)
 
     // Get Tool
     const gitleaksTool = await new GitleaksTool().getGitLeaksTool()
     const toolRunner: tr.ToolRunner = new tr.ToolRunner(gitleaksTool)
-    
-    // Get Commits
-    console.log()
-    const commitsFile = await getCommitsFileFromAzureDevOpsAPI();
 
-    toolRunner.argIf(scanFolderPath, [`--path=${replacePathSlashes(scanFolderPath)}`])
-    toolRunner.argIf(reportPath, [`--report=${replacePathSlashes(reportPath)}`])
-    toolRunner.argIf(reportPath, [`--format=${reportFormat}`])
-    toolRunner.argIf((getConfigPathType() !== undefined), [`${getConfigPathType()}=${getConfigFilePath()}`])
-    toolRunner.argIf(taskLib.getBoolInput('nogit'), ['--no-git'])
-    toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
+    toolRunner.arg['detect']
+    toolRunner.argIf((getConfigFilePath() !== undefined), [`--config ${getConfigFilePath()}`])
+    toolRunner.arg([`--log-level ${logLevel}`])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    toolRunner.argIf(commitsFile, [`--commits-file=${replacePathSlashes(commitsFile!)}`])
-    toolRunner.argIf(depth, [`--depth=${depth}`])
+    toolRunner.arg([`--report-format ${reportFormat}`])
+    toolRunner.arg([`--report-path ${replacePathSlashes(reportPath)}`])
+    toolRunner.arg([`--source ${replacePathSlashes(scanFolderPath)}`])
 
-    // Process extra arguments
-    if (gitleaksArguments) {
-      // Split on argument delimiter
-      const argumentArray = gitleaksArguments.split('--')
-      argumentArray.shift()
-      for (const arg of argumentArray) {
-        toolRunner.arg([`--${replacePathSlashes(arg).trim()}`])
-      }
-    }
+    const scanMode = getAzureDevOpsInput('scanmode')
+    const logOptions = await determineLogOptions(scanMode);
+    toolRunner.argIf(logOptions, [`--log-opts="${logOptions}"`])
+    toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
+    toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
 
     console.log()
     console.log(taskLib.loc('GitleaksOutput'))
@@ -71,6 +58,34 @@ async function run() {
 
 run()
 
+async function determineLogOptions(scanMode: string): Promise<string | undefined> {
+
+  const logoptions = taskLib.getInput('logoptions')
+  const buildReason = getAzureDevOpsVariable('Build.Reason')
+  if (logoptions) {
+    taskLib.warning(taskLib.loc('LogOptionsFound'))
+    return logoptions
+  }
+  else {
+    const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
+    if (scanMode === "all") { return undefined }
+    else if (scanMode === "prevalidationbuild") {
+      if (buildReason === 'PullRequest') {
+        console.log(taskLib.loc('BuildReasonPullRequest'))
+        const commitDiff = await azureDevOpsAPI.getPullRequestCommits()
+        return `--all ${commitDiff.firstCommit}..${commitDiff.lastCommit}`
+      }
+      else { throw new Error(taskLib.loc('PreValidationBuildInvallid')) }
+    }
+    else if (scanMode === "changes") {
+      const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
+      const commitDiff = await azureDevOpsAPI.getBuildChangesCommits(1000)
+      return `--all ${commitDiff.firstCommit}..${commitDiff.lastCommit}`
+    }
+    return undefined
+  }
+}
+
 async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath: string, reportformat: string): Promise<void> {
   const taskfail = taskLib.getBoolInput('taskfail')
   const uploadResult = taskLib.getBoolInput('uploadresults')
@@ -80,7 +95,7 @@ async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath:
     if (uploadResult) { await uploadResultsToAzureDevOps(reportPath, reportformat) }
     if (taskfail) { taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('ResultError')) }
     else { taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultError')) }
-    console.warn(taskLib.loc('HelpOnSecretsFound'))
+    taskLib.warning(taskLib.loc('HelpOnSecretsFound'))
   }
 }
 
@@ -94,50 +109,17 @@ async function uploadResultsToAzureDevOps(reportPath: string, reportFormat: stri
   }
 }
 
-async function getCommitsFileFromAzureDevOpsAPI(): Promise<string | undefined> {
-  const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
-  const buildReason = getAzureDevOpsVariable('Build.Reason')
-  const scanonlychanges = taskLib.getBoolInput('scanonlychanges')
-  const prevalidationbuild = taskLib.getBoolInput('prevalidationbuild')
-
-  const depth = Number(taskLib.getInput('depth'))
-  if (prevalidationbuild && buildReason === 'PullRequest') {
-    console.log(taskLib.loc('BuildReasonPullRequest'))
-    const commitsFile = await azureDevOpsAPI.getPullRequestCommits()
-    if (scanonlychanges || depth) { console.warn(taskLib.loc('BuildReasonPullRequestWarning')) }
-    return commitsFile
-  }
-  else if (scanonlychanges) {
-    const numberOfCommits = (depth !== undefined) ? Number(depth) : 1000
-    const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
-    const commitsFile = await azureDevOpsAPI.getBuildChangesCommits(numberOfCommits)
-    return commitsFile
-  }
-  return undefined
-}
-
 function getReportPath(reportFormat: string): string {
   const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
   const reportPath = Path.join(agentTempDirectory, `gitleaks-report-${Guid.create()}.${reportFormat}`)
   return reportPath
 }
 
-function getConfigPathType(): string | undefined {
-  const nogit = taskLib.getBoolInput('nogit')
-  const configType = getAzureDevOpsInput('configtype')
-
-  if (configType.toLowerCase() === 'default') return undefined
-  if (configType.toLowerCase() === 'custom' && !nogit) {
-    return `--repo-config-path`
-  }
-  else return `--config-path`
-}
-
 function getConfigFilePath(): string | undefined {
   const configType = getAzureDevOpsInput('configtype')
   const predefinedConfigFile = taskLib.getInput('predefinedconfigfile')
   const configfile = taskLib.getInput('configfile')
-  
+
   if (configType.toLowerCase() === 'default') return undefined
   else if (configType.toLowerCase() === 'predefined' && predefinedConfigFile !== undefined) {
     return replacePathSlashes(Path.join(__dirname, 'configs', predefinedConfigFile))

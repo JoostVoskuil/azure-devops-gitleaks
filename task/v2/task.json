@@ -55,15 +55,6 @@
             "groupName": "scanlocation"
         },
         {
-            "name": "nogit",
-            "type": "boolean",
-            "label": "No Git",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Treat git repos as plain directories.",
-            "groupName": "scanlocation"
-        },
-        {
             "name": "configtype",
             "type": "pickList",
             "label": "Configuration Type",
@@ -95,57 +86,43 @@
             "name": "configfile",
             "type": "string",
             "label": "Config file",
-            "defaultValue": "$(Build.SourcesDirectory)/config/gitleaks.toml",
+            "defaultValue": "$(Build.SourcesDirectory)/.gitleaks.toml",
             "required": true,
             "helpMarkDown": "Specify a custom config file.",
             "visibleRule": "configtype=custom",
             "groupName": "scanconfiguration"
         },
         {
-            "name": "scanonlychanges",
+            "name": "scanmode",
+            "type": "pickList",
+            "label": "Commits to scan mode",
+            "defaultValue": "all",
+            "required": false,
+            "options": {
+                "all": "All commits",
+                "prevalidationbuild": "Commits done part of the pull request (pre-validation build)",
+                "changes": "Commits done between this build and previous build.",
+                "nogit": "No commits (no-git scan)"
+            },
+            "helpMarkDown": "Specify if you want to use the default, predefined config or a custom config.",
+            "groupName": "scanoptions"
+        },
+        {
+            "name": "logoptions",
             "type": "boolean",
-            "label": "Scan only changes since last build",
-            "helpMarkDown": "Will fetch the commits since last succesful build from the Azure DevOps Api.",
+            "label": "--log-opts parameters",
+            "helpMarkDown": "Provide log-opts arguments to Gitleaks",
             "defaultValue": "false",
             "required": false,
-            "visibleRule": "nogit=false",
-            "groupName": "scanoptions"
-        },
-        {
-            "name": "prevalidationbuild",
-            "type": "boolean",
-            "label": "Enable pre-validation pipelines",
-            "helpMarkDown": "When true and when the build is run as a pull request it only scans the commits that are merged from the pullrequest.",
-            "defaultValue": "true",
-            "required": false,
-            "visibleRule": "nogit=false",
-            "groupName": "scanoptions"
-        },
-        {
-            "name": "depth",
-            "type": "int",
-            "label": "Number of commits to scan",
-            "helpMarkDown": "Limit the number of commits to scan.",
-            "required": false,
-            "visibleRule": "nogit=false",
             "groupName": "scanoptions"
         },
         {
             "name": "redact",
             "type": "boolean",
             "label": "Redact",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "required": false,
             "helpMarkDown": "Check this option if you want to redact secrets from log messages and leaks.",
-            "groupName": "scanoptions"
-        },
-        {
-            "name": "arguments",
-            "type": "string",
-            "label": "Extra gitleaks arguments",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Specify extra Gitleaks arguments.",
             "groupName": "scanoptions"
         },
         {
@@ -155,14 +132,6 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "behaviour"
-        },
-        {
-            "name": "taskfailonexecutionerror",
-            "type": "boolean",
-            "label": "Fail the task if an execution error or download error occurs.",
-            "defaultValue": "true",
-            "required": false,
-            "groupName": "gitleakstool"
         },
         {
             "name": "uploadresults",
@@ -188,6 +157,22 @@
             "groupName": "behaviour"
         },
         {
+            "name": "loglevel",
+            "type": "pickList",
+            "label": "Log Level",
+            "defaultValue": "info",
+            "required": false,
+            "options": {
+                "debug": "Debug",
+                "info": "Info",
+                "warn": "Warn",
+                "error": "Error",
+                "fatal": "Fatal"
+            },
+            "helpMarkDown": "Select the gitleaks log level (default is info)",
+            "groupName": "behaviour"
+        },
+        {
             "name": "verbose",
             "type": "boolean",
             "label": "Verbose output",
@@ -195,6 +180,14 @@
             "required": false,
             "helpMarkDown": "Check this option if you want gitleaks to print verbose output.",
             "groupName": "behaviour"
+        },
+        {
+            "name": "taskfailonexecutionerror",
+            "type": "boolean",
+            "label": "Fail the task if an execution error or download error occurs.",
+            "defaultValue": "true",
+            "required": false,
+            "groupName": "gitleakstool"
         },
         {
             "name": "version",
@@ -224,7 +217,12 @@
         "ThanksToJesseHouwing": "Thanks to Jesse Houwing (https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.",
         "MinimalAllowdVersion": "The minimal allowed major version of Gitleaks supported by this task is version 8. Specified version is %s",
         "DetectedChanges": "Detected %s Git change(s) for this build. First commit is %s, Last commit is %s",
-        
+        "LogOptionsFound": "Log options is set as input, scanmode is ignored",
+        "BuildReasonPullRequest": "This build is run as pre-validation. Only commits belonging to this Pull Request are scanned.",
+        "PreValidationBuildInvallid": "Scanmode is prevalidation, however, this task is not run as part of a pull request.",
+
+
+
         
         "ResultError": "Secrets found or error encountered when running Gitleaks. See log and report for details.",
         "ResultSuccess": "Good job! No leaks.",
@@ -250,8 +248,7 @@
         "InputEmpty": "Input %s is empty",
         "AdoConnectionError": "Connection cannot be made to Azure DevOps.",
         "GitLeaksNotFound": "Gitleaks cannot be found at %s",
-        "BuildReasonPullRequest": "This build is run as pre-validation. Only commits belonging to this Pull Request are scanned.",
-        "BuildReasonPullRequestWarning": "Scanonlyforchanges and depth are ignored.",
+
         "HelpOnSecretsFound": "See https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository for information how to remove secrets.",
         "GitleaksOutput": "Gitleaks console output:",
         "OfflineAgent": "The agent has no internet connection, searching for toolversion to use on the agent.",

@@ -22,8 +22,8 @@ stages:
     
     - template: build-and-test.yml
       parameters:
-        path: task/v1
-        name: Gitleaks V1
+        path: task/v2
+        name: Gitleaks V2
   
     - task: TfxInstaller@3
       displayName: 'Use Node CLI for Azure DevOps'
