@@ -53,8 +53,8 @@ export class GitleaksTool {
   }
 
   private async getToolFromOnlineAgentBasedOnLatest(version): Promise<string> {
-    const toolExecutable = this.getToolFileName(version)
     const latestVersionAvailableOnGitHub = await this.getLatestToolVersionFromGitHub()
+    const toolExecutable = this.getToolFileName(latestVersionAvailableOnGitHub)
     const versionOnAgent = await this.findToolVersionOnAgent(version)
     if (versionOnAgent && versionOnAgent === latestVersionAvailableOnGitHub) {
       console.log(taskLib.loc('OnlineAgentHasLatestVersion', latestVersionAvailableOnGitHub))
