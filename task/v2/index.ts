@@ -25,12 +25,12 @@ async function run() {
     const toolRunner: tr.ToolRunner = new tr.ToolRunner(gitleaksTool)
 
     toolRunner.arg([`detect`])
-    toolRunner.argIf((getConfigFilePath() !== undefined), [`--config ${getConfigFilePath()}`])
-    toolRunner.arg([`--log-level ${logLevel}`])
+    toolRunner.argIf((getConfigFilePath() !== undefined), [`--config=${getConfigFilePath()}`])
+    toolRunner.arg([`--log-level=${logLevel}`])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
-    toolRunner.arg([`--report-format ${reportFormat}`])
-    toolRunner.arg([`--report-path ${replacePathSlashes(reportPath)}`])
-    toolRunner.arg([`--source ${replacePathSlashes(scanFolderPath)}`])
+    toolRunner.arg([`--report-format=${reportFormat}`])
+    toolRunner.arg([`--report-path=${replacePathSlashes(reportPath)}`])
+    toolRunner.arg([`--source=${replacePathSlashes(scanFolderPath)}`])
 
     const scanMode = getAzureDevOpsInput('scanmode')
     const logOptions = await determineLogOptions(scanMode);
