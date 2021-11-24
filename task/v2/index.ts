@@ -17,6 +17,7 @@ async function run() {
     //Get inputs on Task Behaviour
     const scanFolderPath = getAzureDevOpsInput('scanfolder')
     const reportFormat = getAzureDevOpsInput('reportformat')
+    const debug = taskLib.getVariable('system.debug')
     const reportPath = getReportPath(reportFormat)
 
     // Determine scanmode
@@ -31,10 +32,11 @@ async function run() {
     toolRunner.arg([`detect`])
     toolRunner.argIf(getConfigFilePath(), [`--config=${getConfigFilePath()}`])
     toolRunner.arg([`--source=${replacePathSlashes(scanFolderPath)}`])
+    toolRunner.argIf(logOptions, [`--log-opts="${logOptions}"`])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
+    toolRunner.argIf(debug ==="true", ['--log-level=debug'])
     toolRunner.arg([`--report-format=${reportFormat}`])
     toolRunner.arg([`--report-path=${replacePathSlashes(reportPath)}`])
-    toolRunner.argIf(logOptions, [`--log-opts="${logOptions}"`])
     toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
 
@@ -72,7 +74,7 @@ async function determineLogOptions(scanMode: string): Promise<string | undefined
     if (scanMode === "all") { return undefined }
     else if (scanMode === "prevalidationbuild" && buildReason === 'PullRequest') { return await getLogOptionsForPreValidationBuild() }
     else if (scanMode === "prevalidationbuild") { throw new Error(taskLib.loc('PreValidationBuildInvallid')) }
-    else if (scanMode === "changes") { return await getLogOptionsForBuildDelta(1000) }
+    else if (scanMode === "delta") { return await getLogOptionsForBuildDelta(1000) }
     else if (scanMode === "smart" && buildReason === 'PullRequest') { return await getLogOptionsForPreValidationBuild() }
     else if (scanMode === "smart" && buildReason === 'Schedule') { return await getLogOptionsForBuildDelta(10000) }
     else if (scanMode === "smart")  { return await getLogOptionsForBuildDelta(1000) }
