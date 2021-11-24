@@ -54,7 +54,7 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
 
 ## How do I remove a secret from git's history?
 
-[Github](https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository) has a great article on this using the [BFG Repo Cleaner](https://rtyley.github.io/bfg-repo-cleaner/).
+[GitHub](https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository) has a great article on this using the [BFG Repo Cleaner](https://rtyley.github.io/bfg-repo-cleaner/).
 
 ## Changelog
 
