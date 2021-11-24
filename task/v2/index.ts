@@ -74,7 +74,7 @@ async function determineLogOptions(scanMode: string): Promise<string | undefined
     if (scanMode === "all") { return undefined }
     else if (scanMode === "prevalidationbuild" && buildReason === 'PullRequest') { return await getLogOptionsForPreValidationBuild() }
     else if (scanMode === "prevalidationbuild") { throw new Error(taskLib.loc('PreValidationBuildInvallid')) }
-    else if (scanMode === "delta") { return await getLogOptionsForBuildDelta(1000) }
+    else if (scanMode === "changes") { return await getLogOptionsForBuildDelta(1000) }
     else if (scanMode === "smart" && buildReason === 'PullRequest') { return await getLogOptionsForPreValidationBuild() }
     else if (scanMode === "smart" && buildReason === 'Schedule') { return await getLogOptionsForBuildDelta(10000) }
     else if (scanMode === "smart")  { return await getLogOptionsForBuildDelta(1000) }
@@ -86,14 +86,14 @@ async function getLogOptionsForPreValidationBuild(): Promise<string>{
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('PreValidationScan'))
   const commitDiff = await azureDevOpsAPI.getPullRequestCommits()
-  return `--all ${commitDiff.firstCommit}..${commitDiff.lastCommit}`
+  return `--all ${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
 }
 
 async function getLogOptionsForBuildDelta(limit: number): Promise<string>{
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('DeltaScan', limit))
   const commitDiff = await azureDevOpsAPI.getBuildChangesCommits(limit)
-  return `--all ${commitDiff.firstCommit}..${commitDiff.lastCommit}`
+  return `--all ${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
 }
 
 async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath: string, reportformat: string): Promise<void> {
