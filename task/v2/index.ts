@@ -30,10 +30,10 @@ async function run() {
     // Set Gitleaks arguments
     toolRunner.arg([`detect`])
     toolRunner.argIf(getConfigFilePath(), [`--config=${getConfigFilePath()}`])
+    toolRunner.arg([`--source=${replacePathSlashes(scanFolderPath)}`])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
     toolRunner.arg([`--report-format=${reportFormat}`])
     toolRunner.arg([`--report-path=${replacePathSlashes(reportPath)}`])
-    toolRunner.arg([`--source=${replacePathSlashes(scanFolderPath)}`])
     toolRunner.argIf(logOptions, [`--log-opts="${logOptions}"`])
     toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
