@@ -82,7 +82,10 @@ async function determineLogOptions(scanMode: string): Promise<string | undefined
     else if (scanMode === "smart")  { logOptions =  await getLogOptionsForBuildDelta(1000) }
     else throw new Error(taskLib.loc('UnknownScanMode', scanMode))
 
-    if (!logOptions) { taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('NoChangesDetected'), true)  }
+    if (!logOptions) { 
+      taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('NoChangesDetected'), true)
+      return process.exit(0) 
+    }
     return logOptions
   }
 }
