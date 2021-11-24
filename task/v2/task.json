@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 17
     },
     "groups": [
         {
@@ -99,10 +99,10 @@
             "required": false,
             "options": {
                 "all": "All commits",
-                "prevalidationbuild": "Pre-validation scan; Only commits part of a Pull Request",
-                "changes": "Changes scan; Only commits done between this build and previous build.",
-                "smart": "Smart scanning based on build-reason",
-                "nogit": "Plain scan; no-git"
+                "prevalidationbuild": "Pre-validation (pull request)",
+                "changes": "Changes",
+                "smart": "Smart",
+                "nogit": "Plain"
             },
             "helpMarkDown": "Specify if you want to use the default, predefined config or a custom config.",
             "groupName": "scanoptions"

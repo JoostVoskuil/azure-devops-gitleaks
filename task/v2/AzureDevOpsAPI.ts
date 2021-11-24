@@ -31,8 +31,8 @@ export class AzureDevOpsAPI {
     const filteredCommits = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined))
 
     const commitDiff: CommitDiff = {
-      firstCommit: filteredCommits[0].id,
-      lastCommit: filteredCommits[filteredCommits.length-1].id
+      lastCommit: filteredCommits[0].id,
+      firstCommit: filteredCommits[filteredCommits.length-1].id
     }
     taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
     return commitDiff
@@ -49,8 +49,8 @@ export class AzureDevOpsAPI {
     const filteredCommits = commits.filter((x => x.commitId !== undefined))
 
     const commitDiff: CommitDiff = {
-      firstCommit: filteredCommits[0].commitId,
-      lastCommit: filteredCommits[filteredCommits.length-1].commitId
+      lastCommit: filteredCommits[0].commitId,
+      firstCommit: filteredCommits[filteredCommits.length-1].commitId
     }
     taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
     return commitDiff
