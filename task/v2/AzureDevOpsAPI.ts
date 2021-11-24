@@ -30,7 +30,7 @@ export class AzureDevOpsAPI {
     const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, buildId, undefined, numberOfCommits)
     if (!changes) { return undefined }
     const filteredCommits = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined))
-
+    if (!filteredCommits) { return undefined }
     const commitDiff: CommitDiff = {
       lastCommit: filteredCommits[0].id,
       firstCommit: filteredCommits[filteredCommits.length-1].id
@@ -49,7 +49,7 @@ export class AzureDevOpsAPI {
     const commits: GitCommitRef[] = await gitApi.getPullRequestCommits(repositoryId, pullRequestId, this.teamProject)
     if (!commits) { return undefined }
     const filteredCommits = commits.filter((x => x.commitId !== undefined))
-
+    if (!filteredCommits) { return undefined }
     const commitDiff: CommitDiff = {
       lastCommit: filteredCommits[0].commitId,
       firstCommit: filteredCommits[filteredCommits.length-1].commitId

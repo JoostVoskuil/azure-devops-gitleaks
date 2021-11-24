@@ -64,7 +64,7 @@ run()
 async function determineLogOptions(scanMode: string): Promise<string | undefined> {
   const logoptions = taskLib.getInput('logoptions')
   const buildReason = getAzureDevOpsVariable('Build.Reason')
-  console.log(taskLib.loc('BuildReason'))
+  console.log(taskLib.loc('BuildReason', buildReason))
 
   if (logoptions) {
     console.log(taskLib.loc('LogOptionsFound'))
