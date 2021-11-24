@@ -28,7 +28,7 @@ export class AzureDevOpsAPI {
     const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
     const buildApi: BuildApi = await connection.getBuildApi()
     const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, buildId, undefined, numberOfCommits)
-    taskLib.debug(taskLib.loc('ScanningCommits', changes.length))
+    taskLib.debug(taskLib.loc('DetectedChanges', changes.length))
     if (changes.length === 0) { return undefined }
     const filteredCommits = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined))
     const commitDiff: CommitDiff = {

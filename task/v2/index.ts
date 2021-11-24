@@ -49,7 +49,7 @@ async function run() {
 
     // Execute and determine outcome
     const result: number = await toolRunner.exec(options)
-    await setTaskOutcomeBasedOnGitLeaksResult(result, reportPath, reportFormat)
+    await setTaskOutcomeBasedOnGitLeaksResult(result, reportPath)
   }
   // Error handling on task downloading and execution
   catch (err) {
@@ -62,33 +62,25 @@ async function run() {
 run()
 
 async function determineLogOptions(scanMode: string): Promise<string | undefined> {
-  const logoptions = taskLib.getInput('logoptions')
   const buildReason = getAzureDevOpsVariable('Build.Reason')
-  console.log(taskLib.loc('BuildReason', buildReason))
+  let logOptions
 
-  if (logoptions) {
-    console.log(taskLib.loc('LogOptionsFound'))
-    return logoptions
-  }
-  else {
-    let logOptions
-    if (scanMode === "all") { return undefined }
-    else if (scanMode === "nogit") { return undefined }
-    else if (scanMode === "prevalidationbuild" && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() }
-    else if (scanMode === "prevalidationbuild") { throw new Error(taskLib.loc('PreValidationBuildInvallid')) }
-    else if (scanMode === "changes") { logOptions = await getLogOptionsForBuildDelta(1000) }
-    else if (scanMode === "smart" && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() }
-    else if (scanMode === "smart" && buildReason === 'Schedule') { logOptions = await getLogOptionsForBuildDelta(10000) }
-    else if (scanMode === "smart") { logOptions = await getLogOptionsForBuildDelta(1000) }
-    else throw new Error(taskLib.loc('UnknownScanMode', scanMode))
+  if (scanMode === "all") { return undefined }
+  else if (scanMode === "nogit") { return undefined }
+  else if (scanMode === "custom") { logOptions = taskLib.getInput('logoptions') }
+  else if (scanMode === "prevalidationbuild" && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() }
+  else if (scanMode === "prevalidationbuild") { throw new Error(taskLib.loc('PreValidationBuildInvallid')) }
+  else if (scanMode === "changes") { logOptions = await getLogOptionsForBuildDelta(1000) }
+  else if (scanMode === "smart" && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() }
+  else if (scanMode === "smart" && buildReason !== 'PullRequest') { logOptions = await getLogOptionsForBuildDelta(1000) }
+  else throw new Error(taskLib.loc('UnknownScanMode', scanMode))
 
-    if (!logOptions) {
-      console.log(taskLib.loc('NoChangesDetected'))
-      taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('NoChangesDetected'), true)
-      return process.exit(0)
-    }
-    return logOptions
+  if (!logOptions) {
+    console.log(taskLib.loc('NoCommitsToScan'))
+    taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('NoCommitsToScan'), true)
+    return process.exit(0)
   }
+  return logOptions
 }
 
 async function getLogOptionsForPreValidationBuild(): Promise<string | undefined> {
@@ -107,32 +99,27 @@ async function getLogOptionsForBuildDelta(limit: number): Promise<string | undef
   return `${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
 }
 
-async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath: string, reportformat: string): Promise<void> {
+async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath: string): Promise<void> {
   const taskfail = taskLib.getBoolInput('taskfail')
   const uploadResult = taskLib.getBoolInput('uploadresults')
 
   if (exitCode === 0) { taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('ResultSuccess')) }
   else {
-    if (uploadResult) { await uploadResultsToAzureDevOps(reportPath, reportformat) }
+    if (uploadResult) { await uploadResultsToAzureDevOps(reportPath) }
+    taskLib.error(taskLib.loc('HelpOnSecretsFound'))
     if (taskfail) {
-      taskLib.error(taskLib.loc('HelpOnSecretsFound'))
       taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('ResultError'))
     }
     else {
-      taskLib.warning(taskLib.loc('HelpOnSecretsFound'))
       taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultError'))
     }
-
   }
 }
 
-async function uploadResultsToAzureDevOps(reportPath: string, reportFormat: string): Promise<void> {
-  let containerFolder: string | undefined
+async function uploadResultsToAzureDevOps(reportPath: string): Promise<void> {
   if (taskLib.exist(reportPath)) {
-    if (reportFormat === 'sarif') { containerFolder = 'CodeAnalysisLogs' }
-    else { containerFolder = 'gitleaks' }
-    taskLib.debug(taskLib.loc('UploadResults', containerFolder))
-    taskLib.uploadArtifact(containerFolder, reportPath, containerFolder)
+    taskLib.debug(taskLib.loc('UploadResults', 'CodeAnalysisLogs'))
+    taskLib.uploadArtifact('Gitleaks', reportPath, 'CodeAnalysisLogs')
   }
 }
 

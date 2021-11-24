@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 25
+        "Patch": 26
     },
     "groups": [
         {
@@ -100,11 +100,12 @@
             "options": {
                 "all": "All commits",
                 "prevalidationbuild": "Pre-validation (pull request)",
-                "changes": "Changes",
+                "changes": "Only changes between builds",
                 "smart": "Smart",
-                "nogit": "Plain"
+                "nogit": "Flat (no-git)",
+                "custom": "Custom Log options"
             },
-            "helpMarkDown": "Specify if you want to use the default, predefined config or a custom config.",
+            "helpMarkDown": "Set the mode of what the scope is of the commits to be scanned.",
             "groupName": "scanoptions"
         },
         {
@@ -113,6 +114,7 @@
             "label": "--log-opts parameters",
             "helpMarkDown": "Provide log-opts arguments to Gitleaks",
             "required": false,
+            "visibleRule": "scanmode=custom",
             "groupName": "scanoptions"
         },
         {
@@ -202,9 +204,8 @@
         "DetectedChanges": "Detected %s Git commit(s)",
         "ScanningCommits": "Scanning for %s Git commit(s) for this build. First commit is %s, Last commit is %s",
         "LogOptionsFound": "Log options is set as input, scanmode is ignored",
-        "PreValidationScan": "This task is run as part of a pre-validation build. Only commits belonging to this Pull Request are scanned.",
-        "BuildReason": "This build is running with reason '%s'.",
-        "ChangeScan": "Scanmode is 'change'. Only commits are scanned that are ommited between this build and the previous build with a max of %s commits.",
+        "PreValidationScan": "Only commits belonging to this Pull Request are scanned.",
+        "ChangeScan": "Only commits are scanned that are ommited between this build and the previous build with a max of %s commits.",
         "PreValidationBuildInvallid": "Scanmode is 'prevalidation', however, this task is not run as part of a pull request.",
         "ResultError": "Secrets found or error encountered when running Gitleaks. See log and report for details.",
         "ResultSuccess": "Good job! No leaks.",
@@ -233,12 +234,12 @@
         "OfflineAgent": "The agent has no internet connection, searching for toolversion to use on the agent.",
         "OfflineAgentToolNotAvailable": "The agent has no internet connection and the specified Gitleaks tool version is not available on the agent.",
         "OnlineAgentHasLatestVersion": "The latest version of the tool is available in the toolcache. Version is %s",
-        "OnlineAgentHasNotTheLatestVersion": "The latest allowed version of the tool is not available in the toolcache. The latest allowed version is %s and needs to be downloaded.",
+        "OnlineAgentHasNotTheLatestVersion": "The latest version of Gitleaks (%s) must be downloaded...",
         "NoToolcacheDownloading": "Version %s is not available in toolcache. Downloading version %s.",
         "AvailableInToolcache": "Version %s of gitleaks is already available in toolcache.",
         "DownloadFromGitHub": "Downloading %s from GitHub.",
         "CachedVersions": "Cached versions of Gitleaks on the agent are: %s",
-        "NoChangesDetected": "No changes detected",
+        "NoCommitsToScan": "No commits to scan; exiting.",
         "UnknownScanMode": "Unknown scanmode: %s"
     }
 }

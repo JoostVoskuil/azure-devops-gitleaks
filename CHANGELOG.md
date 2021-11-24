@@ -5,12 +5,13 @@
 ### 2.0
 
 - Only support gitleaks 8 and up, please note that Gitleaks 8 does not provide binaries for 32-bit architectures
+- Made configuration of the task easier by providing a 'scanmode' picklist
 - Sarif is now default reporting option of the task
+- Reports will be uploaded to the 'CodeAnalysisLogs' artifact
 - Redact is now default turned on
 - GitleaksUdmCombo.toml is now set as default configuration file, combining gitleaks default configuration and the Credscan alike scan by Jesse Houwing
 - Since Gitleaks 8 is made simpler, removed the extra arguments input field, there are no extra inputs
 - Provided input field for additional log-options
-- Made configuration of the task easier by providing a 'scanmode' picklist
 
 ## Task version 1
 
