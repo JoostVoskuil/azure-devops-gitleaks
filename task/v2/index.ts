@@ -82,17 +82,19 @@ async function determineLogOptions(scanMode: string): Promise<string | undefined
   }
 }
 
-async function getLogOptionsForPreValidationBuild(): Promise<string>{
+async function getLogOptionsForPreValidationBuild(): Promise<string | undefined>{
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('PreValidationScan'))
   const commitDiff = await azureDevOpsAPI.getPullRequestCommits()
+  if (!commitDiff) return undefined
   return `${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
 }
 
-async function getLogOptionsForBuildDelta(limit: number): Promise<string>{
+async function getLogOptionsForBuildDelta(limit: number): Promise<string | undefined>{
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('DeltaScan', limit))
   const commitDiff = await azureDevOpsAPI.getBuildChangesCommits(limit)
+  if (!commitDiff) return undefined
   return `${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
 }
 
