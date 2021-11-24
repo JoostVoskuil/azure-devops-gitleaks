@@ -32,7 +32,7 @@ async function run() {
     toolRunner.arg([`detect`])
     toolRunner.argIf(getConfigFilePath(), [`--config=${getConfigFilePath()}`])
     toolRunner.arg([`--source=${replacePathSlashes(scanFolderPath)}`])
-    toolRunner.argIf(logOptions, [`--log-opts="${logOptions}"`])
+    toolRunner.argIf(logOptions, [`--log-opts=${logOptions}`])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
     toolRunner.argIf(debug ==="true", ['--log-level=debug'])
     toolRunner.arg([`--report-format=${reportFormat}`])
@@ -86,14 +86,14 @@ async function getLogOptionsForPreValidationBuild(): Promise<string>{
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('PreValidationScan'))
   const commitDiff = await azureDevOpsAPI.getPullRequestCommits()
-  return `--all ${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
+  return `${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
 }
 
 async function getLogOptionsForBuildDelta(limit: number): Promise<string>{
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('DeltaScan', limit))
   const commitDiff = await azureDevOpsAPI.getBuildChangesCommits(limit)
-  return `--all ${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
+  return `${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
 }
 
 async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath: string, reportformat: string): Promise<void> {
