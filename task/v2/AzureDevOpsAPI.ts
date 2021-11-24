@@ -29,8 +29,10 @@ export class AzureDevOpsAPI {
     const buildApi: BuildApi = await connection.getBuildApi()
     const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, buildId, undefined, numberOfCommits)
     if (!changes) { return undefined }
+    console.log(changes)
     const filteredCommits = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined))
     if (!filteredCommits) { return undefined }
+    console.log(filteredCommits)
     const commitDiff: CommitDiff = {
       lastCommit: filteredCommits[0].id,
       firstCommit: filteredCommits[filteredCommits.length-1].id
