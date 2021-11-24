@@ -97,7 +97,7 @@ async function getLogOptionsForPreValidationBuild(): Promise<string | undefined>
 
 async function getLogOptionsForBuildDelta(limit: number): Promise<string | undefined>{
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
-  console.log(taskLib.loc('DeltaScan', limit))
+  console.log(taskLib.loc('ChangeScan', limit))
   const commitDiff = await azureDevOpsAPI.getBuildChangesCommits(limit)
   if (!commitDiff) return undefined
   return `${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
