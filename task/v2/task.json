@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 24
+        "Patch": 25
     },
     "groups": [
         {
@@ -199,7 +199,8 @@
         "ThanksToZacharyRice": "Thanks to Zachary Rice (https://github.com/zricethezav) for creating and maintaining gitleaks.",
         "ThanksToJesseHouwing": "Thanks to Jesse Houwing (https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.",
         "MinimalAllowdVersion": "The minimal allowed major version of Gitleaks supported by this task is version 8. Specified version is %s",
-        "DetectedChanges": "Detected %s Git change(s) for this build. First commit is %s, Last commit is %s",
+        "DetectedChanges": "Detected %s Git commit(s)",
+        "ScanningCommits": "Scanning for %s Git commit(s) for this build. First commit is %s, Last commit is %s",
         "LogOptionsFound": "Log options is set as input, scanmode is ignored",
         "PreValidationScan": "This task is run as part of a pre-validation build. Only commits belonging to this Pull Request are scanned.",
         "BuildReason": "This build is running with reason '%s'.",

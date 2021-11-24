@@ -34,7 +34,7 @@ async function run() {
     toolRunner.arg([`--source=${replacePathSlashes(scanFolderPath)}`])
     toolRunner.argIf(logOptions, [`--log-opts=${logOptions}`])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
-    toolRunner.argIf(debug ==="true", ['--log-level=debug'])
+    toolRunner.argIf(debug === "true", ['--log-level=debug'])
     toolRunner.arg([`--report-format=${reportFormat}`])
     toolRunner.arg([`--report-path=${replacePathSlashes(reportPath)}`])
     toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
@@ -76,21 +76,22 @@ async function determineLogOptions(scanMode: string): Promise<string | undefined
     else if (scanMode === "nogit") { return undefined }
     else if (scanMode === "prevalidationbuild" && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() }
     else if (scanMode === "prevalidationbuild") { throw new Error(taskLib.loc('PreValidationBuildInvallid')) }
-    else if (scanMode === "changes") { logOptions =  await getLogOptionsForBuildDelta(1000) }
-    else if (scanMode === "smart" && buildReason === 'PullRequest') { logOptions =  await getLogOptionsForPreValidationBuild() }
-    else if (scanMode === "smart" && buildReason === 'Schedule') { logOptions =  await getLogOptionsForBuildDelta(10000) }
-    else if (scanMode === "smart")  { logOptions =  await getLogOptionsForBuildDelta(1000) }
+    else if (scanMode === "changes") { logOptions = await getLogOptionsForBuildDelta(1000) }
+    else if (scanMode === "smart" && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() }
+    else if (scanMode === "smart" && buildReason === 'Schedule') { logOptions = await getLogOptionsForBuildDelta(10000) }
+    else if (scanMode === "smart") { logOptions = await getLogOptionsForBuildDelta(1000) }
     else throw new Error(taskLib.loc('UnknownScanMode', scanMode))
 
-    if (!logOptions) { 
-      taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('NoChangesDetected'), true)
-      return process.exit(0) 
+    if (!logOptions) {
+      console.log(taskLib.loc('NoChangesDetected'))
+      taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('NoChangesDetected'), true)
+      return process.exit(0)
     }
     return logOptions
   }
 }
 
-async function getLogOptionsForPreValidationBuild(): Promise<string | undefined>{
+async function getLogOptionsForPreValidationBuild(): Promise<string | undefined> {
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('PreValidationScan'))
   const commitDiff = await azureDevOpsAPI.getPullRequestCommits()
@@ -98,7 +99,7 @@ async function getLogOptionsForPreValidationBuild(): Promise<string | undefined>
   return `${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
 }
 
-async function getLogOptionsForBuildDelta(limit: number): Promise<string | undefined>{
+async function getLogOptionsForBuildDelta(limit: number): Promise<string | undefined> {
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('ChangeScan', limit))
   const commitDiff = await azureDevOpsAPI.getBuildChangesCommits(limit)
