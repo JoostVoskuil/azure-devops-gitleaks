@@ -71,14 +71,19 @@ async function determineLogOptions(scanMode: string): Promise<string | undefined
     return logoptions
   }
   else {
+    let logOptions
     if (scanMode === "all") { return undefined }
-    else if (scanMode === "prevalidationbuild" && buildReason === 'PullRequest') { return await getLogOptionsForPreValidationBuild() }
+    else if (scanMode === "nogit") { return undefined }
+    else if (scanMode === "prevalidationbuild" && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() }
     else if (scanMode === "prevalidationbuild") { throw new Error(taskLib.loc('PreValidationBuildInvallid')) }
-    else if (scanMode === "changes") { return await getLogOptionsForBuildDelta(1000) }
-    else if (scanMode === "smart" && buildReason === 'PullRequest') { return await getLogOptionsForPreValidationBuild() }
-    else if (scanMode === "smart" && buildReason === 'Schedule') { return await getLogOptionsForBuildDelta(10000) }
-    else if (scanMode === "smart")  { return await getLogOptionsForBuildDelta(1000) }
-    return undefined
+    else if (scanMode === "changes") { logOptions =  await getLogOptionsForBuildDelta(1000) }
+    else if (scanMode === "smart" && buildReason === 'PullRequest') { logOptions =  await getLogOptionsForPreValidationBuild() }
+    else if (scanMode === "smart" && buildReason === 'Schedule') { logOptions =  await getLogOptionsForBuildDelta(10000) }
+    else if (scanMode === "smart")  { logOptions =  await getLogOptionsForBuildDelta(1000) }
+    else throw new Error(taskLib.loc('UnknownScanMode', scanMode))
+
+    if (!logOptions) { taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('NoChangesDetected'), true)  }
+    return logOptions
   }
 }
 
