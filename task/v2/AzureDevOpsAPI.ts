@@ -32,7 +32,7 @@ export class AzureDevOpsAPI {
 
     const commitDiff: CommitDiff = {
       firstCommit: filteredCommits[0].id,
-      lastCommit: filteredCommits[length-1].id
+      lastCommit: filteredCommits[filteredCommits.length-1].id
     }
     taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
     return commitDiff
@@ -50,7 +50,7 @@ export class AzureDevOpsAPI {
 
     const commitDiff: CommitDiff = {
       firstCommit: filteredCommits[0].commitId,
-      lastCommit: filteredCommits[length-1].commitId
+      lastCommit: filteredCommits[filteredCommits.length-1].commitId
     }
     taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
     return commitDiff

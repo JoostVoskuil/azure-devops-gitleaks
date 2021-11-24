@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 12
     },
     "groups": [
         {
@@ -95,9 +95,10 @@
             "name": "scanmode",
             "type": "pickList",
             "label": "Commits to scan mode",
-            "defaultValue": "all",
+            "defaultValue": "smart",
             "required": false,
             "options": {
+                "smart": "Smart scanning based on build-reason",
                 "all": "All commits",
                 "prevalidationbuild": "Commits done part of the pull request (pre-validation build)",
                 "changes": "Commits done between this build and previous build.",
@@ -155,22 +156,6 @@
             "groupName": "reporting"
         },
         {
-            "name": "loglevel",
-            "type": "pickList",
-            "label": "Log Level",
-            "defaultValue": "info",
-            "required": false,
-            "options": {
-                "debug": "Debug",
-                "info": "Info",
-                "warn": "Warn",
-                "error": "Error",
-                "fatal": "Fatal"
-            },
-            "helpMarkDown": "Select the gitleaks log level (default is info)",
-            "groupName": "behaviour"
-        },
-        {
             "name": "verbose",
             "type": "boolean",
             "label": "Verbose output",
@@ -216,7 +201,9 @@
         "MinimalAllowdVersion": "The minimal allowed major version of Gitleaks supported by this task is version 8. Specified version is %s",
         "DetectedChanges": "Detected %s Git change(s) for this build. First commit is %s, Last commit is %s",
         "LogOptionsFound": "Log options is set as input, scanmode is ignored",
-        "BuildReasonPullRequest": "This build is run as pre-validation. Only commits belonging to this Pull Request are scanned.",
+        "PreValidationScan": "This task is run as part of a pre-validation build. Only commits belonging to this Pull Request are scanned.",
+        "BuildReason": "This build is running with reason %s.",
+        "DeltaScan": "This task is run as part of a normal build. Only commits are scanned that are ommited between this build and the previous build with a max of %s commits.",
         "PreValidationBuildInvallid": "Scanmode is prevalidation, however, this task is not run as part of a pull request.",
         "ResultError": "Secrets found or error encountered when running Gitleaks. See log and report for details.",
         "ResultSuccess": "Good job! No leaks.",

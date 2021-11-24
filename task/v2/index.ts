@@ -1,7 +1,7 @@
 import * as path from 'path'
 import taskLib = require('azure-pipelines-task-lib/task')
 import tr = require('azure-pipelines-task-lib/toolrunner')
-import { AzureDevOpsAPI, CommitDiff } from './AzureDevOpsAPI'
+import { AzureDevOpsAPI } from './AzureDevOpsAPI'
 import { GitleaksTool } from './gitleakstool'
 import { getAzureDevOpsInput, getAzureDevOpsVariable, replacePathSlashes } from './helpers'
 import Path = require('path')
@@ -16,37 +16,40 @@ async function run() {
 
     //Get inputs on Task Behaviour
     const scanFolderPath = getAzureDevOpsInput('scanfolder')
-    const logLevel = getAzureDevOpsInput('loglevel')
     const reportFormat = getAzureDevOpsInput('reportformat')
     const reportPath = getReportPath(reportFormat)
+
+    // Determine scanmode
+    const scanMode = getAzureDevOpsInput('scanmode')
+    const logOptions = await determineLogOptions(scanMode);
 
     // Get Tool
     const gitleaksTool = await new GitleaksTool().getGitLeaksTool()
     const toolRunner: tr.ToolRunner = new tr.ToolRunner(gitleaksTool)
 
+    // Set Gitleaks arguments
     toolRunner.arg([`detect`])
-    toolRunner.argIf((getConfigFilePath() !== undefined), [`--config=${getConfigFilePath()}`])
-    toolRunner.arg([`--log-level=${logLevel}`])
+    toolRunner.argIf(getConfigFilePath(), [`--config=${getConfigFilePath()}`])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
     toolRunner.arg([`--report-format=${reportFormat}`])
     toolRunner.arg([`--report-path=${replacePathSlashes(reportPath)}`])
     toolRunner.arg([`--source=${replacePathSlashes(scanFolderPath)}`])
-
-    const scanMode = getAzureDevOpsInput('scanmode')
-    const logOptions = await determineLogOptions(scanMode);
     toolRunner.argIf(logOptions, [`--log-opts="${logOptions}"`])
     toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
 
+    // Set Tool options
     const options: tr.IExecOptions = {
       failOnStdErr: false,
       ignoreReturnCode: true,
       silent: false
     }
 
+    // Execute and determine outcome
     const result: number = await toolRunner.exec(options)
     await setTaskOutcomeBasedOnGitLeaksResult(result, reportPath, reportFormat)
   }
+  // Error handling on task downloading and execution
   catch (err) {
     const taskfailonexecutionerror = taskLib.getBoolInput('taskfailonexecutionerror')
     if (taskfailonexecutionerror) { taskLib.setResult(taskLib.TaskResult.Failed, err.message) }
@@ -57,31 +60,38 @@ async function run() {
 run()
 
 async function determineLogOptions(scanMode: string): Promise<string | undefined> {
-
   const logoptions = taskLib.getInput('logoptions')
   const buildReason = getAzureDevOpsVariable('Build.Reason')
+  console.log(taskLib.loc('BuildReason'))
+
   if (logoptions) {
-    taskLib.warning(taskLib.loc('LogOptionsFound'))
+    console.log(taskLib.loc('LogOptionsFound'))
     return logoptions
   }
   else {
-    const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
     if (scanMode === "all") { return undefined }
-    else if (scanMode === "prevalidationbuild") {
-      if (buildReason === 'PullRequest') {
-        console.log(taskLib.loc('BuildReasonPullRequest'))
-        const commitDiff = await azureDevOpsAPI.getPullRequestCommits()
-        return `--all ${commitDiff.firstCommit}..${commitDiff.lastCommit}`
-      }
-      else { throw new Error(taskLib.loc('PreValidationBuildInvallid')) }
-    }
-    else if (scanMode === "changes") {
-      const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
-      const commitDiff = await azureDevOpsAPI.getBuildChangesCommits(1000)
-      return `--all ${commitDiff.firstCommit}..${commitDiff.lastCommit}`
-    }
+    else if (scanMode === "prevalidationbuild" && buildReason === 'PullRequest') { return await getLogOptionsForPreValidationBuild() }
+    else if (scanMode === "prevalidationbuild") { throw new Error(taskLib.loc('PreValidationBuildInvallid')) }
+    else if (scanMode === "changes") { return await getLogOptionsForBuildDelta(1000) }
+    else if (scanMode === "smart" && buildReason === 'PullRequest') { return await getLogOptionsForPreValidationBuild() }
+    else if (scanMode === "smart" && buildReason === 'Schedule') { return await getLogOptionsForBuildDelta(10000) }
+    else if (scanMode === "smart")  { return await getLogOptionsForBuildDelta(1000) }
     return undefined
   }
+}
+
+async function getLogOptionsForPreValidationBuild(): Promise<string>{
+  const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
+  console.log(taskLib.loc('PreValidationScan'))
+  const commitDiff = await azureDevOpsAPI.getPullRequestCommits()
+  return `--all ${commitDiff.firstCommit}..${commitDiff.lastCommit}`
+}
+
+async function getLogOptionsForBuildDelta(limit: number): Promise<string>{
+  const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
+  console.log(taskLib.loc('DeltaScan', limit))
+  const commitDiff = await azureDevOpsAPI.getBuildChangesCommits(limit)
+  return `--all ${commitDiff.firstCommit}..${commitDiff.lastCommit}`
 }
 
 async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath: string, reportformat: string): Promise<void> {
@@ -104,7 +114,7 @@ async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath:
 }
 
 async function uploadResultsToAzureDevOps(reportPath: string, reportFormat: string): Promise<void> {
-  let containerFolder
+  let containerFolder: string | undefined
   if (taskLib.exist(reportPath)) {
     if (reportFormat === 'sarif') { containerFolder = 'CodeAnalysisLogs' }
     else { containerFolder = 'gitleaks' }
