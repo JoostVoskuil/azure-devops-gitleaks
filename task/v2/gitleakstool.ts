@@ -38,8 +38,7 @@ export class GitleaksTool {
     }
     else {
       const cleanedVersion = toolLib.cleanVersion(version);
-      if (cachedVersionsbyAgent.filter(x => x === cleanedVersion)) return cleanedVersion
-      return undefined
+      return cachedVersionsbyAgent.find(x => x === cleanedVersion)
     }
   }
 

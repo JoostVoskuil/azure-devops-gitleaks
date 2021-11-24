@@ -38,10 +38,6 @@ async function run() {
     toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
 
-    console.debug("ToolRunner Information:")
-    console.debug(toolRunner)
-
-    console.log(taskLib.loc('GitleaksOutput'))
     const options: tr.IExecOptions = {
       failOnStdErr: false,
       ignoreReturnCode: true,
@@ -95,9 +91,15 @@ async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath:
   if (exitCode === 0) { taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('ResultSuccess')) }
   else {
     if (uploadResult) { await uploadResultsToAzureDevOps(reportPath, reportformat) }
-    if (taskfail) { taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('ResultError')) }
-    else { taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultError')) }
-    taskLib.warning(taskLib.loc('HelpOnSecretsFound'))
+    if (taskfail) {
+      taskLib.error(taskLib.loc('HelpOnSecretsFound'))
+      taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('ResultError'))
+    }
+    else {
+      taskLib.warning(taskLib.loc('HelpOnSecretsFound'))
+      taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultError'))
+    }
+
   }
 }
 

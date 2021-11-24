@@ -1,7 +1,7 @@
 {
     "id": "11bd67d8-bfe7-497b-967d-e800eb673119",
     "name": "Gitleaks",
-    "friendlyName": "Gitleaks scan",
+    "friendlyName": "[Beta] Gitleaks scan",
     "description": "Scan git repos (or files) for secrets using regex and entropy.",
     "helpMarkDown": "[More information](https://github.com/JoostVoskuil/azure-devops-gitleaks)",
     "category": "Utility",
@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 10
     },
     "groups": [
         {
@@ -199,7 +199,7 @@
         {
             "name": "taskfailonexecutionerror",
             "type": "boolean",
-            "label": "Fail the task if a task (this wrapper) error occurs.",
+            "label": "Fail the task if this task produces an error (including download errors).",
             "defaultValue": "true",
             "required": false,
             "groupName": "gitleakstool"
@@ -242,11 +242,10 @@
         "AdoConnectionError": "Connection cannot be made to Azure DevOps.",
         "GitLeaksNotFound": "Gitleaks cannot be found at %s",
         "HelpOnSecretsFound": "See https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository for information how to remove secrets.",
-        "GitleaksOutput": "Gitleaks console output:",
         "OfflineAgent": "The agent has no internet connection, searching for toolversion to use on the agent.",
         "OfflineAgentToolNotAvailable": "The agent has no internet connection and the specified Gitleaks tool version is not available on the agent.",
         "OnlineAgentHasLatestVersion": "The latest version of the tool is available in the toolcache. Version is %s",
-        "OnlineAgentHasNotTheLatestVersion": "The latest version of the tool is not available in the toolcache. Version is %s and needs to be downloaded.",
+        "OnlineAgentHasNotTheLatestVersion": "The latest allowed version of the tool is not available in the toolcache. The latest allowed version is %s and needs to be downloaded.",
         "NoToolcacheDownloading": "Version %s is not available in toolcache. Downloading version %s.",
         "AvailableInToolcache": "Version %s of gitleaks is already available in toolcache.",
         "DownloadFromGitHub": "Downloading %s from GitHub.",

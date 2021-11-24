@@ -69,8 +69,6 @@ export class GitleaksTool {
   private async getToolFromOnlineAgentBasedOnVersion(version): Promise<string> {
     const toolExecutable = this.getToolFileName()
     const versionOnAgent = await this.findToolVersionOnAgent(version)
-    console.log("THIS IS DEBUG: ")
-    console.log(versionOnAgent)
     if (versionOnAgent && versionOnAgent == toolLib.cleanVersion(version)) {
       console.log(taskLib.loc('AvailableInToolcache', version))
       const cachedToolDirectory = toolLib.findLocalTool('gitleaks', toolLib.cleanVersion(version))
