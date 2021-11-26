@@ -4,14 +4,15 @@
 
 ### 2.0
 
-- Only support gitleaks 8 and up, please note that Gitleaks 8 does not provide binaries for 32-bit architectures
+- Only support GitLeaks 8 and up, please note that GitLeaks 8 does not provide binaries for 32-bit architectures so the task will only work on x64 architectures
 - Made configuration of the task easier by providing a 'scanmode' picklist
 - Sarif is now default reporting option of the task
-- Reports will be uploaded to the 'CodeAnalysisLogs' artifact
-- Redact is now default turned on
-- GitleaksUdmCombo.toml is now set as default configuration file, combining gitleaks default configuration and the Credscan alike scan by Jesse Houwing
-- Since Gitleaks 8 is made simpler, removed the extra arguments input field, there are no extra inputs
+- Reports will be uploaded to the 'CodeAnalysisLogs' artifact of de pipeline, regardless of the report-format
+- Redact is now default turned on. GitLeaks's default is off however, the reports are stored in Azure DevOps, hence this is default turned on.
+- GitleaksUdmCombo.toml is now set as default configuration file, combining GitLeaks default configuration and the Credscan alike configuration by Jesse Houwing
+- GitLeaks 8 is made simpler, so the extra arguments input field is removed
 - Provided input field for additional log-options
+- When the pipeline runs in debug mode (system.debug=true), GitLeaks will be also run in debug mode.
 
 ## Task version 1
 
@@ -33,7 +34,7 @@
 - Updated UDMSecretChecks.toml and GitleaksUdmCombo.toml to latest v7 structure (thanks to Dariusz Porowski)
 - Fixed bug that scanonlychanges (--commit-file) and depth cannot work together
 - Fixed bug that reportype was a mandatory parameter, will default in code to json
-- Protection against Gitleaks v8, Gitleaks v7 will be the latest version supported by this major version of this task. For Gitleaks v8 there will be a newer version of this task.
+- Protection against GitLeaks v8, GitLeaks v7 will be the latest version supported by this major version of this task. For GitLeaks v8 there will be a newer version of this task.
 
 ### 1.3
 
@@ -42,7 +43,7 @@
   - Added tags to manifest
   - Added ts-node to run locally for dev testing
   - Moved strings to messages section to use with loc
-  - Added predefined - GitleaksUdmCombo.toml (Gitleaks defaults + UDM)
+  - Added predefined - GitleaksUdmCombo.toml (GitLeaks defaults + UDM)
   - Added support for report format
   - If report format is sarif then upload to artifact to CodeAnalysisLogs - nice report presentation with SARIF SAST Scans Tab extension
   - Added support for depth
@@ -55,7 +56,7 @@
 ### 1.2
 
 - Added redact option to redact secrets from output
-- Added argument field to pass more options to gitleaks
+- Added argument field to pass more options to GitLeaks
 - Added option to scan only for changes between this build and the previous build
 - Bumped node packages to the latest
 

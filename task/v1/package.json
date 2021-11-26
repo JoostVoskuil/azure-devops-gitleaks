@@ -9,8 +9,8 @@
     "clean": "rm -rf ./node_modules/ && rm -rf package-lock.json && npm run clean-build",
     "clean-build": "rm -rf ./coverage/ && rm -rf ./.nyc_output/ && rm -rf test-results.xml && find . -name '*.js' -delete && find . -name '*.js.map' -delete && find . -name '.taskkey' -delete",
     "lint": "eslint . --ext .ts",
-    "test": "npm run lint && nyc mocha tests/_suite.js --timeout 20000 && rm -rf ./.nyc_output/",
-    "test-ci": "npm run lint && nyc --reporter=cobertura --reporter=html mocha tests/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml --timeout 10000",
+    "test": "npm run lint && nyc mocha test/_suite.js --timeout 20000 && rm -rf ./.nyc_output/",
+    "test-ci": "npm run lint && nyc --reporter=cobertura --reporter=html mocha test/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml --timeout 10000",
     "start": "ts-node index.ts"
   },
   "nyc": {
@@ -20,7 +20,7 @@
     ],
     "exclude": [
       "**/*.d.ts",
-      "**/tests/*.ts"
+      "**/test/*.ts"
     ],
     "all": true
   },

@@ -23,7 +23,6 @@ export class AzureDevOpsAPI {
 
   public async getBuildChangesCommits (numberOfCommits: number): Promise<CommitDiff | undefined> {
     const buildId = Number(getAzureDevOpsVariable('Build.BuildId'))
-
     // Get changes
     const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
     const buildApi: BuildApi = await connection.getBuildApi()

@@ -46,9 +46,9 @@
     ],
     "inputs": [
         {
-            "name": "scanfolder",
+            "name": "scanlocation",
             "type": "string",
-            "label": "Scan Folder",
+            "label": "Scan Locatiom",
             "defaultValue": "$(Build.SourcesDirectory)",
             "required": true,
             "helpMarkDown": "Specify the location to scan. Defaults to your sources directory."
@@ -94,16 +94,16 @@
         {
             "name": "scanmode",
             "type": "pickList",
-            "label": "Commits to scan mode",
+            "label": "Scan range",
             "defaultValue": "smart",
             "required": false,
             "options": {
                 "all": "All commits",
-                "prevalidationbuild": "Pre-validation (pull request)",
-                "changes": "Only changes between builds",
+                "prevalidation": "Pull request commits",
+                "changes": "Commits (changes) between builds",
                 "smart": "Smart",
                 "nogit": "Flat (no-git)",
-                "custom": "Custom Log options"
+                "custom": "Custom"
             },
             "helpMarkDown": "Set the mode of what the scope is of the commits to be scanned.",
             "groupName": "scanoptions"
@@ -148,7 +148,7 @@
             "type": "pickList",
             "label": "Report format",
             "defaultValue": "sarif",
-            "required": false,
+            "required": true,
             "options": {
                 "json": "json",
                 "sarif": "sarif",

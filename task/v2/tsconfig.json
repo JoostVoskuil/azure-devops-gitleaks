@@ -10,8 +10,10 @@
     "esModuleInterop": true,
     "noEmitOnError": true,
     "rootDir": ".",
+    "skipLibCheck": true,
+    "types": ["@types/mocha","mocha","node"]
   },
   "exclude": [
-    "node_modules",
+    "node_modules"
   ]
 }

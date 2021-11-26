@@ -1,6 +1,6 @@
 # Gitleaks
 
-This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specified location. It can only scan already checked-out repo's on the agent because it is currently not possible to scan Azure DevOps repo-urls. See [this github issue](https://github.com/zricethezav/gitleaks/issues/440) for more information.
+This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specified location. It can only scan already checked-out repo's on the agent because it is currently not possible to scan Azure DevOps repo-urls. See [this GitHub issue](https://github.com/zricethezav/gitleaks/issues/440) for more information.
 
 - Thanks to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining gitleaks.
 - Thanks to [Jesse Houwing](https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.
@@ -18,7 +18,7 @@ This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specifi
 
 Any feedback on gitleaks, please reach out to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining gitleaks.
 
-Any feedback on the Azure configuration file ('UDMSecretChecks.toml') is welcome. See [Jesse Houwing's github repo](https://github.com/jessehouwing/gitleaks-azure). 
+Any feedback on the Azure configuration file ('UDMSecretChecks.toml') is welcome. See [Jesse Houwing's GitHub repo](https://github.com/jessehouwing/gitleaks-azure). 
 *The configuration file isn't as good as credscan was before, it had a bunch of helper functions to rule out false positives that aren't (yet) possible with gitleaks.*
 
 ## Contributions
@@ -48,7 +48,7 @@ Thanks to John Lokerse for providing feedback on this extension.
 | taskfail             | Sets the behavior of the task when secrets are detected. When set to `true`, fail the task. When set to `false` and secrets present end with warning. Default is true                                                                                                                                 |   
 | taskfailonexecutionerror | Sets the behavior of the task when execution errors occurs. When set to `true`, fail the task. When set to `false` and the tasks fails to execute the task is SuccededWithWarnings. Default is true                                                                                                            |
 | arguments            | Provide extra arguments to gitleaks. See [GitHub](https://github.com/zricethezav/gitleaks#usage-and-options) |
-| version              | Version of Gitleaks to be used. See the gitleaks github page. Set to 'latest' to download the latest version of gitleaks.                                                                                                                                                             |
+| version              | Version of Gitleaks to be used. See the gitleaks GitHub page. Set to 'latest' to download the latest version of gitleaks.                                                                                                                                                             |
 
 ## SARIF display in Summary
 
@@ -56,4 +56,4 @@ You can display gitleaks report nicely in your Pipeline run summary. To realize 
 
 ## How do I remove a secret from git's history?
 
-[Github](https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository) has a great article on this using the [BFG Repo Cleaner](https://rtyley.github.io/bfg-repo-cleaner/).
+[GitHub](https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository) has a great article on this using the [BFG Repo Cleaner](https://rtyley.github.io/bfg-repo-cleaner/).

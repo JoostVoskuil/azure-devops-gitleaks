@@ -3,7 +3,7 @@ import taskLib = require('azure-pipelines-task-lib/task')
 import tr = require('azure-pipelines-task-lib/toolrunner')
 import { AzureDevOpsAPI } from './AzureDevOpsAPI'
 import { GitleaksTool } from './gitleakstool'
-import { getAzureDevOpsInput, getAzureDevOpsVariable, replacePathSlashes } from './helpers'
+import { getAzureDevOpsInput, getAzureDevOpsVariable } from './helpers'
 import Path = require('path')
 import { Guid } from 'guid-typescript'
 
@@ -15,7 +15,7 @@ async function run() {
     console.log()
 
     //Get inputs on Task Behaviour
-    const scanFolderPath = getAzureDevOpsInput('scanfolder')
+    const scanLocation = getAzureDevOpsInput('scanlocation')
     const reportFormat = getAzureDevOpsInput('reportformat')
     const debug = taskLib.getVariable('system.debug')
     const reportPath = getReportPath(reportFormat)
@@ -31,12 +31,12 @@ async function run() {
     // Set Gitleaks arguments
     toolRunner.arg([`detect`])
     toolRunner.argIf(getConfigFilePath(), [`--config=${getConfigFilePath()}`])
-    toolRunner.arg([`--source=${replacePathSlashes(scanFolderPath)}`])
+    toolRunner.arg([`--source=${scanLocation}`])
     toolRunner.argIf(logOptions, [`--log-opts=${logOptions}`])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
     toolRunner.argIf(debug === "true", ['--log-level=debug'])
     toolRunner.arg([`--report-format=${reportFormat}`])
-    toolRunner.arg([`--report-path=${replacePathSlashes(reportPath)}`])
+    toolRunner.arg([`--report-path=${reportPath}`])
     toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
 
@@ -68,8 +68,8 @@ async function determineLogOptions(scanMode: string): Promise<string | undefined
   if (scanMode === "all") { return undefined }
   else if (scanMode === "nogit") { return undefined }
   else if (scanMode === "custom") { logOptions = taskLib.getInput('logoptions') }
-  else if (scanMode === "prevalidationbuild" && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() }
-  else if (scanMode === "prevalidationbuild") { throw new Error(taskLib.loc('PreValidationBuildInvallid')) }
+  else if (scanMode === "prevalidation" && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() }
+  else if (scanMode === "prevalidation") { throw new Error(taskLib.loc('PreValidationBuildInvallid')) }
   else if (scanMode === "changes") { logOptions = await getLogOptionsForBuildDelta(1000) }
   else if (scanMode === "smart" && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() }
   else if (scanMode === "smart" && buildReason !== 'PullRequest') { logOptions = await getLogOptionsForBuildDelta(1000) }
@@ -136,10 +136,10 @@ function getConfigFilePath(): string | undefined {
 
   if (configType.toLowerCase() === 'default') return undefined
   else if (configType.toLowerCase() === 'predefined' && predefinedConfigFile !== undefined) {
-    return replacePathSlashes(Path.join(__dirname, 'configs', predefinedConfigFile))
+    return Path.join(__dirname, 'configs', predefinedConfigFile)
   }
   else if (configType.toLowerCase() === 'custom' && configfile !== undefined) {
-    return replacePathSlashes(configfile)
+    return configfile
   }
   else throw new Error(taskLib.loc('IncorrectConfig'))
 }

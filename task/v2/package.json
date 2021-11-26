@@ -9,8 +9,8 @@
     "clean": "rm -rf ./node_modules/ && rm -rf package-lock.json && npm run clean-build",
     "clean-build": "rm -rf ./coverage/ && rm -rf ./.nyc_output/ && rm -rf test-results.xml && find . -name '*.js' -delete && find . -name '*.js.map' -delete && find . -name '.taskkey' -delete",
     "lint": "eslint . --ext .ts",
-    "test": "npm run lint && nyc mocha tests/_suite.js --timeout 20000 && rm -rf ./.nyc_output/",
-    "test-ci": "npm run lint && nyc --reporter=cobertura --reporter=html mocha tests/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml --timeout 10000",
+    "test": "npm run lint && nyc mocha test/_suite.js --timeout 20000 && rm -rf ./.nyc_output/",
+    "test-ci": "npm run lint && nyc --reporter=cobertura --reporter=html mocha test/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml --timeout 10000",
     "start": "ts-node index.ts"
   },
   "nyc": {
@@ -20,7 +20,7 @@
     ],
     "exclude": [
       "**/*.d.ts",
-      "**/tests/*.ts"
+      "**/test/*.ts"
     ],
     "all": true
   },
@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.10",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.2.0",
@@ -47,6 +48,7 @@
     "source-map-support": "^0.5.21",
     "sync-request": "^6.1.0",
     "ts-node": "^10.4.0",
-    "typescript": "^4.5.2"
+    "typescript": "^4.5.2",
+    "typescript-require": "^0.3.0"
   }
 }
