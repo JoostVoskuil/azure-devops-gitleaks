@@ -125,10 +125,11 @@ export class GitleaksTool {
     // Download, extract and cache tool
     const url = `https://github.com/zricethezav/gitleaks/releases/download/v${version}/${this.getDownloadFileName(version)}`
     const temp = await toolLib.downloadTool(url);
+    taskLib.debug(taskLib.loc('Downloading', url))
     const extractedToolLocation = Path.join(await toolLib.extractTar(temp), this.getGitleaksExecutableFileName());
     const cachedToolDirectory = await toolLib.cacheFile(extractedToolLocation, this.getGitleaksExecutableFileName(), 'gitleaks', version)
     const cachedToolFullPath = Path.join(cachedToolDirectory, this.getGitleaksExecutableFileName())
-    taskLib.debug(`cachedToolExecutable: ${cachedToolFullPath}`)
+    taskLib.debug(taskLib.loc('cachedToolExecutable', cachedToolFullPath))
     
     // Set permissions
     if (!(getAzureDevOpsVariable('Agent.OS') === 'Windows_NT')) fs.chmodSync(cachedToolFullPath, '777')

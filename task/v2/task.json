@@ -240,6 +240,8 @@
         "DownloadFromGitHub": "Downloading %s from GitHub.",
         "CachedVersions": "Cached versions of Gitleaks on the agent are: %s",
         "NoCommitsToScan": "No commits to scan; exiting.",
-        "UnknownScanMode": "Unknown scanmode: %s"
+        "UnknownScanMode": "Unknown scanmode: %s",
+        "cachedToolExecutable": "cachedToolExecutable: %s",       
+        "Downloading": "Downloading %s"
     }
 }

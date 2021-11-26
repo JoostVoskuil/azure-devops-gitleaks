@@ -25,7 +25,7 @@ tmr = new AzureDevOpsAPIMock(tmr)
 
 tmr = new TaskMockBuilder(tmr)
         .withDefaultMocks()
-        .withFailingToolCache()
+        .withDownloadFailure()
         .build()
 
 tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr);

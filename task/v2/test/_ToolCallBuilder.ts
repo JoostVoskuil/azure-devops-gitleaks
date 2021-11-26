@@ -16,11 +16,15 @@ export class ToolCallBuilder {
         return this
     }
 
+    public withCustomTool(): ToolCallBuilder {
+        this.argument[0] = `exists/gitleaks`
+        return this
+    }
+
     public withNoGit(): ToolCallBuilder {
         this.argument[9] = `--no-git`
         return this
     }
-
 
     public withDebug(): ToolCallBuilder {
         this.argument[6] = `--log-level=debug`

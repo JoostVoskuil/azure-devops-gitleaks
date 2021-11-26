@@ -63,7 +63,7 @@ export class TaskMockBuilder {
 		return this;
 	}
 
-	public withFailingToolCache(): TaskMockBuilder {
+	public withDownloadFailure(): TaskMockBuilder {
 		this.tmr.registerMock('azure-pipelines-tool-lib/tool', {
 			downloadTool(url: string, downloadUri: string, toolExecutable: string) {
 				throw new Error ('download error')
@@ -84,6 +84,39 @@ export class TaskMockBuilder {
 				return undefined;
 			},
 
+		});
+		return this;
+	}
+
+	public withToolCache(): TaskMockBuilder {
+		this.tmr.registerMock('azure-pipelines-tool-lib/tool', {
+			downloadTool(url: string, downloadUri: string, toolExecutable: string) {
+				return '/tool';
+			},
+			extractTar(exe: string) {
+				return '/tool';
+			},
+			findLocalTool: function (toolName: string, versionSpec: string) {
+                if (toolName != 'gitleaks') {
+                        throw new Error('Searching for wrong tool');
+                }
+                return '/tool';
+        },
+        cleanVersion: function (version: string) {
+                return version;
+        },
+        findLocalToolVersions: function (toolName: string) {
+                if (toolName != 'gitleaks') {
+                        throw new Error('Searching for wrong tool');
+                }
+                return [ '9.0.0' ];
+        },
+			cacheFile(fileGUID: string, toolExecutable: string, toolName: string, version: string) {
+				if (toolName != 'gitleaks') {
+					throw new Error('Searching for wrong tool');
+				}
+				return '/tool';
+			}
 		});
 		return this;
 	}
@@ -125,6 +158,7 @@ export class TaskMockBuilder {
 		this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr);
 		this.answers.exist = {
 			[reportFile]: exists,
+			['exists/gitleaks']: true
 		}
 		return this;
 	}

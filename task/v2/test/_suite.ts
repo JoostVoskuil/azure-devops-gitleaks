@@ -273,3 +273,110 @@ describe('Set scanmode', function () {
         done();
     }); 
 });
+
+describe('Gitleaks Releases', function () {
+    it('Should download Darwin/x64', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnDarwinX64');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        console.log(tr.stdout)
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        assert.strictEqual(tr.stdout.indexOf('darwin_x64') >= 0, true, "Should contain 'darwin_x64'")
+        done();
+    });
+    it('Should not download WindowsNT/x86 because Os/Arch not supported', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksRelease_ShouldFailOnOsArchNotSupported');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.failed, true, 'should have failed');
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_OsArchNotSupported') >= 0, true, "Should contain 'loc_mock_OsArchNotSupported'")
+        assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked 0 time');
+        done();
+    });
+    it('Should download WindowsNT/x64', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnWindowsNTx64');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        assert.strictEqual(tr.stdout.indexOf('windows_x64') >= 0, true, "Should contain 'windows_x64'")
+        done();
+    });
+    it('Should download Linux/x64', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnLinuxx64');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        assert.strictEqual(tr.stdout.indexOf('linux_x64') >= 0, true, "Should contain 'linux_x64'")
+        done();
+    });
+});
+
+
+describe('Gitleaks versions', function () {
+    it('Should get latest when input version is set to latest', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksVersion_ShouldDownloadedWhenLatest');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_OnlineAgentHasNotTheLatestVersion') >= 0, true, "Should contain 'loc_mock_OnlineAgentHasNotTheLatestVersion.'")
+        done();
+    });
+    it('Should get version that is specified.', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksVersion_ShouldDownloadedWhenSpecified');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_NoToolcacheDownloading') >= 0, true, "Should contain 'loc_mock_NoToolcacheDownloading.'")
+        done();
+    });
+});
+
+describe('Gitleaks custom location', function () {
+    it('Should fail when custom tool cannot be found', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksVersion_ShouldFailWhenCustomToolLocationCanNotBeFound.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, false, 'should have failed');
+        assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should be invoked 0 times');
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_GitLeaksNotFound') >= 0, true, "customLocation/gitleaks-darwin-amd64'");
+        done();
+    });
+    it('Should succeed with custom tool', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksVersion_ShouldSucceedWithCustomLocation.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        console.log(tr.stdout)
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        done();
+    });
+});
+
+
+describe('Gitleaks toolcache', function () {
+    it('Should download when gitleaks version is not in toolcache', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksRelease_ShouldDownloadWhenNotInToolCache');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        console.log(tr.stdout)
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_NoToolcacheDownloading') >= 0, true, "Should contain 'loc_mock_NoToolcacheDownloading'.")
+        done();
+    });
+    it('Should not download when gitleaks version is in toolcache.', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksRelease_ShouldNotDownloadWhenInToolCache');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        console.log(tr.stdout)
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_AvailableInToolcache') >= 0, true, "gitleaks is already available in toolcache'")
+        done();
+    });
+});
