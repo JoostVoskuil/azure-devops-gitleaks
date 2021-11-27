@@ -27,7 +27,7 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
     return '/tool'
   },
   findLocalTool: function (toolName) {
-    if (toolName != 'gitleaks') {
+    if (toolName !== 'gitleaks') {
       throw new Error('Searching for wrong tool')
     }
     return '/tool'
@@ -36,7 +36,7 @@ tmr.registerMock('azure-pipelines-tool-lib/tool', {
     return version
   },
   findLocalToolVersions: function (toolName) {
-    if (toolName != 'gitleaks') {
+    if (toolName !== 'gitleaks') {
       throw new Error('Searching for wrong tool')
     }
     return ['7.0.0']

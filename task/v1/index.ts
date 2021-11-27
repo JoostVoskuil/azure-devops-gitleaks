@@ -33,16 +33,19 @@ async function run (): Promise<void> {
     toolRunner.argIf(scanFolderPath, [`--path=${replacePathSlashes(scanFolderPath)}`])
     toolRunner.argIf(reportPath, [`--report=${replacePathSlashes(reportPath)}`])
     toolRunner.argIf(reportPath, [`--format=${reportFormat}`])
-    toolRunner.argIf((getConfigPathType() !== undefined), [`${getConfigPathType()}=${getConfigFilePath()}`])
+    if (getConfigPathType() !== undefined && getConfigFilePath !== undefined) {
+      toolRunner.arg([`${getConfigPathType()}=${getConfigFilePath()}`])
+    }
     toolRunner.argIf(taskLib.getBoolInput('nogit'), ['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    toolRunner.argIf(commitsFile, [`--commits-file=${replacePathSlashes(commitsFile!)}`])
+    if (commitsFile !== undefined) {
+      toolRunner.arg([`--commits-file=${replacePathSlashes(commitsFile)}`])
+    }
     toolRunner.argIf(depth, [`--depth=${depth}`])
 
     // Process extra arguments
-    if (gitleaksArguments) {
+    if (gitleaksArguments !== undefined) {
       // Split on argument delimiter
       const argumentArray = gitleaksArguments.split('--')
       argumentArray.shift()
@@ -99,7 +102,7 @@ async function getCommitsFileFromAzureDevOpsAPI (): Promise<string | undefined> 
   if (prevalidationbuild && buildReason === 'PullRequest') {
     console.log(taskLib.loc('BuildReasonPullRequest'))
     const commitsFile = await azureDevOpsAPI.getPullRequestCommits()
-    if (scanonlychanges || depth) { console.warn(taskLib.loc('BuildReasonPullRequestWarning')) }
+    if (scanonlychanges !== undefined || depth !== undefined) { console.warn(taskLib.loc('BuildReasonPullRequestWarning')) }
     return commitsFile
   } else if (scanonlychanges) {
     const numberOfCommits = (depth !== undefined) ? Number(depth) : 1000
@@ -112,7 +115,7 @@ async function getCommitsFileFromAzureDevOpsAPI (): Promise<string | undefined> 
 
 function getReportPath (reportFormat: string): string {
   const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
-  const reportPath = Path.join(agentTempDirectory, `gitleaks-report-${Guid.create()}.${reportFormat}`)
+  const reportPath = Path.join(agentTempDirectory, `gitleaks-report-${String(Guid.create())}.${reportFormat}`)
   return reportPath
 }
 

@@ -2,7 +2,6 @@ import * as mr from 'azure-pipelines-task-lib/mock-run'
 import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner'
 import path = require('path')
 import * as helpers from './MockHelper'
-import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer'
 
 const taskPath = path.join(__dirname, '..', 'index.js')
 let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath)
@@ -28,7 +27,7 @@ tmr = helpers.BuildWithEmptyToolCache(tmr)
 tmr = helpers.BuildWithDefaultMocks(tmr)
 tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr)
 
-tmr.setAnswers(<TaskLibAnswers>{
+tmr.setAnswers({
   exec: {
     [createToolCall(reportformat)]: {
       code: 0,
