@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 304
+        "Patch": 305
     },
     "groups": [
         {
@@ -57,8 +57,8 @@
             "name": "configtype",
             "type": "pickList",
             "label": "Configuration Type",
-            "defaultValue": "default",
-            "required": false,
+            "defaultValue": "predefined",
+            "required": true,
             "options": {
                 "default": "Default",
                 "predefined": "Predefined",
