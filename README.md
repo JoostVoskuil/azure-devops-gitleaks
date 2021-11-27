@@ -13,8 +13,11 @@ The behaviour between task version 1 and 2 is different. See [Changelog](CHANGEL
 ```yaml
 # Run Gitleaks on Source Repository
 - task: Gitleaks@2
- inputs:
+  inputs:
     scanlocation: '$(Build.SourcesDirectory)'
+    configtype: 'predefined'
+    predefinedconfigfile: 'GitleaksUdmCombo.toml'
+    reportformat: 'sarif'
 ```
 
 ## Original Authors
