@@ -34,7 +34,6 @@ export class AzureDevOpsAPI {
       lastCommit: filteredCommits[0].id,
       firstCommit: filteredCommits[filteredCommits.length - 1].id
     }
-    console.log(commitDiff)
     taskLib.debug(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
     return commitDiff
   }

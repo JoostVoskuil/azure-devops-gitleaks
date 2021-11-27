@@ -32,12 +32,11 @@ export class GitleaksTool {
     const cachedVersionsbyAgent = toolLib.findLocalToolVersions('gitleaks')
     if (cachedVersionsbyAgent === undefined || cachedVersionsbyAgent.length === 0) return undefined
     taskLib.debug(taskLib.loc('CachedVersions', cachedVersionsbyAgent))
-    if (version.toLowerCase() === 'latest') {
-      return (cachedVersionsbyAgent.sort((one, two) => (one > two ? -1 : 1))).indexOf[0]
-    } else {
-      const cleanedVersion = toolLib.cleanVersion(version)
-      return cachedVersionsbyAgent.find(x => x === cleanedVersion)
-    }
+    if (version.toLowerCase() === 'latest') { 
+      return (cachedVersionsbyAgent.sort((one, two) => (one > two ? -1 : 1)))[0] 
+    } else { 
+        return cachedVersionsbyAgent.find(x => x === toolLib.cleanVersion(version)) 
+      }
   }
 
   private async getToolFromOfflineAgent (version: string): Promise<string> {
