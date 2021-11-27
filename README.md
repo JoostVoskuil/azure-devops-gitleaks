@@ -36,7 +36,7 @@ Thanks to John Lokerse for providing feedback on this extension.
 | :-----|:------------ |
 | scanlocation | The location to be scanned.<br/>Defaults to $(Build.SourcesDirectory). |
 | configtype | Can be 'default', 'predefined', 'custom'.<br/>'default' for GitLeaks default configuration.<br/>'predefined' allows you to select a predefined configurations.<br/>'custom' allows you to set a custom configuration file. |
-| predefinedconfigfile | Can be 'UDMSecretChecks.toml' or 'GitleaksUdmCombo.toml'.<br/>'UDMSecretChecks.toml' uses the Credscan config file provided by Jesse Houwing.<br/>'GitleaksUdmCombo.toml' uses the default GitLeaks configuration icm the CredScan configuration.|
+| predefinedconfigfile | Can be 'UDMSecretChecksv8.toml' or 'GitleaksUdmCombo.toml'.<br/>'UDMSecretChecksv8.toml' uses the Credscan config file provided by Jesse Houwing.<br/>'GitleaksUdmCombo.toml' uses the default GitLeaks configuration icm the CredScan configuration.|
 | configfile | Sets the custom configfile in your repo. |
 | scanmode | 'all' will scan all commits.<br/>'prevalidation' will scan only the commits that are part of a Pull Request.<br/>'changes' will scan only the changes between this build and the previous build.<br/>'smart' will detect the best scanmode.<br/>'nogit' will run GitLeaks in no-git mode (flat file scan).<br/>'custom' will allow you to provide custom -log-opts.|
 | logoptions | When scanmode is set to 'custom', this allows you to fill in custom log-options that are passed to GitLeaks |

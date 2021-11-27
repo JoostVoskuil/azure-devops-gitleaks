@@ -75,7 +75,7 @@
             "required": true,
             "options": {
                 "UDMSecretChecks.toml": "UDMSecretChecks.toml",
-                "GitleaksUdmCombo.toml": "GitleaksUdmCombo.toml"
+                "GitleaksUdmCombo.toml": "UDMSecretChecksv8.toml"
             },
             "helpMarkDown": "Select a predefined config file.",
             "visibleRule": "configtype=predefined",
