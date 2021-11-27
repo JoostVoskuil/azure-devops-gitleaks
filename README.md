@@ -5,8 +5,11 @@ This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specifi
 - Thanks to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining gitleaks.
 - Thanks to [Jesse Houwing](https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.
 
-Please note: Task version 1 supports older versions of GitLeaks (7.x). Task version 2 supports the newer versions of GitLeaks ((8.x and up). 
-The behaviour between task version 1 and 2 is different. See [Changelog](CHANGELOG.MD) for changes.
+Please note: 
+- Task version 1 supports older versions of GitLeaks (7.x). 
+- Task version 2 supports the newer versions of GitLeaks (8.x and up). 
+
+The behaviour between task version 1 and 2 is different. See [Changelog](/CHANGELOG.MD) for changes.
 
 ## YAML Snippet
 
