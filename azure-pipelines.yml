@@ -1,4 +1,4 @@
-name: '1.6$(rev:.r)'
+name: '2.0$(rev:.r)'
 
 trigger:
 - main
@@ -20,36 +20,20 @@ stages:
         versionSpec: '16.x'
       displayName: 'Install Node.js'
     
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: 'cd task && npm run build-test && npm run test-ci'
-      displayName: 'Run Build for Test and Execute tests'
-    
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '**/test-results.xml'
-    
-    - task: PublishCodeCoverageResults@1
-      inputs:
-        codeCoverageTool: 'Cobertura'
-        summaryFileLocation: '$(Build.SourcesDirectory)/task/coverage/cobertura-coverage.xml'
-        pathToSources: '$(Build.SourcesDirectory)/task/'
-    - task: WhiteSource Bolt@20
-      inputs:
-        cwd: '$(Build.SourcesDirectory)task/'
-   
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: 'cd task && npm run clean && npm run build-rel'
-      displayName: 'Run Build for Packaging'
-      
+    - template: build-and-test.yml
+      parameters:
+        path: task/v1
+        name: Gitleaks V1
+
+    - template: build-and-test.yml
+      parameters:
+        path: task/v2
+        name: Gitleaks V2
+  
     - task: TfxInstaller@3
       displayName: 'Use Node CLI for Azure DevOps'
       inputs:
-        version: '0.8.x'
+        version: '0.9.x'
         checkLatest: true
 
     - task: PackageAzureDevOpsExtension@3
@@ -63,8 +47,6 @@ stages:
         extensionName: 'Gitleaks'
         extensionTag: '-build'
         extensionVersion: '$(Build.BuildNumber)'
-        updateTasksVersion: true
-        updateTasksVersionType: patch
         extensionVisibility: private
 
     - task: PublishPipelineArtifact@1
@@ -90,7 +72,7 @@ stages:
           - task: TfxInstaller@3
             displayName: 'Use Node CLI for Azure DevOps'
             inputs:
-              version: '0.8.x'
+              version: '0.9.x'
               checkLatest: true
 
           - task: PublishAzureDevOpsExtension@3
@@ -122,7 +104,7 @@ stages:
             - task: TfxInstaller@3
               displayName: 'Use Node CLI for Azure DevOps'
               inputs:
-                version: '0.8.x'
+                version: '0.9.x'
                 checkLatest: true
 
             - task: PublishAzureDevOpsExtension@3
