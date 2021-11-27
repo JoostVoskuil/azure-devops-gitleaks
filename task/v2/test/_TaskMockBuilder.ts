@@ -3,9 +3,6 @@
 import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
 import * as mr from 'azure-pipelines-task-lib/mock-run';
 import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner';
-import { GitCommitRef } from 'azure-devops-node-api/interfaces/GitInterfaces'
-import { Change } from 'azure-devops-node-api/interfaces/BuildInterfaces'
-
 
 export class TaskMockBuilder {
 	private tmr: mr.TaskMockRunner
@@ -29,7 +26,6 @@ export class TaskMockBuilder {
 						if (url === 'https://api.github.com/repos/zricethezav/gitleaks/releases') {
 							return {
 								result: [
-									{ 'name': 'v10.0.0' },
 									{ 'name': 'v9.0.0' },
 									{ 'name': 'v8.0.0' },
 								],
@@ -66,57 +62,20 @@ export class TaskMockBuilder {
 	public withDownloadFailure(): TaskMockBuilder {
 		this.tmr.registerMock('azure-pipelines-tool-lib/tool', {
 			downloadTool(url: string, downloadUri: string, toolExecutable: string) {
-				throw new Error ('download error')
+				throw new Error('download error')
 			},
 			cleanVersion: function (version: string) {
 				return version;
 			},
 			findLocalToolVersions: function (toolName: string) {
-				if (toolName != 'gitleaks') {
-					throw new Error('Searching for wrong tool');
-				}
+				if (toolName != 'gitleaks') throw new Error('Searching for wrong tool');
 				return undefined;
 			},
 			findLocalTool: function (toolName: string, versionSpec: string) {
-				if (toolName != 'gitleaks') {
-					throw new Error('Searching for wrong tool');
-				}
+				if (toolName != 'gitleaks') throw new Error('Searching for wrong tool');
 				return undefined;
 			},
 
-		});
-		return this;
-	}
-
-	public withToolCache(): TaskMockBuilder {
-		this.tmr.registerMock('azure-pipelines-tool-lib/tool', {
-			downloadTool(url: string, downloadUri: string, toolExecutable: string) {
-				return '/tool';
-			},
-			extractTar(exe: string) {
-				return '/tool';
-			},
-			findLocalTool: function (toolName: string, versionSpec: string) {
-                if (toolName != 'gitleaks') {
-                        throw new Error('Searching for wrong tool');
-                }
-                return '/tool';
-        },
-        cleanVersion: function (version: string) {
-                return version;
-        },
-        findLocalToolVersions: function (toolName: string) {
-                if (toolName != 'gitleaks') {
-                        throw new Error('Searching for wrong tool');
-                }
-                return [ '9.0.0' ];
-        },
-			cacheFile(fileGUID: string, toolExecutable: string, toolName: string, version: string) {
-				if (toolName != 'gitleaks') {
-					throw new Error('Searching for wrong tool');
-				}
-				return '/tool';
-			}
 		});
 		return this;
 	}
@@ -130,24 +89,46 @@ export class TaskMockBuilder {
 				return '/tool';
 			},
 			findLocalTool: function (toolName: string, versionSpec: string) {
-				if (toolName != 'gitleaks') {
-					throw new Error('Searching for wrong tool');
-				}
+				if (toolName != 'gitleaks') throw new Error('Searching for wrong tool');
 				return undefined;
 			},
 			findLocalToolVersions: function (toolName: string) {
-				if (toolName != 'gitleaks') {
-					throw new Error('Searching for wrong tool');
-				}
+				if (toolName != 'gitleaks') throw new Error('Searching for wrong tool');
 				return undefined;
 			},
 			cleanVersion: function (version: string) {
 				return version;
 			},
 			cacheFile(fileGUID: string, toolExecutable: string, toolName: string, version: string) {
-				if (toolName != 'gitleaks') {
-					throw new Error('Searching for wrong tool');
-				}
+				if (toolName != 'gitleaks') throw new Error('Searching for wrong tool');
+				return '/tool';
+			}
+		});
+		return this;
+	}
+
+	public withToolCache(): TaskMockBuilder {
+		this.tmr.registerMock('azure-pipelines-tool-lib/tool', {
+			downloadTool(url: string, downloadUri: string, toolExecutable: string) {
+				return '/tool';
+			},
+			extractTar(exe: string) {
+				return '/tool';
+			},
+			findLocalToolVersions: function (toolName: string): string[] {
+				if (toolName != 'gitleaks') throw new Error('Searching for wrong tool');
+				return [ '9.0.0', '8.0.0' ];
+			},
+			findLocalTool: function (toolName: string, versionSpec: string) {
+				if (toolName != 'gitleaks') throw new Error('Searching for wrong tool');
+				return '/tool';
+			},
+			cleanVersion: function (version: string) {
+				return version;
+			},
+
+			cacheFile(fileGUID: string, toolExecutable: string, toolName: string, version: string) {
+				if (toolName != 'gitleaks') throw new Error('Searching for wrong tool');
 				return '/tool';
 			}
 		});

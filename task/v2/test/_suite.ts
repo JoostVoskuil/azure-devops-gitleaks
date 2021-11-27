@@ -8,7 +8,6 @@ describe('Gitleaks Execution', function () {
         const tp = path.join(__dirname, 'Execution_ShouldFailWhenGitLeaksReturnsExitCodeOne.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.errorIssues.length, 2, "should have two errors");
         assert.strictEqual(tr.stdout.indexOf('loc_mock_ResultError') >= 0, true, "Should contain 'loc_mock_ResultError'")
@@ -20,7 +19,6 @@ describe('Gitleaks Execution', function () {
         const tp = path.join(__dirname, 'Execution_ShouldSucceedWhenGitLeaksReturnsExitCodeZero.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -30,7 +28,6 @@ describe('Gitleaks Execution', function () {
         const tp = path.join(__dirname, 'Execution_ShouldWarningWhenGitLeaksReturnsExitCodeOne.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.stdout.indexOf('SucceededWithIssues') >= 0, true, "Should contain 'SucceededWithIssues'")
         assert.strictEqual(tr.stdout.indexOf('loc_mock_ResultError') >= 0, true, "Should contain 'loc_mock_ResultError'")
@@ -41,7 +38,6 @@ describe('Gitleaks Execution', function () {
         const tp = path.join(__dirname, 'Execution_ShouldFailWhenDownloadError.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.errorIssues.length, 1, "should have one errors");
         assert.strictEqual(tr.stdout.indexOf('download error') >= 0, true, "Should contain 'download error'")
@@ -52,7 +48,6 @@ describe('Gitleaks Execution', function () {
         const tp = path.join(__dirname, 'Execution_ShouldSucceedWarningWhenDownloadError.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.stdout.indexOf('SucceededWithIssues') >= 0, true, "Should contain 'SucceededWithIssues'")
         assert.strictEqual(tr.stdout.indexOf('download error') >= 0, true, "Should contain 'download error'")
@@ -66,7 +61,6 @@ describe('Upload gitleaks results', function () {
         const tp = path.join(__dirname, 'UploadResults_ShouldUploadFileResults');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.stdout.indexOf('loc_mock_ResultError') >= 0, true, "Should contain 'loc_mock_ResultError'")
         assert.strictEqual(tr.stdout.indexOf('##vso[artifact.upload containerfolder=Gitleaks;artifactname=CodeAnalysisLogs;]') >= 0, true, "Should contain '##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;].'")
@@ -77,7 +71,6 @@ describe('Upload gitleaks results', function () {
         const tp = path.join(__dirname, 'UploadResults_ShouldNotUploadFileResultsWhenUploadIsOff');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.stdout.indexOf('loc_mock_ResultError') >= 0, true, "Should contain 'loc_mock_ResultError'")
         assert.strictEqual(tr.stdout.indexOf('##vso[artifact.upload containerfolder=Gitleaks;artifactname=gitleaks;]'), -1 , "Should not contain '##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;].'")
@@ -88,7 +81,6 @@ describe('Upload gitleaks results', function () {
         const tp = path.join(__dirname, 'UploadResults_ShouldNotUploadFileResultsWhenUploadIsOff');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.stdout.indexOf('loc_mock_ResultError') >= 0, true, "Should contain 'loc_mock_ResultError'")
         assert.strictEqual(tr.stdout.indexOf('##vso[artifact.upload containerfolder=Gitleaks;artifactname=gitleaks;]'), -1 , "Should not contain '##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;].'")
@@ -102,7 +94,6 @@ describe('Configuration Files', function () {
         const tp = path.join(__dirname, 'ConfigFiles_ShouldAcceptNoConfig');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -111,7 +102,6 @@ describe('Configuration Files', function () {
         const tp = path.join(__dirname, 'ConfigFiles_ShouldAcceptPredefinedConfig');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -120,7 +110,6 @@ describe('Configuration Files', function () {
         const tp = path.join(__dirname, 'ConfigFiles_ShouldAcceptCustomConfigFile');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -129,7 +118,6 @@ describe('Configuration Files', function () {
         const tp = path.join(__dirname, 'ConfigFiles_ShouldFailWhenCustomConfigFileIsNotProvided');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should be invoked 0 time');
         assert.strictEqual(tr.errorIssues.length, 1, "should have one error");
@@ -143,7 +131,6 @@ describe('Gitleaks parameter calls', function () {
         const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithVerboseParameter');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -152,7 +139,6 @@ describe('Gitleaks parameter calls', function () {
         const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithRedactParameter');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -161,7 +147,6 @@ describe('Gitleaks parameter calls', function () {
         const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithSystemDebug');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -171,7 +156,6 @@ describe('Gitleaks parameter calls', function () {
         const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithReportFormat');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -184,7 +168,6 @@ describe('Set scanmode', function () {
         const tp = path.join(__dirname, 'Gitleaks_ScanModeAll');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -193,7 +176,6 @@ describe('Set scanmode', function () {
         const tp = path.join(__dirname, 'Gitleaks_ScanModeNoGit');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -202,7 +184,6 @@ describe('Set scanmode', function () {
         const tp = path.join(__dirname, 'Gitleaks_ScanModeCustom');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -220,7 +201,6 @@ describe('Set scanmode', function () {
         const tp = path.join(__dirname, 'Gitleaks_ScanModePrevalidation');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -229,7 +209,6 @@ describe('Set scanmode', function () {
         const tp = path.join(__dirname, 'Gitleaks_ScanModePrevalidationShouldFailWhenBuildReasonIsNotPullRequest');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.stdout.indexOf('loc_mock_PreValidationBuildInvallid') >= 0, true, "Should contain 'loc_mock_PreValidationBuildInvallid'")
         assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked 0 time');
@@ -239,7 +218,6 @@ describe('Set scanmode', function () {
         const tp = path.join(__dirname, 'Gitleaks_ScanModeSmartPullRequest');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -248,7 +226,6 @@ describe('Set scanmode', function () {
         const tp = path.join(__dirname, 'Gitleaks_ScanModeSmartManual');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -257,7 +234,6 @@ describe('Set scanmode', function () {
         const tp = path.join(__dirname, 'Gitleaks_ScanModeChanges');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
@@ -266,7 +242,6 @@ describe('Set scanmode', function () {
         const tp = path.join(__dirname, 'Gitleaks_ScanModeUnknown');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.stdout.indexOf('loc_mock_UnknownScanMode') >= 0, true, "Should contain 'loc_mock_UnknownScanModet'")
         assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked 0 time');
@@ -279,7 +254,6 @@ describe('Gitleaks Releases', function () {
         const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnDarwinX64');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         assert.strictEqual(tr.stdout.indexOf('darwin_x64') >= 0, true, "Should contain 'darwin_x64'")
@@ -350,20 +324,18 @@ describe('Gitleaks custom location', function () {
         const tp = path.join(__dirname, 'GitleaksVersion_ShouldSucceedWithCustomLocation.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         done();
     });
 });
 
-
 describe('Gitleaks toolcache', function () {
+    
     it('Should download when gitleaks version is not in toolcache', function(done: Mocha.Done) {    
         const tp = path.join(__dirname, 'GitleaksRelease_ShouldDownloadWhenNotInToolCache');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         assert.strictEqual(tr.stdout.indexOf('loc_mock_NoToolcacheDownloading') >= 0, true, "Should contain 'loc_mock_NoToolcacheDownloading'.")
@@ -373,10 +345,19 @@ describe('Gitleaks toolcache', function () {
         const tp = path.join(__dirname, 'GitleaksRelease_ShouldNotDownloadWhenInToolCache');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
-        assert.strictEqual(tr.stdout.indexOf('loc_mock_AvailableInToolcache') >= 0, true, "gitleaks is already available in toolcache'")
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_AvailableInToolcache') >= 0, true, "Should contain 'loc_mock_AvailableInToolcache'.")
+        done();
+    });
+
+    it('Should not download when gitleaks version is in toolcache and that is the latest version.', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksRelease_ShouldNotDownloadWhenInToolCacheAndLatest');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_OnlineAgentHasLatestVersion') >= 0, true, "loc_mock_OnlineAgentHasLatestVersion'")
         done();
     });
 });

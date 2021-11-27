@@ -1,5 +1,4 @@
 import * as mr from 'azure-pipelines-task-lib/mock-run'
-import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner'
 
 import path = require('path')
 import { TaskInputBuilder } from './_TaskInputBuilder'
@@ -43,5 +42,4 @@ tmr = new TaskMockBuilder(tmr)
         .withEmptyToolCache()
         .build()
 
-tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr);
 tmr.run();
