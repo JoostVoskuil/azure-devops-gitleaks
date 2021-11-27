@@ -33,7 +33,7 @@ export class GitleaksTool {
     if (cachedVersionsbyAgent === undefined || cachedVersionsbyAgent.length === 0) return undefined
     taskLib.debug(taskLib.loc('CachedVersions', cachedVersionsbyAgent))
     if (version.toLowerCase() === 'latest') {
-      const latestAllowedMajorRelease = 'v7'
+      const latestAllowedMajorRelease = '7'
       const allowedReleases = cachedVersionsbyAgent.filter(a => a.startsWith(latestAllowedMajorRelease))
       return (allowedReleases.sort((one, two) => (one > two ? -1 : 1)))[0]
     } else {
