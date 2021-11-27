@@ -38,7 +38,7 @@ export class TaskInputBuilder {
   public withCustomConfigFile (file?: string): TaskInputBuilder {
     this.tmr.setInput('configtype', 'custom')
     this.tmr.setInput('predefinedconfigfile', '')
-    if (file) this.tmr.setInput('configfile', file)
+    if (file !== undefined) this.tmr.setInput('configfile', file)
     return this
   }
 

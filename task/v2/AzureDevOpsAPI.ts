@@ -29,11 +29,13 @@ export class AzureDevOpsAPI {
     const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, buildId, undefined, numberOfCommits)
     taskLib.debug(taskLib.loc('DetectedChanges', changes.length))
     if (changes.length === 0) { return undefined }
-    const filteredCommits = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined))
+    const filteredCommits = changes.filter(x => x.type !== undefined && x.type === 'commit' && x.id !== undefined)
+
     const commitDiff: CommitDiff = {
       lastCommit: filteredCommits[0].id,
       firstCommit: filteredCommits[filteredCommits.length - 1].id
     }
+    console.log(commitDiff)
     taskLib.debug(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
     return commitDiff
   }

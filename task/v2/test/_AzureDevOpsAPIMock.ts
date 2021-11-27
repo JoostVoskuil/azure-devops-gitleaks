@@ -10,7 +10,7 @@ export class AzureDevOpsAPIMock {
   public defaultCommitRef: GitCommitRef[] = []
   constructor (tmr: mr.TaskMockRunner) {
     this.tmr = tmr
-    this.defaultChanges = [{ id: 'firstCommitChange' }, { id: 'lastCommitChange' }]
+    this.defaultChanges = [{ id: 'firstCommitChange', type: 'commit' }, { id: 'lastCommitChange', type: 'commit' }]
     this.defaultCommitRef = [{ commitId: 'firstCommitPr' }, { commitId: 'lastCommitPr' }
     ]
   }

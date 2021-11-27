@@ -114,11 +114,11 @@ export class TaskMockBuilder {
         return version
       },
       findLocalToolVersions: function (toolName: string) {
-        if (toolName != 'gitleaks') throw new Error('Searching for wrong tool')
+        if (toolName !== 'gitleaks') throw new Error('Searching for wrong tool')
         return undefined
       },
       findLocalTool: function (toolName: string, versionSpec: string) {
-        if (toolName != 'gitleaks') throw new Error('Searching for wrong tool')
+        if (toolName !== 'gitleaks') throw new Error('Searching for wrong tool')
         return undefined
       }
 
@@ -135,18 +135,18 @@ export class TaskMockBuilder {
         return '/tool'
       },
       findLocalTool: function (toolName: string, versionSpec: string) {
-        if (toolName != 'gitleaks') throw new Error('Searching for wrong tool')
+        if (toolName !== 'gitleaks') throw new Error('Searching for wrong tool')
         return undefined
       },
       findLocalToolVersions: function (toolName: string) {
-        if (toolName != 'gitleaks') throw new Error('Searching for wrong tool')
+        if (toolName !== 'gitleaks') throw new Error('Searching for wrong tool')
         return undefined
       },
       cleanVersion: function (version: string) {
         return version
       },
       cacheFile (fileGUID: string, toolExecutable: string, toolName: string, version: string) {
-        if (toolName != 'gitleaks') throw new Error('Searching for wrong tool')
+        if (toolName !== 'gitleaks') throw new Error('Searching for wrong tool')
         return '/tool'
       }
     })
@@ -162,11 +162,11 @@ export class TaskMockBuilder {
         return '/tool'
       },
       findLocalToolVersions: function (toolName: string): string[] {
-        if (toolName != 'gitleaks') throw new Error('Searching for wrong tool')
+        if (toolName !== 'gitleaks') throw new Error('Searching for wrong tool')
         return ['9.0.0', '8.0.0']
       },
       findLocalTool: function (toolName: string, versionSpec: string) {
-        if (toolName != 'gitleaks') throw new Error('Searching for wrong tool')
+        if (toolName !== 'gitleaks') throw new Error('Searching for wrong tool')
         return '/tool'
       },
       cleanVersion: function (version: string) {
@@ -174,7 +174,7 @@ export class TaskMockBuilder {
       },
 
       cacheFile (fileGUID: string, toolExecutable: string, toolName: string, version: string) {
-        if (toolName != 'gitleaks') throw new Error('Searching for wrong tool')
+        if (toolName !== 'gitleaks') throw new Error('Searching for wrong tool')
         return '/tool'
       }
     })

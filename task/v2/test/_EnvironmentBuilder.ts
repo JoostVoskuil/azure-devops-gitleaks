@@ -23,7 +23,7 @@ export class EnvironmentBuilder {
     return this
   }
 
-  public build () {
+  public build (): void {
     for (const environment of this.environmentSettings) {
       process.env[environment.key] = environment.value
     }

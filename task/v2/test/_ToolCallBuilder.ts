@@ -57,7 +57,7 @@ export class ToolCallBuilder {
     return this
   }
 
-  public build () {
+  public build (): string {
     let callString = ''
     for (const argument of this.argument) {
       if (argument !== undefined) {

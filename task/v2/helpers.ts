@@ -5,32 +5,26 @@ import { IProxyConfiguration, IRequestOptions } from 'azure-devops-node-api/inte
 
 taskLib.setResourcePath(path.join(__dirname, 'task.json'), true)
 
-// Replaces Windows \ because of bug in TOML Loader
-// export function replacePathSlashes(filePath: string): string  {
-//  if (filePath === undefined) return ''
-//  return filePath.replace(/\\/g, '/');
-// }
-
 export function getEndpointUrl (name: string): string {
-  const value = taskLib.getEndpointUrl(name, true) || undefined
+  const value = taskLib.getEndpointUrl(name, true)
   if (value === undefined) throw Error(taskLib.loc('GetEndpointUrlEmpty', name))
   return value
 }
 
 export function getEndpointAuthorizationParameter (name: string, key: string): string {
-  const value = taskLib.getEndpointAuthorizationParameter(name, key, true) || undefined
+  const value = taskLib.getEndpointAuthorizationParameter(name, key, true)
   if (value === undefined) throw Error(taskLib.loc('GetEndpointAuthorizationParameterEmpty', name))
   return value
 }
 
 export function getAzureDevOpsVariable (name: string): string {
-  const value = taskLib.getVariable(name) || undefined
+  const value = taskLib.getVariable(name)
   if (value === undefined) throw Error(taskLib.loc('VariableEmpty', name))
   return value
 }
 
 export function getAzureDevOpsInput (name: string): string {
-  const value = taskLib.getInput(name) || undefined
+  const value = taskLib.getInput(name)
   if (value === undefined) throw Error(taskLib.loc('InputEmpty', name))
   return value
 }
@@ -45,7 +39,7 @@ export function getRequestOptions (): IRequestOptions {
   const agentProxy = taskLib.getHttpProxyConfiguration()
   let proxyConfiguration: IProxyConfiguration
 
-  if (agentProxy != null) {
+  if (agentProxy !== null) {
     proxyConfiguration = {
       proxyUrl: agentProxy.proxyUrl,
       proxyUsername: agentProxy.proxyUsername,
@@ -60,6 +54,6 @@ export function getRequestOptions (): IRequestOptions {
 export async function getAzureDevOpsConnection (collectionUri: string, token: string): Promise<azdev.WebApi> {
   const accessTokenHandler = azdev.getPersonalAccessTokenHandler(token)
   const connection = new azdev.WebApi(collectionUri, accessTokenHandler, getRequestOptions())
-  if (!connection) throw Error(taskLib.loc('AdoConnectionError'))
+  if (connection === undefined) throw Error(taskLib.loc('AdoConnectionError'))
   return connection
 }

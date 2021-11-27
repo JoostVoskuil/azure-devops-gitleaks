@@ -220,6 +220,7 @@ describe('Set scanmode', function () {
     assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
     done()
   })
+
   it('Should scan build changes when scanmode is smart and buildreason is manual', function (done: Mocha.Done) {
     const tp = path.join(__dirname, 'Gitleaks_ScanModeSmartManual')
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)

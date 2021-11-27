@@ -7,7 +7,7 @@ import { getAzureDevOpsInput, getAzureDevOpsVariable } from './helpers'
 import Path = require('path')
 import { Guid } from 'guid-typescript'
 
-async function run () {
+async function run (): Promise<void> {
   try {
     taskLib.setResourcePath(path.join(__dirname, 'task.json'), true)
     console.log(taskLib.loc('ThanksToZacharyRice'))
@@ -50,23 +50,37 @@ async function run () {
     // Execute and determine outcome
     const result: number = await toolRunner.exec(options)
     await setTaskOutcomeBasedOnGitLeaksResult(result, reportPath)
-  }
-  // Error handling on task downloading and execution
-  catch (err) {
+  } catch (err) {
     const taskfailonexecutionerror = taskLib.getBoolInput('taskfailonexecutionerror')
     if (taskfailonexecutionerror) { taskLib.setResult(taskLib.TaskResult.Failed, err.message) } else { taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, err.message) }
   }
 }
 
-run()
+void run()
 
 async function determineLogOptions (scanMode: string): Promise<string | undefined> {
   const buildReason = getAzureDevOpsVariable('Build.Reason')
   let logOptions
 
-  if (scanMode === 'all') { return undefined } else if (scanMode === 'nogit') { return undefined } else if (scanMode === 'custom') { logOptions = taskLib.getInput('logoptions') } else if (scanMode === 'prevalidation' && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() } else if (scanMode === 'prevalidation') { throw new Error(taskLib.loc('PreValidationBuildInvallid')) } else if (scanMode === 'changes') { logOptions = await getLogOptionsForBuildDelta(1000) } else if (scanMode === 'smart' && buildReason === 'PullRequest') { logOptions = await getLogOptionsForPreValidationBuild() } else if (scanMode === 'smart' && buildReason !== 'PullRequest') { logOptions = await getLogOptionsForBuildDelta(1000) } else throw new Error(taskLib.loc('UnknownScanMode', scanMode))
+  if (scanMode === 'all') {
+    return undefined
+  } else if (scanMode === 'nogit') {
+    return undefined
+  } else if (scanMode === 'custom') {
+    logOptions = taskLib.getInput('logoptions')
+  } else if (scanMode === 'prevalidation' && buildReason === 'PullRequest') {
+    logOptions = await getLogOptionsForPreValidationBuild()
+  } else if (scanMode === 'prevalidation') {
+    throw new Error(taskLib.loc('PreValidationBuildInvallid'))
+  } else if (scanMode === 'changes') {
+    logOptions = await getLogOptionsForBuildDelta(1000)
+  } else if (scanMode === 'smart' && buildReason === 'PullRequest') {
+    logOptions = await getLogOptionsForPreValidationBuild()
+  } else if (scanMode === 'smart' && buildReason !== 'PullRequest') {
+    logOptions = await getLogOptionsForBuildDelta(1000)
+  } else throw new Error(taskLib.loc('UnknownScanMode', scanMode))
 
-  if (!logOptions) {
+  if (logOptions === undefined) {
     console.log(taskLib.loc('NoCommitsToScan'))
     taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('NoCommitsToScan'), true)
     return process.exit(0)
@@ -78,7 +92,7 @@ async function getLogOptionsForPreValidationBuild (): Promise<string | undefined
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('PreValidationScan'))
   const commitDiff = await azureDevOpsAPI.getPullRequestCommits()
-  if (commitDiff == null) return undefined
+  if (commitDiff === undefined || commitDiff.firstCommit === undefined || commitDiff.lastCommit === undefined) return undefined
   return `${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
 }
 
@@ -86,7 +100,7 @@ async function getLogOptionsForBuildDelta (limit: number): Promise<string | unde
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('ChangeScan', limit))
   const commitDiff = await azureDevOpsAPI.getBuildChangesCommits(limit)
-  if (commitDiff == null) return undefined
+  if (commitDiff === undefined || commitDiff.firstCommit === undefined || commitDiff.lastCommit === undefined) return undefined
   return `${commitDiff.firstCommit}^..${commitDiff.lastCommit}`
 }
 
@@ -114,7 +128,7 @@ async function uploadResultsToAzureDevOps (reportPath: string): Promise<void> {
 
 function getReportPath (reportFormat: string): string {
   const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
-  const reportPath = Path.join(agentTempDirectory, `gitleaks-report-${Guid.create()}.${reportFormat}`)
+  const reportPath = Path.join(agentTempDirectory, `gitleaks-report-${String(Guid.create())}.${reportFormat}`)
   return reportPath
 }
 
