@@ -31,7 +31,7 @@ export class AzureDevOpsAPI {
     const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
     const buildApi: BuildApi = await connection.getBuildApi()
     const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, buildId, undefined, numberOfCommits)
-    const filteredCommits = changes.filter((x => x.type = 'commit') && (x => x.id !== undefined))
+    const filteredCommits = changes.filter(x => x.type !== undefined && x.type === 'commit' && x.id !== undefined)
 
     taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length))
     const commitsArray = filteredCommits.map(o => o.id).join('\n')
@@ -57,7 +57,7 @@ export class AzureDevOpsAPI {
   private writeCommitFile (commitsArray: string): string {
     taskLib.debug(taskLib.loc('Commits', commitsArray))
     const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
-    const commitsFilePath = Path.join(agentTempDirectory, `commits-${Guid.create()}.txt`)
+    const commitsFilePath = Path.join(agentTempDirectory, `commits-${String(Guid.create())}.txt`)
     taskLib.debug(taskLib.loc('CommitsFile', commitsFilePath))
 
     fs.writeFileSync(commitsFilePath, commitsArray)

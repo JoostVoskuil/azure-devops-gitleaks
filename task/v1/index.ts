@@ -7,7 +7,7 @@ import { getAzureDevOpsInput, getAzureDevOpsVariable, replacePathSlashes } from 
 import Path = require('path')
 import { Guid } from 'guid-typescript'
 
-async function run () {
+async function run (): Promise<void> {
   try {
     taskLib.setResourcePath(path.join(__dirname, 'task.json'), true)
     console.log(taskLib.loc('ThanksToZacharyRice'))
@@ -67,7 +67,7 @@ async function run () {
   }
 }
 
-run()
+void run()
 
 async function setTaskOutcomeBasedOnGitLeaksResult (exitCode: number, reportPath: string, reportformat: string): Promise<void> {
   const taskfail = taskLib.getBoolInput('taskfail')

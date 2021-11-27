@@ -44,7 +44,7 @@ export class GitleaksTool {
     const toolExecutable = this.getToolFileName()
     console.log(taskLib.loc('OfflineAgent'))
     const latestVersionAvailableOnAgent = await this.findToolVersionOnAgent(version)
-    if (!latestVersionAvailableOnAgent) throw new Error(taskLib.loc('OfflineAgentToolNotAvailable'))
+    if (latestVersionAvailableOnAgent === undefined) throw new Error(taskLib.loc('OfflineAgentToolNotAvailable'))
     const cachedToolDirectory = toolLib.findLocalTool('gitleaks', latestVersionAvailableOnAgent)
     return Path.join(cachedToolDirectory, toolExecutable)
   }
@@ -53,7 +53,7 @@ export class GitleaksTool {
     const toolExecutable = this.getToolFileName()
     const latestVersionAvailableOnGitHub = await this.getLatestToolVersionFromGitHub()
     const versionOnAgent = await this.findToolVersionOnAgent(version)
-    if (versionOnAgent && versionOnAgent === latestVersionAvailableOnGitHub) {
+    if (versionOnAgent !== undefined && versionOnAgent === latestVersionAvailableOnGitHub) {
       console.log(taskLib.loc('OnlineAgentHasLatestVersion', latestVersionAvailableOnGitHub))
       const cachedToolDirectory = toolLib.findLocalTool('gitleaks', latestVersionAvailableOnGitHub)
       return Path.join(cachedToolDirectory, toolExecutable)
@@ -66,7 +66,7 @@ export class GitleaksTool {
   private async getToolFromOnlineAgentBasedOnVersion (version): Promise<string> {
     const toolExecutable = this.getToolFileName()
     const versionOnAgent = await this.findToolVersionOnAgent(version)
-    if (versionOnAgent && versionOnAgent == toolLib.cleanVersion(version)) {
+    if (versionOnAgent !== undefined && versionOnAgent === toolLib.cleanVersion(version)) {
       console.log(taskLib.loc('AvailableInToolcache', version))
       const cachedToolDirectory = toolLib.findLocalTool('gitleaks', toolLib.cleanVersion(version))
       return Path.join(cachedToolDirectory, toolExecutable)
@@ -133,7 +133,7 @@ export class GitleaksTool {
     try {
       const http: httpClient.HttpClient = new httpClient.HttpClient('vsts-node-tool', undefined, getRequestOptions())
       result = await http.get('https://github.com')
-      if (result.message.statusCode && result.message.statusCode >= 200 && result.message.statusCode < 300) return true
+      if (result.message.statusCode !== undefined && result.message.statusCode >= 200 && result.message.statusCode < 300) return true
       return false
     } catch (err) {
       return false
