@@ -1,5 +1,4 @@
 import * as mr from 'azure-pipelines-task-lib/mock-run'
-
 import path = require('path')
 import { TaskInputBuilder } from './_TaskInputBuilder'
 import { EnvironmentBuilder } from './_EnvironmentBuilder'
@@ -13,8 +12,9 @@ let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath)
 
 new EnvironmentBuilder()
         .build();
+
 tmr = new TaskInputBuilder(tmr)
-        .withScanMode('custom')
+        .withVersion('7.0.0')
         .build();
 
 tmr = new AzureDevOpsAPIMock(tmr)
@@ -23,7 +23,7 @@ tmr = new AzureDevOpsAPIMock(tmr)
 
 const toolCall = new ToolCallBuilder()
         .build()
-   
+
 const reportCall = new ReportBuilder()
         .build()
 
@@ -32,7 +32,7 @@ tmr = new AzureDevOpsAPIMock(tmr)
         .build()
 
 tmr = new TaskMockBuilder(tmr)
-        .withDefaultMocks()
+        .withOnlineAgentMocks()
         .withReport(reportCall, true)
         .withToolExecution(toolCall, 0)
         .withEmptyToolCache()

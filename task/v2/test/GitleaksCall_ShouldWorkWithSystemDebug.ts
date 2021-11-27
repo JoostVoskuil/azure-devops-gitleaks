@@ -24,9 +24,7 @@ tmr = new AzureDevOpsAPIMock(tmr)
 const toolCall = new ToolCallBuilder()
         .withDebug()
         .build()
-
-console.log(toolCall)
-
+        
 const reportCall = new ReportBuilder()
         .build()
 
@@ -35,7 +33,7 @@ tmr = new AzureDevOpsAPIMock(tmr)
         .build()
 
 tmr = new TaskMockBuilder(tmr)
-        .withDefaultMocks()
+        .withOnlineAgentMocks()
         .withReport(reportCall, true)
         .withToolExecution(toolCall, 0)
         .withEmptyToolCache()

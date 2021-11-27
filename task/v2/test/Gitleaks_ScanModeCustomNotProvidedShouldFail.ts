@@ -12,11 +12,9 @@ const taskPath = path.join(__dirname, '..', 'index.js')
 let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath)
 
 new EnvironmentBuilder()
-        .withEnvironmentalSetting('BUILD_REASON','Manual')
         .build();
-
 tmr = new TaskInputBuilder(tmr)
-        .withScanMode('changes')
+        .withScanMode('custom')
         .build();
 
 tmr = new AzureDevOpsAPIMock(tmr)
@@ -24,9 +22,8 @@ tmr = new AzureDevOpsAPIMock(tmr)
         .build()
 
 const toolCall = new ToolCallBuilder()
-        .withLogOptions('lastCommitChange^..firstCommitChange')
         .build()
-
+   
 const reportCall = new ReportBuilder()
         .build()
 

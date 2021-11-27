@@ -192,7 +192,6 @@ describe('Set scanmode', function () {
         const tp = path.join(__dirname, 'Gitleaks_ScanModeCustomNotProvidedShouldFail');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.stdout.indexOf('loc_mock_NoCommitsToScan') >= 0, true, "Should contain 'loc_mock_NoCommitsToScan'")
         done();
@@ -289,7 +288,7 @@ describe('Gitleaks Releases', function () {
 });
 
 
-describe('Gitleaks versions', function () {
+describe('Gitleaks Versions', function () {
     it('Should get latest when input version is set to latest', function(done: Mocha.Done) {    
         const tp = path.join(__dirname, 'GitleaksVersion_ShouldDownloadedWhenLatest');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -307,6 +306,16 @@ describe('Gitleaks versions', function () {
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         assert.strictEqual(tr.stdout.indexOf('loc_mock_NoToolcacheDownloading') >= 0, true, "Should contain 'loc_mock_NoToolcacheDownloading.'")
         done();
+    });
+    it('Should fail when version is lower then 8.0.0.', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksVersion_ShouldFailWhenVersionIsBelow8');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        console.log(tr.stdout)
+        assert.strictEqual(tr.failed, true, 'should have failed');
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_MinimalAllowdVersion') >= 0, true, "Should contain 'loc_mock_MinimalAllowdVersion'")
+        assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked 0 time');
+        done(); 
     });
 });
 
@@ -358,6 +367,28 @@ describe('Gitleaks toolcache', function () {
         assert.strictEqual(tr.succeeded, true, 'should have succeeded');
         assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
         assert.strictEqual(tr.stdout.indexOf('loc_mock_OnlineAgentHasLatestVersion') >= 0, true, "loc_mock_OnlineAgentHasLatestVersion'")
+        done();
+    });
+});
+
+describe('Gitleaks with Offline Agent', function () {
+    it('Should take the latest version in toolcache when agent is offline', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksOfflineAgent_TakeLatestVersionShouldSucceed');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, true, 'should have succeeded');
+        assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time');
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_OfflineAgent') >= 0, true, "Should contain 'loc_mock_OfflineAgent'.")
+        done();
+    });
+
+    it('Should fail when there is no version in toolcache and agent is offline', function(done: Mocha.Done) {    
+        const tp = path.join(__dirname, 'GitleaksOfflineAgent_TakeLatestVersionShouldFail');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        assert.strictEqual(tr.succeeded, false, 'should have failed');
+        assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should be invoked 0 times');
+        assert.strictEqual(tr.stdout.indexOf('loc_mock_OfflineAgentToolNotAvailable') >= 0, true, "Should contain 'loc_mock_OfflineAgentToolNotAvailable'.")
         done();
     });
 });

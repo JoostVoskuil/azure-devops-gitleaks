@@ -23,7 +23,7 @@ tmr = new AzureDevOpsAPIMock(tmr)
         .build()
 
 tmr = new TaskMockBuilder(tmr)
-        .withDefaultMocks()
+        .withOnlineAgentMocks()
         .withDownloadFailure()
         .build()
 

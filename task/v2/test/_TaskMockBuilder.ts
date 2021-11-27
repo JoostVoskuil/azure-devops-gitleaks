@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { IHttpClientResponse } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
 import * as mr from 'azure-pipelines-task-lib/mock-run';
 import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner';
@@ -17,7 +18,46 @@ export class TaskMockBuilder {
 		return this.tmr
 	}
 
-	public withDefaultMocks(): TaskMockBuilder {
+	public withOfflineAgentMocks(): TaskMockBuilder {
+		// Mock RESTClient for Version information
+		this.tmr.registerMock('typed-rest-client/RestClient', {
+			RestClient: function () {
+				return {
+					get: async function (url: string, options: string) {
+						return { statusCode: 404 }
+					}
+				}
+			}
+		});
+		this.tmr.registerMock('typed-rest-client/HttpClient', {
+			HttpClient: function () {
+				return {
+					get: async function (url: string, options: string) {
+						return {
+								message: { statusCode: 404 }
+						}
+					}
+				}
+			}
+		});
+
+		this.tmr.registerMock('fs', {
+			chmodSync: function (filePath: string, rights: string) { return },
+			existsSync: function (filePath: string) { return true },
+			readFileSync: function (filePath: string) { return },
+		});
+		this.tmr.registerMock('guid-typescript', {
+			Guid: {
+				create: function () {
+					return 'guid';
+				}
+			}
+		}
+		);
+		return this;
+	}
+
+	public withOnlineAgentMocks(): TaskMockBuilder {
 		// Mock RESTClient for Version information
 		this.tmr.registerMock('typed-rest-client/RestClient', {
 			RestClient: function () {
@@ -32,10 +72,17 @@ export class TaskMockBuilder {
 								statusCode: 200
 							}
 						}
+					}
+				}
+			}
+		});
+		this.tmr.registerMock('typed-rest-client/HttpClient', {
+			HttpClient: function () {
+				return {
+					get: async function (url: string, options: string) {
 						if (url === 'https://github.com') {
 							return {
-								result: 'hello',
-								statusCode: 200
+									message: { statusCode: 200 }
 							}
 						}
 						else throw Error('Wrong url')
@@ -117,7 +164,7 @@ export class TaskMockBuilder {
 			},
 			findLocalToolVersions: function (toolName: string): string[] {
 				if (toolName != 'gitleaks') throw new Error('Searching for wrong tool');
-				return [ '9.0.0', '8.0.0' ];
+				return ['9.0.0', '8.0.0'];
 			},
 			findLocalTool: function (toolName: string, versionSpec: string) {
 				if (toolName != 'gitleaks') throw new Error('Searching for wrong tool');
