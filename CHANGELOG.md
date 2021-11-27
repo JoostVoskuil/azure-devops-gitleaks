@@ -2,7 +2,7 @@
 
 ## Taks version 2
 
-### 2.0
+### 2.1
 
 - Only support GitLeaks 8 and up, please note that GitLeaks 8 does not provide binaries for 32-bit architectures so the task will only work on x64 architectures
 - Made configuration of the task easier by providing a 'scanmode' picklist
@@ -16,6 +16,10 @@
 
 ## Task version 1
 
+### 1.7
+
+- Last 1.x version
+- Minor bugfixes
 ### 1.6
 
 - Refactored all the code, sorry if that introduced some bugs
