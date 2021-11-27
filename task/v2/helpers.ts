@@ -6,10 +6,10 @@ import { IProxyConfiguration, IRequestOptions } from 'azure-devops-node-api/inte
 taskLib.setResourcePath(path.join(__dirname, 'task.json'), true)
 
 // Replaces Windows \ because of bug in TOML Loader
-//export function replacePathSlashes(filePath: string): string  {
+// export function replacePathSlashes(filePath: string): string  {
 //  if (filePath === undefined) return ''
 //  return filePath.replace(/\\/g, '/');
-//}
+// }
 
 export function getEndpointUrl (name: string): string {
   const value = taskLib.getEndpointUrl(name, true) || undefined
@@ -35,7 +35,7 @@ export function getAzureDevOpsInput (name: string): string {
   return value
 }
 
-export function getRequestOptions(): IRequestOptions {
+export function getRequestOptions (): IRequestOptions {
   const requestOptions: IRequestOptions = {
     socketTimeout: 10000,
     allowRetries: true,

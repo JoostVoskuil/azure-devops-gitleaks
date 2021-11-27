@@ -12,31 +12,31 @@ const taskPath = path.join(__dirname, '..', 'index.js')
 let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath)
 
 new EnvironmentBuilder()
-        .build();
+  .build()
 tmr = new TaskInputBuilder(tmr)
-        .withPredefinedConfigFile('predefined.toml')
-        .build();
+  .withPredefinedConfigFile('predefined.toml')
+  .build()
 
 tmr = new AzureDevOpsAPIMock(tmr)
-        .withAzureDevOpsAPIMock()
-        .build()
+  .withAzureDevOpsAPIMock()
+  .build()
 
 const toolCall = new ToolCallBuilder()
-        .withConfigPath(path.join(__dirname, '../configs/predefined.toml'))
-        .build()
-        
+  .withConfigPath(path.join(__dirname, '../configs/predefined.toml'))
+  .build()
+
 const reportCall = new ReportBuilder()
-        .build()
+  .build()
 
 tmr = new AzureDevOpsAPIMock(tmr)
-        .withAzureDevOpsAPIMock()
-        .build()
+  .withAzureDevOpsAPIMock()
+  .build()
 
 tmr = new TaskMockBuilder(tmr)
-        .withOnlineAgentMocks()
-        .withReport(reportCall, true)
-        .withToolExecution(toolCall, 0)
-        .withEmptyToolCache()
-        .build()
+  .withOnlineAgentMocks()
+  .withReport(reportCall, true)
+  .withToolExecution(toolCall, 0)
+  .withEmptyToolCache()
+  .build()
 
-tmr.run();
+tmr.run()

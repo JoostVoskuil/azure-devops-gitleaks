@@ -10,21 +10,21 @@ const taskPath = path.join(__dirname, '..', 'index.js')
 let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath)
 
 new EnvironmentBuilder()
-        .build();
+  .build()
 tmr = new TaskInputBuilder(tmr)
-        .build();
+  .build()
 
 tmr = new AzureDevOpsAPIMock(tmr)
-        .withAzureDevOpsAPIMock()
-        .build()
-        
+  .withAzureDevOpsAPIMock()
+  .build()
+
 tmr = new AzureDevOpsAPIMock(tmr)
-        .withAzureDevOpsAPIMock()
-        .build()
+  .withAzureDevOpsAPIMock()
+  .build()
 
 tmr = new TaskMockBuilder(tmr)
-        .withOnlineAgentMocks()
-        .withDownloadFailure()
-        .build()
+  .withOnlineAgentMocks()
+  .withDownloadFailure()
+  .build()
 
-tmr.run();
+tmr.run()

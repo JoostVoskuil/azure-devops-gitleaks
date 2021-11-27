@@ -11,32 +11,32 @@ const taskPath = path.join(__dirname, '..', 'index.js')
 let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath)
 
 new EnvironmentBuilder()
-        .build();
+  .build()
 tmr = new TaskInputBuilder(tmr)
-        .withReportFormat('json')
-        .build();
+  .withReportFormat('json')
+  .build()
 
 tmr = new AzureDevOpsAPIMock(tmr)
-        .withAzureDevOpsAPIMock()
-        .build()
+  .withAzureDevOpsAPIMock()
+  .build()
 
 const toolCall = new ToolCallBuilder()
-        .withReportFormat('json')
-        .build()
+  .withReportFormat('json')
+  .build()
 
 const reportCall = new ReportBuilder()
-        .withReportFormat('json')
-        .build()
+  .withReportFormat('json')
+  .build()
 
 tmr = new AzureDevOpsAPIMock(tmr)
-        .withAzureDevOpsAPIMock()
-        .build()
+  .withAzureDevOpsAPIMock()
+  .build()
 
 tmr = new TaskMockBuilder(tmr)
-        .withOnlineAgentMocks()
-        .withReport(reportCall, true)
-        .withToolExecution(toolCall, 0)
-        .withEmptyToolCache()
-        .build()
+  .withOnlineAgentMocks()
+  .withReport(reportCall, true)
+  .withToolExecution(toolCall, 0)
+  .withEmptyToolCache()
+  .build()
 
-tmr.run();
+tmr.run()
