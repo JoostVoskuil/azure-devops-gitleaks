@@ -30,7 +30,7 @@ Thanks to John Lokerse for providing feedback on this extension.
 ## Arguments voor Version 2 of the Task
 
 | Name | Description |
-| -----:------------ |
+| :-----|:------------ |
 | scanlocation | The location to be scanned.<br/> Defaults to $(Build.SourcesDirectory). |
 | configtype | Can be 'default', 'predefined', 'custom'.<br/>'default' is using the default gitleaks setup.<br/>When set to 'predefined' you have the option to select predefined configurations.<br/>When set to 'custom' you need to pass the argument 'configfile' with the filename of your gitleaks config file. |
 | predefinedconfigfile | When set to 'UDMSecretChecks.toml' it uses the Credscan config file provided by Jesse Houwing. |
@@ -49,7 +49,7 @@ Thanks to John Lokerse for providing feedback on this extension.
 ## Arguments voor Version 1 of the Task
 
 | Name | Description |
-| -----:------------ |
+| :-----|:------------ |
 | scanfolder | The location to be scanned. Defaults to $(Build.SourcesDirectory). This is passed to gitleaks as '--path=' |
 | configtype | Can be 'default', 'predefined', 'custom'. 'default' is using the default gitleaks setup. When set to 'predefined' you can pass the argument 'predefinedconfigfile'. When set to 'custom' you need to pass the argument 'configfile' with the filename of your gitleaks config file. |
 | predefinedconfigfile | When set to 'UDMSecretChecks.toml' it uses the Credscan config file provided by Jesse Houwing. |
