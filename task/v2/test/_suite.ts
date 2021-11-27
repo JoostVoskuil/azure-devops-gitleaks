@@ -311,7 +311,6 @@ describe('Gitleaks Versions', function () {
         const tp = path.join(__dirname, 'GitleaksVersion_ShouldFailWhenVersionIsBelow8');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout)
         assert.strictEqual(tr.failed, true, 'should have failed');
         assert.strictEqual(tr.stdout.indexOf('loc_mock_MinimalAllowdVersion') >= 0, true, "Should contain 'loc_mock_MinimalAllowdVersion'")
         assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked 0 time');
