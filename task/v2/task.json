@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 303
+        "Patch": 304
     },
     "groups": [
         {
@@ -74,8 +74,8 @@
             "defaultValue": "GitleaksUdmCombo.toml",
             "required": true,
             "options": {
-                "UDMSecretChecks.toml": "UDMSecretChecks.toml",
-                "GitleaksUdmCombo.toml": "UDMSecretChecksv8.toml"
+                "UDMSecretChecksv8.toml": "UDMSecretChecksv8.toml",
+                "GitleaksUdmCombo.toml": "GitleaksUdmCombo.toml"
             },
             "helpMarkDown": "Select a predefined config file.",
             "visibleRule": "configtype=predefined",
