@@ -23,10 +23,10 @@ const executable = 'gitleaks-darwin-amd64';
 
 helpers.BuildWithDefaultValues();
 tmr.registerMock('azure-pipelines-tool-lib/tool', {
-        downloadTool(url) {
+        downloadTool() {
                 return '/tool';
         },
-        findLocalTool: function (toolName, versionSpec) {
+        findLocalTool: function (toolName) {
                 if (toolName != 'gitleaks') {
                         throw new Error('Searching for wrong tool');
                 }

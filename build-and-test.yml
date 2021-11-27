@@ -5,26 +5,26 @@ parameters:
     type: string
 
 steps:
-#- task: Bash@3
-#  inputs:
-#    targetType: 'inline'
-#    script: 'cd ${{ parameters.path }} && npm run build-test && npm run test-ci'
-#  displayName: 'Run Build for Test and Execute tests'
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'cd ${{ parameters.path }} && npm run build-test && npm run test-ci'
+  displayName: 'Run Build for Test and Execute tests'
 
-#- task: PublishTestResults@2
-#  inputs:
-#    testResultsFormat: 'JUnit'
-#    testResultsFiles: '**/test-results.xml'
-#    testRunTitle: ${{ parameters.name }}
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/test-results.xml'
+    testRunTitle: ${{ parameters.name }}
 
-#- task: PublishCodeCoverageResults@1
-#  inputs:
-#    codeCoverageTool: 'Cobertura'
-#    summaryFileLocation: '$(Build.SourcesDirectory)/${{ parameters.path }}/coverage/cobertura-coverage.xml'
-#    pathToSources: '$(Build.SourcesDirectory)/${{ parameters.path }}'
-#- task: WhiteSource Bolt@20
-#  inputs:
-#    cwd: '$(Build.SourcesDirectory)/${{ parameters.path }}'
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/${{ parameters.path }}/coverage/cobertura-coverage.xml'
+    pathToSources: '$(Build.SourcesDirectory)/${{ parameters.path }}'
+- task: WhiteSource Bolt@20
+  inputs:
+    cwd: '$(Build.SourcesDirectory)/${{ parameters.path }}'
 
 - task: Bash@3
   inputs:

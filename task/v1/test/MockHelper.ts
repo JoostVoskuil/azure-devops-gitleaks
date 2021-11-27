@@ -20,7 +20,7 @@ export function BuildWithDefaultMocks(taskMockRunner: mr.TaskMockRunner): mr.Tas
 	taskMockRunner.registerMock('typed-rest-client/RestClient', {
 		RestClient: function () {
 			return {
-				get: async function (url, options) {
+				get: async function (url: string) {
 					if (url === 'https://api.github.com/repos/zricethezav/gitleaks/releases') {
 						return {
 							result: [
@@ -45,7 +45,7 @@ export function BuildWithDefaultMocks(taskMockRunner: mr.TaskMockRunner): mr.Tas
 		}
 	});
 	taskMockRunner.registerMock('fs', {
-		chmodSync: function (filePath, rights) { return },
+		chmodSync: function () { return true },
 	});
 	taskMockRunner.registerMock('guid-typescript', {
 		Guid: {
@@ -60,10 +60,10 @@ export function BuildWithDefaultMocks(taskMockRunner: mr.TaskMockRunner): mr.Tas
 
 export function BuildWithEmptyToolCache(taskMockRunner: mr.TaskMockRunner): mr.TaskMockRunner {
 	taskMockRunner.registerMock('azure-pipelines-tool-lib/tool', {
-		downloadTool(url, downloadUri, toolExecutable) {
+		downloadTool() {
 			return '/tool';
 		},
-		findLocalTool: function (toolName, versionSpec) {
+		findLocalTool: function (toolName) {
 			if (toolName != 'gitleaks') {
 				throw new Error('Searching for wrong tool');
 			}
@@ -78,7 +78,7 @@ export function BuildWithEmptyToolCache(taskMockRunner: mr.TaskMockRunner): mr.T
 		cleanVersion: function (version) {
 			return version;
 		},
-		cacheFile(fileGUID, toolExecutable, toolName, version) {
+		cacheFile(fileGUID: string, toolExecutable: string, toolName: string) {
 			if (toolName != 'gitleaks') {
 				throw new Error('Searching for wrong tool');
 			}
