@@ -15,7 +15,7 @@ export class AzureDevOpsAPI {
   private readonly teamProject: string
   private readonly collectionUri: string
   private readonly token: string
-  
+
   constructor () {
     this.teamProject = getAzureDevOpsVariable('System.TeamProject')
     this.collectionUri = getEndpointUrl('SYSTEMVSSCONNECTION')
@@ -47,20 +47,20 @@ export class AzureDevOpsAPI {
     const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
     const gitApi: GitApi = await connection.getGitApi()
     const commits: GitCommitRef[] = await gitApi.getPullRequestCommits(repositoryId, pullRequestId, this.teamProject)
-    const filteredCommits = commits.filter((x => x.commitId !== undefined))
+    const filteredCommits = commits.filter(x => x.commitId !== undefined)
 
     taskLib.debug(taskLib.loc('DetectedChanges', filteredCommits.length))
     const commitsArray = filteredCommits.map(o => o.commitId).join('\n')
     return this.writeCommitFile(commitsArray)
   }
 
-  private writeCommitFile(commitsArray: string): string {
+  private writeCommitFile (commitsArray: string): string {
     taskLib.debug(taskLib.loc('Commits', commitsArray))
     const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
     const commitsFilePath = Path.join(agentTempDirectory, `commits-${Guid.create()}.txt`)
     taskLib.debug(taskLib.loc('CommitsFile', commitsFilePath))
-    
+
     fs.writeFileSync(commitsFilePath, commitsArray)
-    return commitsFilePath  
+    return commitsFilePath
   }
 }

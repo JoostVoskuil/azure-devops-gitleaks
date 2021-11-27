@@ -1,28 +1,28 @@
-import * as mr from 'azure-pipelines-task-lib/mock-run';
+import * as mr from 'azure-pipelines-task-lib/mock-run'
 
-import path = require('path');
-import * as helpers from './MockHelper';
+import path = require('path')
+import * as helpers from './MockHelper'
 
-const taskPath = path.join(__dirname, '..', 'index.js');
-let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath);
+const taskPath = path.join(__dirname, '..', 'index.js')
+let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath)
 
 // Inputs
-tmr.setInput('version', 'latest');
-tmr.setInput('configType', 'default');
-tmr.setInput('reportformat', 'json');
-tmr.setInput('scanfolder', __dirname);
+tmr.setInput('version', 'latest')
+tmr.setInput('configType', 'default')
+tmr.setInput('reportformat', 'json')
+tmr.setInput('scanfolder', __dirname)
 
-tmr.setInput('nogit', 'false');
-tmr.setInput('verbose', 'false');
-tmr.setInput('uploadresults', 'false');
-tmr.setInput('redact', 'false');
-tmr.setInput('taskfail', 'true');
-tmr.setInput('taskfailonexecutionerror', 'true');
+tmr.setInput('nogit', 'false')
+tmr.setInput('verbose', 'false')
+tmr.setInput('uploadresults', 'false')
+tmr.setInput('redact', 'false')
+tmr.setInput('taskfail', 'true')
+tmr.setInput('taskfailonexecutionerror', 'true')
 
-const executable = 'gitleaks-darwin-amd64';
+const executable = 'gitleaks-darwin-amd64'
 
-helpers.BuildWithDefaultValues();
-tmr = helpers.BuildWithEmptyToolCache(tmr);
-tmr = helpers.BuildWithSucceedingToolExecution(tmr, executable);
-tmr = helpers.BuildWithDefaultMocks(tmr);
-tmr.run();
+helpers.BuildWithDefaultValues()
+tmr = helpers.BuildWithEmptyToolCache(tmr)
+tmr = helpers.BuildWithSucceedingToolExecution(tmr, executable)
+tmr = helpers.BuildWithDefaultMocks(tmr)
+tmr.run()

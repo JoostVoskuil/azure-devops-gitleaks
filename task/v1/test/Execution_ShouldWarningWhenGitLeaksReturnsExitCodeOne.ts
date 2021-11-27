@@ -1,40 +1,40 @@
-import * as mr from 'azure-pipelines-task-lib/mock-run';
-import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner';
+import * as mr from 'azure-pipelines-task-lib/mock-run'
+import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner'
 
-import path = require('path');
-import * as helpers from './MockHelper';
-import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer';
+import path = require('path')
+import * as helpers from './MockHelper'
+import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer'
 
-const taskPath = path.join(__dirname, '..', 'index.js');
-let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath);
+const taskPath = path.join(__dirname, '..', 'index.js')
+let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath)
 
 // Inputs
-tmr.setInput('version', 'latest');
-tmr.setInput('configType', 'default');
-tmr.setInput('reportformat', 'json');
-tmr.setInput('scanfolder', __dirname);
+tmr.setInput('version', 'latest')
+tmr.setInput('configType', 'default')
+tmr.setInput('reportformat', 'json')
+tmr.setInput('scanfolder', __dirname)
 
-tmr.setInput('nogit', 'false');
-tmr.setInput('verbose', 'false');
-tmr.setInput('uploadresults', 'false');
-tmr.setInput('taskfail', 'false');
-tmr.setInput('redact', 'false');
-tmr.setInput('taskfailonexecutionerror', 'true');
+tmr.setInput('nogit', 'false')
+tmr.setInput('verbose', 'false')
+tmr.setInput('uploadresults', 'false')
+tmr.setInput('taskfail', 'false')
+tmr.setInput('redact', 'false')
+tmr.setInput('taskfailonexecutionerror', 'true')
 
-const executable = 'gitleaks-darwin-amd64';
+const executable = 'gitleaks-darwin-amd64'
 
-helpers.BuildWithDefaultValues();
-tmr = helpers.BuildWithEmptyToolCache(tmr);
-tmr = helpers.BuildWithDefaultMocks(tmr);
-tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr);
+helpers.BuildWithDefaultValues()
+tmr = helpers.BuildWithEmptyToolCache(tmr)
+tmr = helpers.BuildWithDefaultMocks(tmr)
+tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr)
 
 tmr.setAnswers(<TaskLibAnswers>{
-        exec: {
-                [helpers.createToolCall(executable)]: {
-                        'code': 1,
-                        'stdout': 'Gitleaks tool console output',
-                },
-        },
-});
+  exec: {
+    [helpers.createToolCall(executable)]: {
+      code: 1,
+      stdout: 'Gitleaks tool console output'
+    }
+  }
+})
 
-tmr.run();
+tmr.run()
