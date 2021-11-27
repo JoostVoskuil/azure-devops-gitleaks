@@ -1,9 +1,12 @@
 # Gitleaks
 
-This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specified location. It can only scan already checked-out repo's on the agent because it is currently not possible to scan Azure DevOps repo-urls. See [this GitHub issue](https://github.com/zricethezav/gitleaks/issues/440) for more information.
+This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specified location. 
 
 - Thanks to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining gitleaks.
 - Thanks to [Jesse Houwing](https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.
+
+Please note: Task version 1 supports older versions of GitLeaks (7.x). Task version 2 supports the newer versions of GitLeaks ((8.x and up). 
+The behaviour between task version 1 and 2 is different. See [Changelog](CHANGELOG.MD) for changes.
 
 ## YAML Snippet
 
@@ -31,20 +34,20 @@ Thanks to John Lokerse for providing feedback on this extension.
 
 | Name | Description |
 | :-----|:------------ |
-| scanlocation | The location to be scanned.<br/> Defaults to $(Build.SourcesDirectory). |
-| configtype | Can be 'default', 'predefined', 'custom'.<br/>'default' is using the default gitleaks setup.<br/>When set to 'predefined' you have the option to select predefined configurations.<br/>When set to 'custom' you need to pass the argument 'configfile' with the filename of your gitleaks config file. |
-| predefinedconfigfile | When set to 'UDMSecretChecks.toml' it uses the Credscan config file provided by Jesse Houwing. |
-| configfile | Sets the custom configfile in your repo.<br/>Use a relative path within the scanfolder. Example: 'config/gitleaks.toml'. |
-| scanmode | - all will scan all commits.<br/>-prevalidation will scan only the commits that are part of a Pull Request.<br/>-changes will scan only the changes between this build and the previous build.<br/>-smart will detect the best scanmode.<br/>-nogit will run GitLeaks in no-git mode (flat file scan).<br/>-custom will allow you to provide custom -log-opts.|
+| scanlocation | The location to be scanned.<br/>Defaults to $(Build.SourcesDirectory). |
+| configtype | Can be 'default', 'predefined', 'custom'.<br/>'default' for GitLeaks default configuration.<br/>'predefined' allows you to select a predefined configurations.<br/>'custom' allows you to set a custom configuration file. |
+| predefinedconfigfile | Can be 'UDMSecretChecks.toml' or 'GitleaksUdmCombo.toml'.<br/>'UDMSecretChecks.toml' uses the Credscan config file provided by Jesse Houwing.<br/>'GitleaksUdmCombo.toml' uses the default GitLeaks configuration icm the CredScan configuration.|
+| configfile | Sets the custom configfile in your repo. |
+| scanmode | 'all' will scan all commits.<br/>'prevalidation' will scan only the commits that are part of a Pull Request.<br/>'changes' will scan only the changes between this build and the previous build.<br/>'smart' will detect the best scanmode.<br/>'nogit' will run GitLeaks in no-git mode (flat file scan).<br/>'custom' will allow you to provide custom -log-opts.|
 | logoptions | When scanmode is set to 'custom', this allows you to fill in custom log-options that are passed to GitLeaks |
-| redact | Redact secrets from log messages and leaks. Default is true. |
-| taskfail | Sets the behavior of the task when secrets are detected.<br/>When set to `true`, fail the task. When set to `false` and secrets present end with warning. Default is true |
-| uploadresults | When set to true, the results of gitleaks will be uploaded as an artifact to Azure DevOps. Default is true.|
-| reportformat | Sets gitleaks report format: JSON, CSV, SARIF (default: SARIF). |
-| verbose | When set to true, gitleaks prints verbose output. Default is false. |
-| version | Version of Gitleaks to be used. See the GitLeaks GitHub page.<br/>Set to 'latest' to download the latest version of gitleaks. |
+| redact | Redact secrets from log messages and leaks. Default is `true`. |
+| taskfail | Sets the behavior of the task when secrets are detected.<br/>When set to `true`, fail the task. When set to `false` and secrets present end with warning. Default is `true` |
+| uploadresults | When set to `true`, the results of gitleaks will be uploaded as an artifact to Azure DevOps. Default is `true`.|
+| reportformat | Sets gitleaks report format. Default is 'sarif'). |
+| verbose | When set to `true`, gitleaks prints verbose output. Default is `false`. |
+| version | Version of Gitleaks to be used. See the GitLeaks GitHub page.<br/>Set to 'latest' to download the latest version of GitLeaks. |
 | customtoollocation | You can set the custom location of GitLeaks. When set, GitLeaks will not be downloaded but fetched from this location.|
-| taskfailonexecutionerror | Sets the behavior of the task when execution errors occurs.<br/>When set to `true`, fail the task. When set to `false` and the tasks fails to execute the task is SuccededWithWarnings. Default is true |
+| taskfailonexecutionerror | Sets the behavior of the task when execution errors occurs.<br/>When set to `true`, fail the task. When set to `false` and the tasks fails to execute the task is SuccededWithWarnings. Default is `true` |
 
 ## Arguments voor Version 1 of the Task
 
