@@ -23,6 +23,11 @@ The behaviour between task version 1 and 2 is different. See [Changelog](/CHANGE
     reportformat: 'sarif'
 ```
 
+## Prerequisites
+
+- Linux/Osx based agents requires tar to unpack Gitleaks from GitHub
+- Windows based agents require zip to unpack Gitleaks from GitHub
+
 ## Original Authors
 
 Any feedback on gitleaks, please reach out to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining gitleaks.
