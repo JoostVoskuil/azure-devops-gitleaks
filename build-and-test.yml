@@ -22,6 +22,7 @@ steps:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(Build.SourcesDirectory)/${{ parameters.path }}/coverage/cobertura-coverage.xml'
     pathToSources: '$(Build.SourcesDirectory)/${{ parameters.path }}'
+
 - task: WhiteSource Bolt@20
   inputs:
     cwd: '$(Build.SourcesDirectory)/${{ parameters.path }}'

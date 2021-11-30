@@ -134,6 +134,9 @@ export class TaskMockBuilder {
       extractTar (exe: string) {
         return '/tool'
       },
+      extractZip (exe: string) {
+        return '/tool'
+      },
       findLocalTool: function (toolName: string, versionSpec: string) {
         if (toolName !== 'gitleaks') throw new Error('Searching for wrong tool')
         return undefined
@@ -159,6 +162,9 @@ export class TaskMockBuilder {
         return '/tool'
       },
       extractTar (exe: string) {
+        return '/tool'
+      },
+      extractZip (exe: string) {
         return '/tool'
       },
       findLocalToolVersions: function (toolName: string): string[] {
