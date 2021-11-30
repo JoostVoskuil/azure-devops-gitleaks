@@ -9,7 +9,7 @@ Please note:
 - Task version 1 supports older versions of GitLeaks (7.x). 
 - Task version 2 supports the newer versions of GitLeaks (8.x and up). 
 
-The behaviour between task version 1 and 2 is different. See [Changelog](/CHANGELOG.MD) for changes.
+The behaviour between task version 1 and 2 is different. See [Changelog](/CHANGELOG.md) for changes.
 
 ## YAML Snippet
 
