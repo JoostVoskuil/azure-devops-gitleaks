@@ -2,6 +2,11 @@
 
 ## Taks version 2
 
+### 2.2
+
+- Updated GitleaksUdmCombo.toml / Gitleaks 8.2.3 version
+- Support for 32 bit OS (Gitleaks v8.1.2)
+
 ### 2.1
 
 - Only support GitLeaks 8 and up, please note that GitLeaks 8 does not provide binaries for 32-bit architectures so the task will only work on x64 architectures

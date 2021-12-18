@@ -95,8 +95,11 @@ export class GitleaksTool {
     const architecture = getAzureDevOpsVariable('Agent.OSArchitecture')
 
     if ((operatingSystem === 'Windows_NT') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_windows_x64.zip`
+    else if ((operatingSystem === 'Windows_NT') && (architecture.toLowerCase() === 'x86')) return `gitleaks_${version}_windows_x32.zip`
     else if ((operatingSystem === 'Darwin') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_darwin_x64.tar.gz`
     else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_linux_x64.tar.gz`
+    else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'x86')) return `gitleaks_${version}_linux_x32.tar.gz`
+    else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'arm')) return `gitleaks_${version}_linux_armv7.tar.gz`
     else throw new Error(taskLib.loc('OsArchNotSupported', operatingSystem, architecture, 'gitleaks'))
   }
 
