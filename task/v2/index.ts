@@ -5,7 +5,6 @@ import { AzureDevOpsAPI } from './AzureDevOpsAPI'
 import { GitleaksTool } from './gitleakstool'
 import { getAzureDevOpsInput, getAzureDevOpsVariable } from './helpers'
 import Path = require('path')
-import { Guid } from 'guid-typescript'
 
 async function run (): Promise<void> {
   try {
@@ -128,7 +127,9 @@ async function uploadResultsToAzureDevOps (reportPath: string): Promise<void> {
 
 function getReportPath (reportFormat: string): string {
   const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
-  const reportPath = Path.join(agentTempDirectory, `gitleaks-report-${String(Guid.create())}.${reportFormat}`)
+  const jobId = getAzureDevOpsVariable('System.JobId')
+  
+  const reportPath = Path.join(agentTempDirectory, `gitleaks-report-${jobId}.${reportFormat}`)
   return reportPath
 }
 

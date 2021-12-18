@@ -13,6 +13,7 @@ export class EnvironmentBuilder {
     this.environmentSettings.push(new EnvironmentSetting('BUILD_REPOSITORY_ID', 'RepoId'))
     this.environmentSettings.push(new EnvironmentSetting('SYSTEM_DEBUG', 'false'))
     this.environmentSettings.push(new EnvironmentSetting('SYSTEM_TEAMPROJECT', 'MyTeamProject'))
+    this.environmentSettings.push(new EnvironmentSetting('SYSTEM_JOBID', 'guid'))
     this.environmentSettings.push(new EnvironmentSetting('ENDPOINT_AUTH_SCHEME_SYSTEMVSSCONNECTION', 'OAuth'))
     this.environmentSettings.push(new EnvironmentSetting('ENDPOINT_AUTH_PARAMETER_SYSTEMVSSCONNECTION_ACCESSTOKEN', 'Accesstoken'))
     this.environmentSettings.push(new EnvironmentSetting('ENDPOINT_URL_SYSTEMVSSCONNECTION', 'https://dev.azure.com/organisation'))
