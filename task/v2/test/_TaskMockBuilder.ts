@@ -46,14 +46,6 @@ export class TaskMockBuilder {
       existsSync: function (filePath: string) { return true },
       readFileSync: function (filePath: string) { return true }
     })
-    this.tmr.registerMock('guid-typescript', {
-      Guid: {
-        create: function () {
-          return 'guid'
-        }
-      }
-    }
-    )
     return this
   }
 
@@ -94,14 +86,6 @@ export class TaskMockBuilder {
       existsSync: function (filePath: string) { return true },
       readFileSync: function (filePath: string) { return true }
     })
-    this.tmr.registerMock('guid-typescript', {
-      Guid: {
-        create: function () {
-          return 'guid'
-        }
-      }
-    }
-    )
     return this
   }
 

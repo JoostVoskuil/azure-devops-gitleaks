@@ -33,8 +33,7 @@
   "dependencies": {
     "azure-devops-node-api": "^11.1.0",
     "azure-pipelines-task-lib": "^3.1.10",
-    "azure-pipelines-tool-lib": "^1.0.1",
-    "guid-typescript": "^1.0.9"
+    "azure-pipelines-tool-lib": "^1.0.1"
   },
   "devDependencies": {
     "@types/mocha": "^9.0.0",
