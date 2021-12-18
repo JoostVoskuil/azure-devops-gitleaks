@@ -11,10 +11,9 @@ const taskPath = path.join(__dirname, '..', 'index.js')
 let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath)
 
 new EnvironmentBuilder()
-  .withEnvironmentalSetting('AGENT_OS', 'Windows_NT')
-  .withEnvironmentalSetting('AGENT_OSARCHITECTURE', 'x128')
+  .withEnvironmentalSetting('AGENT_OS', 'Linux')
+  .withEnvironmentalSetting('AGENT_OSARCHITECTURE', 'x86')
   .build()
-
 tmr = new TaskInputBuilder(tmr)
   .build()
 
@@ -23,7 +22,6 @@ tmr = new AzureDevOpsAPIMock(tmr)
   .build()
 
 const toolCall = new ToolCallBuilder()
-  .withWindowsExecutable()
   .build()
 
 const reportCall = new ReportBuilder()

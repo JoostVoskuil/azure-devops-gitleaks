@@ -258,7 +258,7 @@ describe('Gitleaks Releases', function () {
     assert.strictEqual(tr.stdout.includes('darwin_x64'), true, "Should contain 'darwin_x64'")
     done()
   })
-  it('Should not download WindowsNT/x86 because Os/Arch not supported', function (done: Mocha.Done) {
+  it('Should not download WindowsNT/x128 because Os/Arch not supported', function (done: Mocha.Done) {
     const tp = path.join(__dirname, 'GitleaksRelease_ShouldFailOnOsArchNotSupported')
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
     tr.run()
@@ -276,6 +276,15 @@ describe('Gitleaks Releases', function () {
     assert.strictEqual(tr.stdout.includes('windows_x64'), true, "Should contain 'windows_x64'")
     done()
   })
+  it('Should download WindowsNT/x32', function (done: Mocha.Done) {
+    const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnWindowsNTx86')
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    tr.run()
+    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
+    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
+    assert.strictEqual(tr.stdout.includes('windows_x32'), true, "Should contain 'windows_x32'")
+    done()
+  })
   it('Should download Linux/x64', function (done: Mocha.Done) {
     const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnLinuxx64')
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
@@ -283,6 +292,15 @@ describe('Gitleaks Releases', function () {
     assert.strictEqual(tr.succeeded, true, 'should have succeeded')
     assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
     assert.strictEqual(tr.stdout.includes('linux_x64'), true, "Should contain 'linux_x64'")
+    done()
+  })
+  it('Should download Linux/x32', function (done: Mocha.Done) {
+    const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnLinuxx86')
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    tr.run()
+    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
+    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
+    assert.strictEqual(tr.stdout.includes('linux_x32'), true, "Should contain 'linux_x32'")
     done()
   })
 })
