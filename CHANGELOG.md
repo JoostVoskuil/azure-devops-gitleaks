@@ -2,9 +2,10 @@
 
 ## Taks version 2
 
-### 2,2.3
+### 2.2.3
 
 - Switched to path inputs
+
 ### 2.2
 
 - Updated GitleaksUdmCombo.toml / Gitleaks 8.2.3 version
