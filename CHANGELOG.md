@@ -2,11 +2,16 @@
 
 ## Taks version 2
 
+### 2.2.3
+
+- Switched to path inputs
+
 ### 2.2
 
 - Updated GitleaksUdmCombo.toml / Gitleaks 8.2.3 version
 - Support for 32 bit OS (Gitleaks v8.1.2)
 - Random GUID in report name is replaced by the GUID of the System.JobId
+
 ### 2.1
 
 - Only support GitLeaks 8 and up, please note that GitLeaks 8 does not provide binaries for 32-bit architectures so the task will only work on x64 architectures
@@ -21,6 +26,9 @@
 
 ## Task version 1
 
+### 1.7.1
+
+- Fixed v1 bug where extension cannot be installed for Azure DevOps server because of incorrect configuration of the input fields
 ### 1.7
 
 - Last 1.x version

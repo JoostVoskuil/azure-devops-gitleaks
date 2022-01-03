@@ -15,7 +15,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
@@ -55,15 +55,6 @@
             "groupName": "scanlocation"
         },
         {
-            "name": "nogit",
-            "type": "boolean",
-            "label": "No Git",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Treat git repos as plain directories.",
-            "groupName": "scanlocation"
-        },
-        {
             "name": "configtype",
             "type": "pickList",
             "label": "Configuration Type",
@@ -100,6 +91,15 @@
             "helpMarkDown": "Specify a custom config file.",
             "visibleRule": "configtype=custom",
             "groupName": "scanconfiguration"
+        },
+        {
+            "name": "nogit",
+            "type": "boolean",
+            "label": "No Git",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Treat git repos as plain directories.",
+            "groupName": "scanoptions"
         },
         {
             "name": "scanonlychanges",

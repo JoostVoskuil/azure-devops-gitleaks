@@ -3,7 +3,7 @@ import taskLib = require('azure-pipelines-task-lib/task')
 import tr = require('azure-pipelines-task-lib/toolrunner')
 import { AzureDevOpsAPI } from './AzureDevOpsAPI'
 import { GitleaksTool } from './gitleakstool'
-import { getAzureDevOpsInput, getAzureDevOpsVariable } from './helpers'
+import { getAzureDevOpsInput, getAzureDevOpsPathInput, getAzureDevOpsVariable } from './helpers'
 import Path = require('path')
 
 async function run (): Promise<void> {
@@ -14,7 +14,7 @@ async function run (): Promise<void> {
     console.log()
 
     // Get inputs on Task Behaviour
-    const scanLocation = getAzureDevOpsInput('scanlocation')
+    const scanLocation = getAzureDevOpsPathInput('scanlocation')
     const reportFormat = getAzureDevOpsInput('reportformat')
     const debug = taskLib.getVariable('system.debug')
     const reportPath = getReportPath(reportFormat)
