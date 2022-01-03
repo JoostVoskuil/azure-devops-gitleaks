@@ -29,6 +29,12 @@ export function getAzureDevOpsInput (name: string): string {
   return value
 }
 
+export function getAzureDevOpsPathInput (name: string): string {
+  const value = taskLib.getPathInput(name)
+  if (value === undefined) throw Error(taskLib.loc('InputEmpty', name))
+  return value
+}
+
 export function getRequestOptions (): IRequestOptions {
   const requestOptions: IRequestOptions = {
     socketTimeout: 10000,
