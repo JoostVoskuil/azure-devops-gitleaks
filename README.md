@@ -41,7 +41,7 @@ Thanks to [Dariusz Porowski](https://github.com/DariuszPorowski) for contributin
 
 Thanks to John Lokerse for providing feedback on this extension.
 
-## Arguments voor Version 2 of the Task
+## Arguments for Version 2 of the Task
 
 | Name | Description |
 | :-----|:------------ |
@@ -60,7 +60,7 @@ Thanks to John Lokerse for providing feedback on this extension.
 | customtoollocation | You can set the custom location of GitLeaks. When set, GitLeaks will not be downloaded but fetched from this location.|
 | taskfailonexecutionerror | Sets the behavior of the task when execution errors occurs.<br/>When set to `true`, fail the task. When set to `false` and the tasks fails to execute the task is SuccededWithWarnings. Default is `true` |
 
-## Arguments voor Version 1 of the Task
+## Arguments for Version 1 of the Task
 
 | Name | Description |
 | :-----|:------------ |
