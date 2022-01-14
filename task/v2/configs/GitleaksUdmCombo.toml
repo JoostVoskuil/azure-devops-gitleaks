@@ -842,6 +842,11 @@ description = "SlackToken 2"
 regex = '''xoxb-[a-z0-9]+-[a-z0-9]+'''
 path = '''\.(?:ps1|psm1|js|json|coffee|xml|js|md|html|py|php|java|ipynb|rb)$|hubot'''
 
+[[rules]]
+id = "common-passwords"
+description = "Common Passwords"
+regex = '''(?i)1q2w3e|abc123|admin@123|admin123|alpha123|asdf|asdfgh|bienvenue|bienvenue123|changeme123|demopass|dragon|iloveyou|letmein|letmein!|letmein_apr|letmein_aug|letmein_dec|letmein_feb|letmein_jan|letmein_jul|letmein_jun|letmein_mar|letmein_may|letmein_nov|letmein_oct|letmein_sep|l0ve|m0t2pass|m0t2passe|mot2pass|mot2passe|mustang|n0tallowed|n0tallowed123|notallowed123|oliver|p@55w0rd|p@55w0rd123|p@55word|p@55word123|p@5sw0rd|p@5sw0rd123|p@5sword|p@5sword123|p@s5w0rd|p@s5w0rd123|p@s5word|p@s5word123|p@55w0rd|p@ssw0rd|p@ssw0rd123|p4ssw0rd|password1|password123|qwert|qwerty|qwerty123|secret1|simplepass|support123|test123|tigger|trustno1|virus|welc0me123|welcome123'''
+
 [allowlist]
 description = "Allowlisted files"
 regexes = ['''219-09-9999''', '''078-05-1120''', '''(9[0-9]{2}|666)-\d{2}-\d{4}''']
