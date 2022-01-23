@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 7
     },
     "groups": [
         {
@@ -237,6 +237,7 @@
         "NoCommitsToScan": "No commits to scan; exiting.",
         "UnknownScanMode": "Unknown scanmode: %s",
         "cachedToolExecutable": "cachedToolExecutable: %s",       
-        "Downloading": "Downloading %s"
+        "Downloading": "Downloading %s",
+        "ScanningRange": "Scanning commit range: %s to %s"
     }
 }

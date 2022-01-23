@@ -28,13 +28,14 @@ export class AzureDevOpsAPI {
     const buildApi: BuildApi = await connection.getBuildApi()
     const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, buildId, undefined, numberOfCommits)
     taskLib.debug(taskLib.loc('DetectedChanges', changes.length))
-    if (changes.length === 0) { return undefined }
+    if (!changes || changes.length === 0) { return undefined }
     const filteredCommits = changes.filter(x => x.id !== undefined)
+    if (!filteredCommits || filteredCommits.length === 0) { return undefined }
     const commitDiff: CommitDiff = {
       lastCommit: filteredCommits[0].id,
       firstCommit: filteredCommits[filteredCommits.length - 1].id
     }
-    taskLib.debug(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
+    console.log(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
     return commitDiff
   }
 
@@ -47,14 +48,14 @@ export class AzureDevOpsAPI {
     const gitApi: GitApi = await connection.getGitApi()
     const commits: GitCommitRef[] = await gitApi.getPullRequestCommits(repositoryId, pullRequestId, this.teamProject)
     taskLib.debug(taskLib.loc('DetectedChanges', commits.length))
-    if (commits.length === 0) { return undefined }
+    if (!commits || commits.length === 0) { return undefined }
     const filteredCommits = commits.filter(x => x.commitId !== undefined)
-    if (filteredCommits.length === 0) { return undefined }
+    if (!filteredCommits || filteredCommits.length === 0) { return undefined }
     const commitDiff: CommitDiff = {
       lastCommit: filteredCommits[0].commitId,
       firstCommit: filteredCommits[filteredCommits.length - 1].commitId
     }
-    taskLib.debug(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
+    console.log(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
     return commitDiff
   }
 }
