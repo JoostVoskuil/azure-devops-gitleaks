@@ -35,7 +35,7 @@ export class AzureDevOpsAPI {
       lastCommit: filteredCommits[0].id,
       firstCommit: filteredCommits[filteredCommits.length - 1].id
     }
-    taskLib.debug(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
+    console.log(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
     return commitDiff
   }
 
@@ -55,7 +55,7 @@ export class AzureDevOpsAPI {
       lastCommit: filteredCommits[0].commitId,
       firstCommit: filteredCommits[filteredCommits.length - 1].commitId
     }
-    taskLib.debug(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
+    console.log(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
     return commitDiff
   }
 }
