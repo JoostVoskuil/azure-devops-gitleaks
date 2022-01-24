@@ -27,8 +27,8 @@ export class AzureDevOpsAPI {
     const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
     const buildApi: BuildApi = await connection.getBuildApi()
     const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, buildId, undefined, numberOfCommits)
+    if (changes === null || changes === undefined || changes.length === 0) { return undefined }
     taskLib.debug(taskLib.loc('DetectedChanges', changes.length))
-    if (!changes || changes.length === 0) { return undefined }
     const filteredCommits = changes.filter(x => x.id !== undefined)
     if (!filteredCommits || filteredCommits.length === 0) { return undefined }
     const commitDiff: CommitDiff = {
@@ -47,8 +47,8 @@ export class AzureDevOpsAPI {
     const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
     const gitApi: GitApi = await connection.getGitApi()
     const commits: GitCommitRef[] = await gitApi.getPullRequestCommits(repositoryId, pullRequestId, this.teamProject)
+    if (commits === null || commits === undefined || commits.length === 0) { return undefined }
     taskLib.debug(taskLib.loc('DetectedChanges', commits.length))
-    if (!commits || commits.length === 0) { return undefined }
     const filteredCommits = commits.filter(x => x.commitId !== undefined)
     if (!filteredCommits || filteredCommits.length === 0) { return undefined }
     const commitDiff: CommitDiff = {
