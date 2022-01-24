@@ -44,7 +44,7 @@ export class AzureDevOpsAPI {
     const pullRequestId = Number(getAzureDevOpsVariable('System.PullRequest.PullRequestId'))
     const repositoryProvider = getAzureDevOpsVariable('Build.Repository.Provider')
 
-    if (repositoryProvider === 'Git') {
+    if (repositoryProvider === 'TfsGit') {
       // Get changes
       const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
       const gitApi: GitApi = await connection.getGitApi()

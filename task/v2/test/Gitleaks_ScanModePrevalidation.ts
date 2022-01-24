@@ -14,7 +14,7 @@ let tmr: mr.TaskMockRunner = new mr.TaskMockRunner(taskPath)
 new EnvironmentBuilder()
   .withEnvironmentalSetting('BUILD_REASON', 'PullRequest')
   .withEnvironmentalSetting('SYSTEM_PULLREQUEST_PULLREQUESTID', 'PullRequestId')
-  .withEnvironmentalSetting('BUILD_REPOSITORY_PROVIDER', 'Git')
+  .withEnvironmentalSetting('BUILD_REPOSITORY_PROVIDER', 'TfsGit')
   .build()
 
 tmr = new TaskInputBuilder(tmr)
