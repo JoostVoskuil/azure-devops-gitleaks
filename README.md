@@ -60,6 +60,9 @@ Thanks to John Lokerse for providing feedback on this extension.
 | customtoollocation | You can set the custom location of GitLeaks. When set, GitLeaks will not be downloaded but fetched from this location.|
 | taskfailonexecutionerror | Sets the behavior of the task when execution errors occurs.<br/>When set to `true`, fail the task. When set to `false` and the tasks fails to execute the task is SuccededWithWarnings. Default is `true` |
 
+### Notes for GitHub repositories:
+- Only Git repositories hosted in Azure DevOps are supported for prevalidation/smart scanning mode. This is because the extension fetches the Pull Request changes from the Azure DevOps API. The API has no knowledge on the PR's on GitHub.
+
 ## Arguments for Version 1 of the Task
 
 | Name | Description |
