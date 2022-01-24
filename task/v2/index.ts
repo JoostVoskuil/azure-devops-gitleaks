@@ -6,7 +6,7 @@ import { GitleaksTool } from './gitleakstool'
 import { getAzureDevOpsInput, getAzureDevOpsPathInput, getAzureDevOpsVariable } from './helpers'
 import Path = require('path')
 
-async function run (): Promise<void> {
+async function run(): Promise<void> {
   try {
     taskLib.setResourcePath(path.join(__dirname, 'task.json'), true)
     console.log(taskLib.loc('ThanksToZacharyRice'))
@@ -57,7 +57,7 @@ async function run (): Promise<void> {
 
 void run()
 
-async function determineLogOptions (scanMode: string): Promise<string | undefined> {
+async function determineLogOptions(scanMode: string): Promise<string | undefined> {
   const buildReason = getAzureDevOpsVariable('Build.Reason')
   let logOptions
 
@@ -87,7 +87,7 @@ async function determineLogOptions (scanMode: string): Promise<string | undefine
   return logOptions
 }
 
-async function getLogOptionsForPreValidationBuild (): Promise<string | undefined> {
+async function getLogOptionsForPreValidationBuild(): Promise<string | undefined> {
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('PreValidationScan'))
   const commitDiff = await azureDevOpsAPI.getPullRequestCommits()
@@ -95,7 +95,7 @@ async function getLogOptionsForPreValidationBuild (): Promise<string | undefined
   return `${commitDiff.firstCommit}..${commitDiff.lastCommit}`
 }
 
-async function getLogOptionsForBuildDelta (limit: number): Promise<string | undefined> {
+async function getLogOptionsForBuildDelta(limit: number): Promise<string | undefined> {
   const azureDevOpsAPI: AzureDevOpsAPI = new AzureDevOpsAPI()
   console.log(taskLib.loc('ChangeScan', limit))
   const commitDiff = await azureDevOpsAPI.getBuildChangesCommits(limit)
@@ -103,7 +103,7 @@ async function getLogOptionsForBuildDelta (limit: number): Promise<string | unde
   return `${commitDiff.firstCommit}..${commitDiff.lastCommit}`
 }
 
-async function setTaskOutcomeBasedOnGitLeaksResult (exitCode: number, reportPath: string): Promise<void> {
+async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath: string): Promise<void> {
   const taskfail = taskLib.getBoolInput('taskfail')
   const uploadResult = taskLib.getBoolInput('uploadresults')
 
@@ -118,22 +118,22 @@ async function setTaskOutcomeBasedOnGitLeaksResult (exitCode: number, reportPath
   }
 }
 
-async function uploadResultsToAzureDevOps (reportPath: string): Promise<void> {
+async function uploadResultsToAzureDevOps(reportPath: string): Promise<void> {
   if (taskLib.exist(reportPath)) {
     taskLib.debug(taskLib.loc('UploadResults', 'CodeAnalysisLogs'))
     taskLib.uploadArtifact('Gitleaks', reportPath, 'CodeAnalysisLogs')
   }
 }
 
-function getReportPath (reportFormat: string): string {
+function getReportPath(reportFormat: string): string {
   const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
   const jobId = getAzureDevOpsVariable('System.JobId')
-  
+
   const reportPath = Path.join(agentTempDirectory, `gitleaks-report-${jobId}.${reportFormat}`)
   return reportPath
 }
 
-function getConfigFilePath (): string | undefined {
+function getConfigFilePath(): string | undefined {
   const configType = getAzureDevOpsInput('configtype')
   const predefinedConfigFile = taskLib.getInput('predefinedconfigfile')
   const configfile = taskLib.getInput('configfile')

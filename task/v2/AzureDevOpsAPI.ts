@@ -14,21 +14,21 @@ export class AzureDevOpsAPI {
   private readonly collectionUri: string
   private readonly token: string
 
-  constructor () {
+  constructor() {
     this.teamProject = getAzureDevOpsVariable('System.TeamProject')
     this.collectionUri = getEndpointUrl('SYSTEMVSSCONNECTION')
     this.token = getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken')
     taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
   }
 
-  public async getBuildChangesCommits (numberOfCommits: number): Promise<CommitDiff | undefined> {
+  public async getBuildChangesCommits(numberOfCommits: number): Promise<CommitDiff | undefined> {
     const buildId = Number(getAzureDevOpsVariable('Build.BuildId'))
     // Get changes
     const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
     const buildApi: BuildApi = await connection.getBuildApi()
     const changes: Change[] = await buildApi.getBuildChanges(this.teamProject, buildId, undefined, numberOfCommits)
+    if (changes === null || changes === undefined || changes.length === 0) { return undefined }
     taskLib.debug(taskLib.loc('DetectedChanges', changes.length))
-    if (!changes || changes.length === 0) { return undefined }
     const filteredCommits = changes.filter(x => x.id !== undefined)
     if (!filteredCommits || filteredCommits.length === 0) { return undefined }
     const commitDiff: CommitDiff = {
@@ -39,24 +39,30 @@ export class AzureDevOpsAPI {
     return commitDiff
   }
 
-  public async getPullRequestCommits (): Promise<CommitDiff | undefined> {
+  public async getPullRequestCommits(): Promise<CommitDiff | undefined> {
     const repositoryId = getAzureDevOpsVariable('Build.Repository.ID')
     const pullRequestId = Number(getAzureDevOpsVariable('System.PullRequest.PullRequestId'))
+    const repositoryProvider = getAzureDevOpsVariable('Build.Repository.Provider')
 
-    // Get changes
-    const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
-    const gitApi: GitApi = await connection.getGitApi()
-    const commits: GitCommitRef[] = await gitApi.getPullRequestCommits(repositoryId, pullRequestId, this.teamProject)
-    taskLib.debug(taskLib.loc('DetectedChanges', commits.length))
-    if (!commits || commits.length === 0) { return undefined }
-    const filteredCommits = commits.filter(x => x.commitId !== undefined)
-    if (!filteredCommits || filteredCommits.length === 0) { return undefined }
-    const commitDiff: CommitDiff = {
-      lastCommit: filteredCommits[0].commitId,
-      firstCommit: filteredCommits[filteredCommits.length - 1].commitId
+    if (repositoryProvider === 'Git') {
+      // Get changes
+      const connection: azdev.WebApi = await getAzureDevOpsConnection(this.collectionUri, this.token)
+      const gitApi: GitApi = await connection.getGitApi()
+      const commits: GitCommitRef[] = await gitApi.getPullRequestCommits(repositoryId, pullRequestId, this.teamProject)
+      if (commits === null || commits === undefined || commits.length === 0) { return undefined }
+      taskLib.debug(taskLib.loc('DetectedChanges', commits.length))
+      const filteredCommits = commits.filter(x => x.commitId !== undefined)
+      if (!filteredCommits || filteredCommits.length === 0) { return undefined }
+      const commitDiff: CommitDiff = {
+        lastCommit: filteredCommits[0].commitId,
+        firstCommit: filteredCommits[filteredCommits.length - 1].commitId
+      }
+      console.log(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
+      return commitDiff
     }
-    console.log(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
-    return commitDiff
+    else {
+      taskLib.warning(taskLib.loc('NotGitRepository', repositoryProvider))
+    }
   }
 }
 

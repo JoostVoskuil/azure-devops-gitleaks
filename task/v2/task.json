@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 7
+        "Patch": 9
     },
     "groups": [
         {
@@ -238,6 +238,7 @@
         "UnknownScanMode": "Unknown scanmode: %s",
         "cachedToolExecutable": "cachedToolExecutable: %s",       
         "Downloading": "Downloading %s",
-        "ScanningRange": "Scanning commit range: %s to %s"
+        "ScanningRange": "Scanning commit range: %s to %s",
+        "NotGitRepository": "For prevalidation/smart scanning mode, only 'Git' is supported as repository type. This repository type is '%s'"
     }
-}
+}   
