@@ -30,7 +30,7 @@ export class AzureDevOpsAPI {
     if (changes === null || changes === undefined || changes.length === 0) { return undefined }
     taskLib.debug(taskLib.loc('DetectedChanges', changes.length))
     const filteredCommits = changes.filter(x => x.id !== undefined)
-    if (!filteredCommits || filteredCommits.length === 0) { return undefined }
+    if (filteredCommits === null || filteredCommits === undefined || filteredCommits.length === 0) { return undefined }
     const commitDiff: CommitDiff = {
       lastCommit: filteredCommits[0].id,
       firstCommit: filteredCommits[filteredCommits.length - 1].id
@@ -52,7 +52,7 @@ export class AzureDevOpsAPI {
       if (commits === null || commits === undefined || commits.length === 0) { return undefined }
       taskLib.debug(taskLib.loc('DetectedChanges', commits.length))
       const filteredCommits = commits.filter(x => x.commitId !== undefined)
-      if (!filteredCommits || filteredCommits.length === 0) { return undefined }
+      if (filteredCommits === null || filteredCommits === undefined || filteredCommits.length === 0) { return undefined }
       const commitDiff: CommitDiff = {
         lastCommit: filteredCommits[0].commitId,
         firstCommit: filteredCommits[filteredCommits.length - 1].commitId
@@ -62,6 +62,7 @@ export class AzureDevOpsAPI {
     }
     else {
       taskLib.warning(taskLib.loc('NotGitRepository', repositoryProvider))
+      return undefined
     }
   }
 }
