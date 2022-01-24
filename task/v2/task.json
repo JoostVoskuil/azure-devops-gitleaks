@@ -238,6 +238,7 @@
         "UnknownScanMode": "Unknown scanmode: %s",
         "cachedToolExecutable": "cachedToolExecutable: %s",       
         "Downloading": "Downloading %s",
-        "ScanningRange": "Scanning commit range: %s to %s"
+        "ScanningRange": "Scanning commit range: %s to %s",
+        "NotGitRepository": "Only 'Git' is supported as repository type. This repository type is '%s'"
     }
 }
