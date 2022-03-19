@@ -160,6 +160,14 @@ describe('Gitleaks parameter calls', function () {
     assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
     done()
   })
+  it('Should provide the correct report name to gitleaks when provided a custom name', function (done: Mocha.Done) {
+    const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithReportNameCustom')
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    tr.run()
+    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
+    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
+    done()
+  })
 })
 
 describe('Set scanmode', function () {

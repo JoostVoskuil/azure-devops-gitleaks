@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 11
+        "Patch": 13
     },
     "groups": [
         {
@@ -150,6 +150,14 @@
                 "csv": "csv"
             },
             "helpMarkDown": "Select a report format: json, sarif, csv (default: sarif)",
+            "groupName": "reporting"
+        },
+        {
+            "name": "reportname",
+            "type": "string",
+            "label": "Custom Report Name",
+            "required": false,
+            "helpMarkDown": "Specify the filename of the report without the extension.",
             "groupName": "reporting"
         },
         {

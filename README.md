@@ -55,10 +55,12 @@ Thanks to John Lokerse for providing feedback on this extension.
 | taskfail | Sets the behavior of the task when secrets are detected.<br/>When set to `true`, fail the task. When set to `false` and secrets present end with warning. Default is `true` |
 | uploadresults | When set to `true`, the results of gitleaks will be uploaded as an artifact to Azure DevOps. Default is `true`.|
 | reportformat | Sets gitleaks report format. Default is 'sarif'). |
+| reportname | Sets the report file name. Default this will be 'gitleaks-<newguid>.<reportextension> |
 | verbose | When set to `true`, gitleaks prints verbose output. Default is `false`. |
 | version | Version of Gitleaks to be used. See the GitLeaks GitHub page.<br/>Set to 'latest' to download the latest version of GitLeaks. |
 | customtoollocation | You can set the custom location of GitLeaks. When set, GitLeaks will not be downloaded but fetched from this location.|
 | taskfailonexecutionerror | Sets the behavior of the task when execution errors occurs.<br/>When set to `true`, fail the task. When set to `false` and the tasks fails to execute the task is SuccededWithWarnings. Default is `true` |
+
 
 ### Notes for GitHub repositories:
 - Only Git repositories hosted in Azure DevOps are supported for prevalidation/smart scanning mode. This is because the extension fetches the Pull Request changes from the Azure DevOps API. The API has no knowledge on the PR's on GitHub.

@@ -16,8 +16,9 @@ async function run(): Promise<void> {
     // Get inputs on Task Behaviour
     const scanLocation = getAzureDevOpsPathInput('scanlocation')
     const reportFormat = getAzureDevOpsInput('reportformat')
+    const reportName = taskLib.getInput('reportname', false)
     const debug = taskLib.getVariable('system.debug')
-    const reportPath = getReportPath(reportFormat)
+    const reportPath = getReportPath(reportFormat, reportName)
 
     // Determine scanmode
     const scanMode = getAzureDevOpsInput('scanmode')
@@ -125,12 +126,16 @@ async function uploadResultsToAzureDevOps(reportPath: string): Promise<void> {
   }
 }
 
-function getReportPath(reportFormat: string): string {
+function getReportPath(reportFormat: string, reportName?: string): string {
   const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
   const jobId = getAzureDevOpsVariable('System.JobId')
 
-  const reportPath = Path.join(agentTempDirectory, `gitleaks-report-${jobId}.${reportFormat}`)
-  return reportPath
+  if (reportName) {
+    return Path.join(agentTempDirectory, `${reportName}.${reportFormat}`)
+  }
+  else {
+    return Path.join(agentTempDirectory, `gitleaks-report-${jobId}.${reportFormat}`)
+  }
 }
 
 function getConfigFilePath(): string | undefined {

@@ -1,9 +1,15 @@
 import path = require('path')
+
 export class ReportBuilder {
   private reportFile: string
 
   constructor () {
     this.reportFile = path.join(__dirname, '/gitleaks-report-guid.sarif')
+  }
+
+  public withReportName (reportType: string, reportName: string): ReportBuilder {
+    this.reportFile = path.join(__dirname, `/${reportName}.${reportType}`)
+    return this
   }
 
   public withReportFormat (reportType: string): ReportBuilder {
