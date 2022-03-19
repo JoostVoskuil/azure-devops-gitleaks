@@ -50,7 +50,8 @@ export function getRequestOptions (): IRequestOptions {
       proxyUrl: agentProxy.proxyUrl,
       proxyUsername: agentProxy.proxyUsername,
       proxyPassword: agentProxy.proxyPassword,
-      proxyBypassHosts: agentProxy.proxyBypassHosts
+      proxyBypassHosts: agentProxy.proxyBypassHosts,
+      
     }
     requestOptions.proxy = proxyConfiguration
   }
