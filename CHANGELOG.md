@@ -2,6 +2,11 @@
 
 ## Taks version 2
 
+### 2.2.13
+
+- Updated NPM Packages
+- Add custom report name
+
 ### 2.2.3
 
 - Switched to path inputs
