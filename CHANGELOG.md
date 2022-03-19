@@ -2,6 +2,10 @@
 
 ## Taks version 2
 
+### 2.2.15
+
+- Updated Config File (GitleaksUdmCombo.toml)
+
 ### 2.2.13
 
 - Updated NPM Packages
