@@ -2,6 +2,11 @@
 
 ## Taks version 2
 
+### 2.2.16
+
+- Updated Config File (GitleaksUdmCombo.toml)
+
+
 ### 2.2.15
 
 - Updated Config File (GitleaksUdmCombo.toml)
