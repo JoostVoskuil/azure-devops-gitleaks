@@ -93,7 +93,7 @@ async function getLogOptionsForPreValidationBuild(): Promise<string | undefined>
   console.log(taskLib.loc('PreValidationScan'))
   const commitDiff = await azureDevOpsAPI.getPullRequestCommits()
   if (commitDiff === undefined || commitDiff.firstCommit === undefined || commitDiff.lastCommit === undefined) return undefined
-  return `${commitDiff.firstCommit}..${commitDiff.lastCommit}`
+  return `${commitDiff.firstCommit}~1..${commitDiff.lastCommit}`
 }
 
 async function getLogOptionsForBuildDelta(limit: number): Promise<string | undefined> {
@@ -101,7 +101,7 @@ async function getLogOptionsForBuildDelta(limit: number): Promise<string | undef
   console.log(taskLib.loc('ChangeScan', limit))
   const commitDiff = await azureDevOpsAPI.getBuildChangesCommits(limit)
   if (commitDiff === undefined || commitDiff.firstCommit === undefined || commitDiff.lastCommit === undefined) return undefined
-  return `${commitDiff.firstCommit}..${commitDiff.lastCommit}`
+  return `${commitDiff.firstCommit}~1..${commitDiff.lastCommit}`
 }
 
 async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath: string): Promise<void> {
