@@ -25,7 +25,7 @@ tmr = new AzureDevOpsAPIMock(tmr)
   .build()
 
 const toolCall = new ToolCallBuilder()
-  .withLogOptions('lastCommitPr..firstCommitPr')
+  .withLogOptions('lastCommitPr^! firstCommitPr')
   .build()
 
 const reportCall = new ReportBuilder()
