@@ -16,13 +16,15 @@ steps:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/test-results.xml'
     testRunTitle: ${{ parameters.name }}
+  condition: always()
 
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(Build.SourcesDirectory)/${{ parameters.path }}/coverage/cobertura-coverage.xml'
     pathToSources: '$(Build.SourcesDirectory)/${{ parameters.path }}'
-
+  condition: always()
+  
 - task: WhiteSource Bolt@20
   inputs:
     cwd: '$(Build.SourcesDirectory)/${{ parameters.path }}'
