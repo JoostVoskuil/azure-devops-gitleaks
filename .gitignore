@@ -4,7 +4,6 @@
 .taskkey
 node_modules/
 .nyc_output/
-package-lock.json
 gitleaks/
 gitleaks-report*
 coverage/
