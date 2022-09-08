@@ -6,6 +6,7 @@ import * as httpClient from 'typed-rest-client/HttpClient'
 import taskLib = require('azure-pipelines-task-lib/task')
 import { getAzureDevOpsInput, getAzureDevOpsVariable, getRequestOptions } from './helpers'
 import { IHttpClientResponse } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces'
+
 export class GitleaksTool {
   constructor () {
     taskLib.setResourcePath(Path.join(__dirname, 'task.json'), true)
@@ -111,7 +112,7 @@ export class GitleaksTool {
     if (gitHubReleases === null) throw new Error(taskLib.loc('CannotRetrieveVersion', url))
 
     // sort releases and get top release as latest
-    gitHubReleases.sort((a, b) => (a.name > b.name) ? -1 : 1)
+    gitHubReleases.sort((a, b) => (a.published_at > b.published_at) ? -1 : 1)
     const version = toolLib.cleanVersion(gitHubReleases[0].name.substr(1, gitHubReleases[0].name.length))
     taskLib.debug(taskLib.loc('ReleaseInfo', version))
     return version
@@ -157,4 +158,5 @@ export class GitleaksTool {
 
 interface GitHubRelease {
   name: string
+  published_at: Date
 }

@@ -14,8 +14,8 @@
     "author": "Joost Voskuil (joost@foxhole.nl)",
     "version": {
         "Major": 2,
-        "Minor": 2,
-        "Patch": 30
+        "Minor": 3,
+        "Patch": 0
     },
     "groups": [
         {
