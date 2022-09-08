@@ -116,7 +116,7 @@ export class GitleaksTool {
     const version = sortedVersions[sortedVersions.length -1].name // Pick last one
     
     taskLib.debug(taskLib.loc('ReleaseInfo', version))
-    return version
+    return version.substring(1, version.length) //remove v
   }
 
   private getGitleaksExecutableFileName (): string {

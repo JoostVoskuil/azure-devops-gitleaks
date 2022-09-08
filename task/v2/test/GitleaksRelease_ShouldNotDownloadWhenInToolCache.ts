@@ -14,7 +14,7 @@ new EnvironmentBuilder()
   .build()
 
 tmr = new TaskInputBuilder(tmr)
-  .withVersion('v8.10.0')
+  .withVersion('8.10.0')
   .build()
 
 tmr = new AzureDevOpsAPIMock(tmr)
