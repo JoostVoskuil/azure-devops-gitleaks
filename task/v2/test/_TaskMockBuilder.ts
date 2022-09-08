@@ -58,8 +58,8 @@ export class TaskMockBuilder {
             if (url === 'https://api.github.com/repos/zricethezav/gitleaks/releases') {
               return {
                 result: [
-                  { name: 'v9.0.0' },
-                  { name: 'v8.0.0' }
+                  { name: 'v9.0.0', published_at: '2022-08-26T15:01:46Z' },
+                  { name: 'v8.0.0', published_at: '2022-08-01T15:01:46Z' }
                 ],
                 statusCode: 200
               }
