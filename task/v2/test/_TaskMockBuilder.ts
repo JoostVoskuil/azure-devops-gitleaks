@@ -58,8 +58,12 @@ export class TaskMockBuilder {
             if (url === 'https://api.github.com/repos/zricethezav/gitleaks/releases') {
               return {
                 result: [
-                  { name: 'v9.0.0' },
-                  { name: 'v8.0.0' }
+                  { name: 'v8.9.0' },
+                  { name: 'v8.9.1'},
+                  { name: 'v8.9.10'},
+                  { name: 'v8.10.0'},
+                  { name: 'v8.7.0' },
+                  { name: 'v8.2.1' }
                 ],
                 statusCode: 200
               }
@@ -153,7 +157,7 @@ export class TaskMockBuilder {
       },
       findLocalToolVersions: function (toolName: string): string[] {
         if (toolName !== 'gitleaks') throw new Error('Searching for wrong tool')
-        return ['9.0.0', '8.0.0']
+      return ['8.0.0', '8.10.0']
       },
       findLocalTool: function (toolName: string, versionSpec: string) {
         if (toolName !== 'gitleaks') throw new Error('Searching for wrong tool')
