@@ -464,9 +464,6 @@ keywords = [
     "key","api","token","secret","client","passwd","password","auth","access",
 ]
 [rules.allowlist]
-paths = [
-  '''Database.refactorlog'''
-]
 stopwords= [
     "client",
     "endpoint",

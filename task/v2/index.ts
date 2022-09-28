@@ -37,6 +37,7 @@ async function run(): Promise<void> {
     toolRunner.argIf(debug === 'true', ['--log-level=debug'])
     toolRunner.arg([`--report-format=${reportFormat}`])
     toolRunner.arg([`--report-path=${reportPath}`])
+    toolRunner.arg([`--exit-code=99`])
     toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
 
@@ -106,15 +107,29 @@ async function getLogOptionsForBuildDelta(limit: number): Promise<string | undef
 
 async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath: string): Promise<void> {
   const taskfail = taskLib.getBoolInput('taskfail')
+  const taskfailonexecutionerror = taskLib.getBoolInput('taskfailonexecutionerror')
+
   const uploadResult = taskLib.getBoolInput('uploadresults')
 
-  if (exitCode === 0) { taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('ResultSuccess')) } else {
+  if (exitCode === 0) 
+  { 
+    taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('ResultSuccess')) 
+  }
+  else if (exitCode === 99) 
+  {
     if (uploadResult) { await uploadResultsToAzureDevOps(reportPath) }
     taskLib.error(taskLib.loc('HelpOnSecretsFound'))
     if (taskfail) {
       taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('ResultError'))
     } else {
       taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultError'))
+    }
+  }
+  else {
+    if (taskfailonexecutionerror) {
+      taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('ResultErrorOnExecution'))
+    } else {
+      taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultErrorOnExecution'))
     }
   }
 }
