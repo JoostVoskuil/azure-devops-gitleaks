@@ -37,10 +37,9 @@ async function run(): Promise<void> {
     toolRunner.argIf(debug === 'true', ['--log-level=debug'])
     toolRunner.arg([`--report-format=${reportFormat}`])
     toolRunner.arg([`--report-path=${reportPath}`])
-    toolRunner.arg([`--exit-code=99`])
     toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
-
+    toolRunner.arg([`--exit-code=99`])
     // Set Tool options
     const options: tr.IExecOptions = {
       failOnStdErr: false,
