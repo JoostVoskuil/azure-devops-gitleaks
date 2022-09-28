@@ -9,6 +9,7 @@ export class ToolCallBuilder {
     this.argument[3] = `--source=${path.join(__dirname, '../')}`
     this.argument[7] = '--report-format=sarif'
     this.argument[8] = `--report-path=${path.join(__dirname, '/gitleaks-report-guid.sarif')}`
+    this.argument[11] = `--exit-code=99`
   }
 
   public withVerbose (): ToolCallBuilder {

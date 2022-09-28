@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 3,
-        "Patch": 2
+        "Patch": 9
     },
     "groups": [
         {
@@ -210,7 +210,8 @@
         "PreValidationScan": "Only commits belonging to this Pull Request are scanned.",
         "ChangeScan": "Only commits are scanned that are ommited between this build and the previous build with a max of %s commits.",
         "PreValidationBuildInvallid": "Scanmode is 'prevalidation', however, this task is not run as part of a pull request.",
-        "ResultError": "Secrets found or error encountered when running Gitleaks. See log and report for details.",
+        "ResultError": "Leaks found. See log and report for details.",
+        "ResultErrorOnExecution": "Execution errors occured. See log for details.",
         "ResultSuccess": "Good job! No leaks.",
         "ScanFolder": "Scan Folder is set to %s",
         "ReportPath": "Report path is set to %s",
