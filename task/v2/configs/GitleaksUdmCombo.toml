@@ -464,6 +464,9 @@ keywords = [
     "key","api","token","secret","client","passwd","password","auth","access",
 ]
 [rules.allowlist]
+paths = [
+  '''Database.refactorlog'''
+]
 stopwords= [
     "client",
     "endpoint",
@@ -1939,8 +1942,8 @@ stopwords= [
     "branch",
     "combination",
     "combo",
-    "Rename Refactor"
 ]
+
 [[rules]]
 description = "GitHub App Token"
 id = "github-app-token"
