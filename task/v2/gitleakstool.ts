@@ -120,7 +120,7 @@ export class GitleaksTool {
       }
       catch (error) {
         console.log(taskLib.loc('ErrorFetchingGitHubAPI', error.message))
-        await delay(5000)
+        await delay(30000)
       }
       if (tryCount == 3) {
         retry = false

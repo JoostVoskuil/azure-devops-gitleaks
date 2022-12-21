@@ -2,12 +2,12 @@
 
 ## Taks version 2
 
-### 2.4.4
+### 2.4.5
 
 - Updated node dependencies
 - Updated GitleaksUdmCombo.toml
 - Added Node16 support (Minimal Agent required is 2.144.0)
-- Retry for 3 times to handle API throttling for GitHub
+- Retry for 3 times to handle API throttling for GitHub. When Throttled it waits for 30 seconds
 
 ### 2.2.16
 

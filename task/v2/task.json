@@ -253,6 +253,6 @@
         "Downloading": "Downloading %s",
         "ScanningRange": "Scanning commit range: %s to %s",
         "NotGitRepository": "For prevalidation/smart scanning mode, only 'TfsGit' is supported as repository type. This repository type is '%s'",
-        "ErrorFetchingGitHubAPI": "Error contacting GitHub API. Waiting for 5 seconds: %s"
+        "ErrorFetchingGitHubAPI": "Error contacting GitHub API. Waiting for 30 seconds: %s"
     }
 }   
