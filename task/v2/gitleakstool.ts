@@ -116,7 +116,7 @@ export class GitleaksTool {
         tryCount = tryCount + 1
         const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool', undefined, undefined, getRequestOptions())
         gitHubReleases = (await rest.get<GitHubRelease[]>(url)).result
-        if (gitHubReleases !== null) retry = false
+        if (gitHubReleases !== undefined) retry = false
       }
       catch (error) {
         console.log(taskLib.loc('ErrorFetchingGitHubAPI', error.message))
@@ -126,7 +126,7 @@ export class GitleaksTool {
         retry = false
       }
     }
-    if (gitHubReleases === null) throw new Error(taskLib.loc('CannotRetrieveVersion'))
+    if (gitHubReleases === undefined) throw new Error(taskLib.loc('CannotRetrieveVersion'))
 
     // sort releases and get top release as latest
     const sortedVersions = gitHubReleases.sort(sortSemanticVersions('name'))
