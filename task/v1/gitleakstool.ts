@@ -108,11 +108,11 @@ export class GitleaksTool {
     if (gitHubReleases === null) throw new Error(taskLib.loc('CannotRetrieveVersion', url))
     // filter allowed latest major release
     const allowedReleases = gitHubReleases.filter(a => a.name.startsWith(latestAllowedMajorRelease))
-    if (allowedReleases === null) throw new Error(taskLib.loc('CannotRetrieveVersion', url))
 
-    // sort releases
-    allowedReleases.sort((a, b) => (a.name > b.name) ? -1 : 1)
-    const version = toolLib.cleanVersion(allowedReleases[0].name.substr(1, allowedReleases[0].name.length))
+    // sort releases and get top release as latest
+    const sortedVersions = allowedReleases.sort(sortSemanticVersions('name'))
+    if (sortedVersions === null) throw new Error(taskLib.loc('CannotRetrieveVersion', url))
+    const version = sortedVersions[sortedVersions.length -1].name // Pick last one
     taskLib.debug(taskLib.loc('ReleaseInfo', version))
     return version
   }
@@ -140,6 +140,30 @@ export class GitleaksTool {
       return false
     }
   }
+}
+
+const sortSemanticVersions = (key: string) => (a: any, b: any) => {
+  // remove v prefix
+  const tmpa = a[ key ].substring(1, a[key].length)
+  const tmpb = b[ key ].substring(1, b[key].length)
+  
+  const a1 = tmpa.split('.');
+  const b1 = tmpb.split('.');
+
+  // 2. Contingency in case there's a 4th or 5th version
+  const len = Math.min(a1.length, b1.length);
+  // 3. Look through each version number and compare.
+  for (let i = 0; i < len; i++) {
+      const a2 = +a1[ i ] || 0;
+      const b2 = +b1[ i ] || 0;
+      
+      if (a2 !== b2) {
+          return a2 > b2 ? 1 : -1;        
+      }
+  }
+  
+  // 4. We hit this if the all checked versions so far are equal
+  return b1.length - a1.length;
 }
 
 interface GitHubRelease {
