@@ -14,9 +14,10 @@
     "author": "Joost Voskuil (joost@foxhole.nl)",
     "version": {
         "Major": 2,
-        "Minor": 3,
-        "Patch": 9
+        "Minor": 4,
+        "Patch": 6
     },
+    "minimumAgentVersion": "2.144.0",
     "groups": [
         {
             "name": "scanconfiguration",
@@ -198,7 +199,10 @@
     "execution": {
         "Node10": {
             "target": "$(currentDirectory)/index.js"
-        }
+        },
+        "Node16": {
+            "target": "$(currentDirectory)/index.js"
+          }
     },
     "messages": {
         "ThanksToZacharyRice": "Thanks to Zachary Rice (https://github.com/zricethezav) for creating and maintaining gitleaks.",
@@ -220,7 +224,7 @@
         "CachedTool": "Cached tool is %s",
         "CannotParseVersion": "Cannot parse version %s",
         "DownloadUri": "%s download uri is %s",
-        "CannotRetrieveVersion": "Cannot retrieve version from %s",
+        "CannotRetrieveVersion": "Cannot retrieve version from GitHub. Maybe it hitted the API throttling.",
         "CannotDownloadUri": "Cannot retreive download from url %s",
         "OsArchNotSupported": "OS '%s' and architecture '%s' is not supported by %s.",
         "UploadResults": "Uploading report file to %s",
@@ -248,6 +252,7 @@
         "cachedToolExecutable": "cachedToolExecutable: %s",       
         "Downloading": "Downloading %s",
         "ScanningRange": "Scanning commit range: %s to %s",
-        "NotGitRepository": "For prevalidation/smart scanning mode, only 'TfsGit' is supported as repository type. This repository type is '%s'"
+        "NotGitRepository": "For prevalidation/smart scanning mode, only 'TfsGit' is supported as repository type. This repository type is '%s'",
+        "ErrorFetchingGitHubAPI": "Error contacting GitHub API. Waiting for 30 seconds: %s"
     }
 }   

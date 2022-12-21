@@ -22,11 +22,6 @@ stages:
     
     - template: build-and-test.yml
       parameters:
-        path: task/v1
-        name: Gitleaks V1
-
-    - template: build-and-test.yml
-      parameters:
         path: task/v2
         name: Gitleaks V2
   

@@ -4,7 +4,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool'
 import * as restClient from 'typed-rest-client/RestClient'
 import * as httpClient from 'typed-rest-client/HttpClient'
 import taskLib = require('azure-pipelines-task-lib/task')
-import { getAzureDevOpsInput, getAzureDevOpsVariable, getRequestOptions } from './helpers'
+import { delay, getAzureDevOpsInput, getAzureDevOpsVariable, getRequestOptions } from './helpers'
 import { IHttpClientResponse } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces'
 
 export class GitleaksTool {
@@ -107,9 +107,26 @@ export class GitleaksTool {
   private async getLatestToolVersionFromGitHub (): Promise<string> {
     // Get information from github
     const url = 'https://api.github.com/repos/zricethezav/gitleaks/releases'
-    const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool', undefined, undefined, getRequestOptions())
-    const gitHubReleases = (await rest.get<GitHubRelease[]>(url)).result
-    if (gitHubReleases === null) throw new Error(taskLib.loc('CannotRetrieveVersion', url))
+    let gitHubReleases
+    let retry = true
+    let tryCount = 0
+
+    while (retry) {
+      try {
+        tryCount = tryCount + 1
+        const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool', undefined, undefined, getRequestOptions())
+        gitHubReleases = (await rest.get<GitHubRelease[]>(url)).result
+        if (gitHubReleases !== undefined) retry = false
+      }
+      catch (error) {
+        console.log(taskLib.loc('ErrorFetchingGitHubAPI', error.message))
+        await delay(30000)
+      }
+      if (tryCount == 3) {
+        retry = false
+      }
+    }
+    if (gitHubReleases === undefined) throw new Error(taskLib.loc('CannotRetrieveVersion'))
 
     // sort releases and get top release as latest
     const sortedVersions = gitHubReleases.sort(sortSemanticVersions('name'))
