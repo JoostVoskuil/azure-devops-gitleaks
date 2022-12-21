@@ -2,9 +2,11 @@
 
 ## Taks version 2
 
-### 2.4.0
+### 2.4.1
 
 - Update node dependencies
+- Updated GitleaksUdmCombo.toml
+
 ### 2.2.16
 
 - Updated Config File (GitleaksUdmCombo.toml)
