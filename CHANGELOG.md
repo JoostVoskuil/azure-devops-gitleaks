@@ -6,6 +6,8 @@
 
 - Update node dependencies
 - Updated GitleaksUdmCombo.toml
+- Added Node16 support
+- Minimal Agent required is 2.144.0
 
 ### 2.2.16
 
