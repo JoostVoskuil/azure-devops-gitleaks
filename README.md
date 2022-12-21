@@ -37,6 +37,41 @@ Thanks to [Dariusz Porowski](https://github.com/DariuszPorowski) for contributin
 
 Thanks to John Lokerse for providing feedback on this extension.
 
+## FetchDepth
+
+Since September 12th ([Sprint 209](https://learn.microsoft.com/en-gb/azure/devops/release-notes/2022/sprint-209-update?tabs=yaml#do-not-sync-tags-when-fetching-a-git-repository])) release of Azure DevOps new pipelines will have a fetch depth of 1. When the fetch depth is set to 1. That means that previous commits are not fetched and cannot be scanned. This results in Gitleaks reporting: `ERR [git] fatal: bad object`
+
+To solve this issue, there are two options:
+
+### Set the fetch depth to 0
+
+When the Fetch Depth is set to 0, all the commits are downloaded. This needs to be set for every pipeline:
+
+```yaml
+steps:
+- checkout: self
+  fetchDepth: 0
+```
+
+See also the [Microsoft Documentation on this](https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines)
+
+For coorporate environments setting variable `Agent.Source.Git.ShallowFetchDepth` to 0 can set this for every pipeline.
+
+### Set the scan mode to nogit
+
+This means that commits are not scanned but flat files. In this case you scan the as-if situation. Secrets  commited but that are not in the HEAD will not be found. 
+
+```yaml
+# Run Gitleaks on Source Repository
+- task: Gitleaks@2
+  inputs:
+    scanlocation: '$(Build.SourcesDirectory)'
+    configtype: 'predefined'
+    predefinedconfigfile: 'GitleaksUdmCombo.toml'
+    scanmode: 'nogit'
+    reportformat: 'sarif'
+```
+
 ## Arguments for Version 2 of the Task
 
 | Name | Description |
