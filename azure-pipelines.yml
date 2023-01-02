@@ -25,13 +25,13 @@ stages:
         path: task/v2
         name: Gitleaks V2
   
-    - task: TfxInstaller@3
+    - task: TfxInstaller@4
       displayName: 'Use Node CLI for Azure DevOps'
       inputs:
-        version: '0.9.x'
+        version: '0.x'
         checkLatest: true
 
-    - task: PackageAzureDevOpsExtension@3
+    - task: PackageAzureDevOpsExtension@4
       displayName: 'Package Extension: $(Build.SourcesDirectory)'
       name: 'packageStep'
       inputs:
@@ -57,20 +57,20 @@ stages:
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   dependsOn: 'Build'
   jobs:
-    - deployment: 
+    - deployment:
       environment: Test
       strategy: 
         runOnce:
          deploy:
           steps:
 
-          - task: TfxInstaller@3
+          - task: TfxInstaller@4
             displayName: 'Use Node CLI for Azure DevOps'
             inputs:
-              version: '0.9.x'
+              version: '0.x'
               checkLatest: true
 
-          - task: PublishAzureDevOpsExtension@3
+          - task: PublishAzureDevOpsExtension@4
             name: 'PublishTest'
             inputs:
               connectTo: 'VsTeam'
@@ -90,19 +90,19 @@ stages:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   dependsOn: 'Test'
   jobs:
-    - deployment: 
+    - deployment:
       environment: Production
       strategy: 
         runOnce:
           deploy:
             steps:
-            - task: TfxInstaller@3
+            - task: TfxInstaller@4
               displayName: 'Use Node CLI for Azure DevOps'
               inputs:
-                version: '0.9.x'
+                version: '0.x'
                 checkLatest: true
 
-            - task: PublishAzureDevOpsExtension@3
+            - task: PublishAzureDevOpsExtension@4
               name: 'PublishProd'
               inputs:
                 connectTo: 'VsTeam'
