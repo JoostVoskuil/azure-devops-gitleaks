@@ -2,6 +2,11 @@
 
 ## Taks version 2
 
+### 2.5.0
+
+- Update node dependencies
+- Include parameter
+
 ### 2.4.5
 
 - Updated node dependencies

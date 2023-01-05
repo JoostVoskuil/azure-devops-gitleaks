@@ -88,8 +88,12 @@ export class TaskInputBuilder {
     return this
   }
 
-  public withCustomToolLocation (toolLocation: string): TaskInputBuilder {
+  public withCustomToolLocationInput (toolLocation: string): TaskInputBuilder {
     this.tmr.setInput('customtoollocation', toolLocation)
+    return this
+  }
+  public withCustomToolLocationVariable (toolLocation: string): TaskInputBuilder {
+    process.env['AGENT_TOOLSGITLEAKSDIRECTORY'] = toolLocation
     return this
   }
 }

@@ -14,7 +14,7 @@ new EnvironmentBuilder()
   .build()
 
 tmr = new TaskInputBuilder(tmr)
-  .withCustomToolLocationInput('shouldnotexist')
+  .withCustomToolLocationInput('exists')
   .build()
 
 tmr = new AzureDevOpsAPIMock(tmr)
@@ -22,6 +22,7 @@ tmr = new AzureDevOpsAPIMock(tmr)
   .build()
 
 const toolCall = new ToolCallBuilder()
+  .withCustomTool()
   .build()
 
 const reportCall = new ReportBuilder()

@@ -95,12 +95,12 @@ This means that commits are not scanned but flat files. In this case you scan th
 | reportname | Sets the report file name. Default this will be 'gitleaks-<newguid>.<reportextension> |
 | verbose | When set to `true`, gitleaks prints verbose output. Default is `false`. |
 | version | Version of Gitleaks to be used. See the GitLeaks GitHub page.<br/>Set to 'latest' to download the latest version of GitLeaks. |
-| customtoollocation | You can set the custom location of GitLeaks. When set, GitLeaks will not be downloaded but fetched from this location.|
+| customtoollocation | You can set the custom location of GitLeaks. When set, GitLeaks will not be downloaded but fetched from this location. An alternative is setting a system variable named 'AGENT_TOOLSGITLEAKSDIRECTORY' to the Gitleaks tool location. This is specially for agents that do not have an internet connection. You can only set file paths. |
 | taskfailonexecutionerror | Sets the behavior of the task when execution errors occurs.<br/>When set to `true`, fail the task. When set to `false` and the tasks fails to execute the task is SuccededWithWarnings. Default is `true` |
 
 
 ### Notes for GitHub repositories:
-- Only Git repositories hosted in Azure DevOps are supported for prevalidation/smart scanning mode. This is because the extension fetches the Pull Request changes from the Azure DevOps API. The API has no knowledge on the PR's on GitHub.
+Only Git repositories hosted in Azure DevOps are supported for prevalidation/smart scanning mode. This is because the extension fetches the Pull Request changes from the Azure DevOps API. The API has no knowledge on the PR's on GitHub.
 
 ## SARIF display in Summary
 
