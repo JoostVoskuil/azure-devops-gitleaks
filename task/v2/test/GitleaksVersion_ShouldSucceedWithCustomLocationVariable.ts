@@ -14,7 +14,7 @@ new EnvironmentBuilder()
   .build()
 
 tmr = new TaskInputBuilder(tmr)
-  .withCustomToolLocation('exists')
+  .withCustomToolLocationVariable('exists')
   .build()
 
 tmr = new AzureDevOpsAPIMock(tmr)

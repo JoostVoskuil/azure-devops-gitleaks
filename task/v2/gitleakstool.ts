@@ -14,8 +14,17 @@ export class GitleaksTool {
 
   async getGitLeaksTool (): Promise<string> {
     const specifiedVersion = getAzureDevOpsInput('version')
-    const customtoollocation = taskLib.getPathInput('customtoollocation')
-    if (customtoollocation === undefined) { return await this.getToolFromAgent(specifiedVersion) } else { return await this.getToolFromCustomLocation(customtoollocation) }
+    const customtoollocationInput = taskLib.getPathInput('customtoollocation')
+    const customtoollocationVariabele = taskLib.getVariable('AGENT_TOOLSGITLEAKSDIRECTORY')
+    if (customtoollocationInput !== undefined) { 
+      return await this.getToolFromCustomLocation(customtoollocationInput) 
+    }
+    else if (customtoollocationVariabele !== undefined) {
+      return await this.getToolFromCustomLocation(customtoollocationVariabele) 
+    }
+    else {
+      return await this.getToolFromAgent(specifiedVersion) 
+    }
   }
 
   private async getToolFromCustomLocation (customToolLocation: string): Promise<string> {

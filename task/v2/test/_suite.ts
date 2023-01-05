@@ -353,8 +353,16 @@ describe('Gitleaks custom location', function () {
     assert.strictEqual(tr.stdout.includes('loc_mock_GitLeaksNotFound'), true, "customLocation/gitleaks-darwin-amd64'")
     done()
   })
-  it('Should succeed with custom tool', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksVersion_ShouldSucceedWithCustomLocation.js')
+  it('Should succeed with custom tool as input parameter', function (done: Mocha.Done) {
+    const tp = path.join(__dirname, 'GitleaksVersion_ShouldSucceedWithCustomLocationInput.js')
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    tr.run()
+    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
+    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
+    done()
+  })
+  it('Should succeed with custom tool as variabele', function (done: Mocha.Done) {
+    const tp = path.join(__dirname, 'GitleaksVersion_ShouldSucceedWithCustomLocationVariable.js')
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
     tr.run()
     assert.strictEqual(tr.succeeded, true, 'should have succeeded')
