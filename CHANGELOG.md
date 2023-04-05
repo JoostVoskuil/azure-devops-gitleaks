@@ -2,6 +2,11 @@
 
 ## Taks version 2
 
+### 2.5.1
+
+- Update node dependencies
+- Update toml files
+
 ### 2.5.0
 
 - Update node dependencies

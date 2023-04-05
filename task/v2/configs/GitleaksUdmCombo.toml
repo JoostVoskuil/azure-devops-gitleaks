@@ -14,12 +14,19 @@ title = "gitleaks config"
 description = "global allow lists"
 paths = [
     '''gitleaks.toml''',
-    '''GitleaksUdmCombo.toml''',
-    '''UDMSecretChecksv8.toml''',
-    '''(.*?)(jpg|gif|doc|docx|zip|xls|pdf|bin|svg|socket)$''',
+    '''(.*?)(jpg|gif|doc|docx|zip|xls|pdf|bin|svg|png|tif|tiff|pyc|zip|socket)$''',
     '''(go.mod|go.sum)$''',
+    '''gradle.lockfile''',
     '''node_modules''',
+    '''package-lock.json''',
+    '''pnpm-lock.yaml''',
+    '''Database.refactorlog''',
     '''vendor''',
+    '''buildsearchers.xml''',
+    '''gitleaks.toml''',
+    '''UDMSecretChecks.toml''',
+    '''UDMSecretChecksv8.toml''',
+    '''GitleaksUdmCombo.toml'''
 ]
 
 [[rules]]
@@ -115,6 +122,15 @@ regex = '''(?i)(?:atlassian|confluence|jira)(?:[0-9a-z\-_\t .]{0,20})(?:[\s|']|[
 secretGroup = 1
 keywords = [
     "atlassian","confluence","jira",
+]
+
+[[rules]]
+description = "Authress Service Client Access Key"
+id = "authress-service-client-access-key"
+regex = '''(?i)\b((?:sc|ext|scauth|authress)_[a-z0-9]{5,30}\.[a-z0-9]{4,6}\.acc_[a-z0-9-]{10,32}\.[a-z0-9+/_=-]{30,120})(?:['|\"|\n|\r|\s|\x60|;]|$)'''
+secretGroup = 1
+keywords = [
+    "sc_","ext_","scauth_","authress_",
 ]
 
 [[rules]]
@@ -241,6 +257,15 @@ keywords = [
 ]
 
 [[rules]]
+description = "Defined Networking API token"
+id = "defined-networking-api-token"
+regex = '''(?i)(?:dnkey)(?:[0-9a-z\-_\t .]{0,20})(?:[\s|']|[\s|"]){0,3}(?:=|>|:=|\|\|:|<=|=>|:)(?:'|\"|\s|=|\x60){0,5}(dnkey-[a-z0-9=_\-]{26}-[a-z0-9=_\-]{52})(?:['|\"|\n|\r|\s|\x60|;]|$)'''
+secretGroup = 1
+keywords = [
+    "dnkey",
+]
+
+[[rules]]
 description = "DigitalOcean OAuth Access Token"
 id = "digitalocean-access-token"
 regex = '''(?i)\b(doo_v1_[a-f0-9]{64})(?:['|\"|\n|\r|\s|\x60|;]|$)'''
@@ -355,7 +380,7 @@ keywords = [
 [[rules]]
 description = "EasyPost API token"
 id = "easypost-api-token"
-regex = '''EZAK(?i)[a-z0-9]{54}'''
+regex = '''\bEZAK(?i)[a-z0-9]{54}'''
 keywords = [
     "ezak",
 ]
@@ -363,7 +388,7 @@ keywords = [
 [[rules]]
 description = "EasyPost test API token"
 id = "easypost-test-api-token"
-regex = '''EZTK(?i)[a-z0-9]{54}'''
+regex = '''\bEZTK(?i)[a-z0-9]{54}'''
 keywords = [
     "eztk",
 ]
@@ -378,7 +403,7 @@ keywords = [
 ]
 
 [[rules]]
-description = "Facebook"
+description = "Facebook Access Token"
 id = "facebook"
 regex = '''(?i)(?:facebook)(?:[0-9a-z\-_\t .]{0,20})(?:[\s|']|[\s|"]){0,3}(?:=|>|:=|\|\|:|<=|=>|:)(?:'|\"|\s|=|\x60){0,5}([a-f0-9]{32})(?:['|\"|\n|\r|\s|\x60|;]|$)'''
 secretGroup = 1
@@ -491,9 +516,6 @@ keywords = [
     "key","api","token","secret","client","passwd","password","auth","access",
 ]
 [rules.allowlist]
-paths = [
-  '''Database.refactorlog'''
-]
 stopwords= [
     "client",
     "endpoint",
@@ -2019,6 +2041,22 @@ keywords = [
 ]
 
 [[rules]]
+description = "GitLab Pipeline Trigger Token"
+id = "gitlab-ptt"
+regex = '''glptt-[0-9a-f]{40}'''
+keywords = [
+    "glptt-",
+]
+
+[[rules]]
+description = "GitLab Runner Registration Token"
+id = "gitlab-rrt"
+regex = '''GR1348941[0-9a-zA-Z\-\_]{20}'''
+keywords = [
+    "gr1348941",
+]
+
+[[rules]]
 description = "Gitter Access Token"
 id = "gitter-access-token"
 regex = '''(?i)(?:gitter)(?:[0-9a-z\-_\t .]{0,20})(?:[\s|']|[\s|"]){0,3}(?:=|>|:=|\|\|:|<=|=>|:)(?:'|\"|\s|=|\x60){0,5}([a-z0-9_-]{40})(?:['|\"|\n|\r|\s|\x60|;]|$)'''
@@ -2413,7 +2451,7 @@ keywords = [
 [[rules]]
 description = "Private Key"
 id = "private-key"
-regex = '''(?i)-----BEGIN[ A-Z0-9_-]{0,100}PRIVATE KEY( BLOCK)?-----[\s\S-]*KEY----'''
+regex = '''(?i)-----BEGIN[ A-Z0-9_-]{0,100}PRIVATE KEY( BLOCK)?-----[\s\S-]*KEY( BLOCK)?----'''
 keywords = [
     "-----begin",
 ]
@@ -2600,7 +2638,7 @@ keywords = [
 ]
 
 [[rules]]
-description = "Stripe"
+description = "Stripe Access Token"
 id = "stripe-access-token"
 regex = '''(?i)(sk|pk)_(test|live)_[0-9a-z]{10,32}'''
 keywords = [
@@ -2766,7 +2804,8 @@ keywords = [
     "zendesk",
 ]
 
-## CREDSCAN
+### AZURE
+
 [[rules]]
 id = "CSCAN0210" 
 description = "GitCredential" 
