@@ -46,9 +46,9 @@ export class GitleaksTool {
   }
 
   private async getToolFromOfflineAgent (version: string): Promise<string> {
-    const toolExecutable = this.getGitleaksExecutableFileName()
+    const toolExecutable: string = this.getGitleaksExecutableFileName()
     console.log(taskLib.loc('OfflineAgent'))
-    const latestVersionAvailableOnAgent = await this.findToolVersionOnAgent(version)
+    const latestVersionAvailableOnAgent: string | undefined = await this.findToolVersionOnAgent(version)
     if (latestVersionAvailableOnAgent === undefined) throw new Error(taskLib.loc('OfflineAgentToolNotAvailable'))
     const cachedToolDirectory = toolLib.findLocalTool('gitleaks', latestVersionAvailableOnAgent)
     return Path.join(cachedToolDirectory, toolExecutable)
@@ -56,11 +56,11 @@ export class GitleaksTool {
 
   private async getToolFromOnlineAgentBasedOnLatest (version): Promise<string> {
     const latestVersionAvailableOnGitHub = await this.getLatestToolVersionFromGitHub()
-    const toolExecutable = this.getGitleaksExecutableFileName()
-    const versionOnAgent = await this.findToolVersionOnAgent(version)
+    const toolExecutable: string = this.getGitleaksExecutableFileName()
+    const versionOnAgent: string | undefined = await this.findToolVersionOnAgent(version)
     if (versionOnAgent !== undefined && versionOnAgent === latestVersionAvailableOnGitHub) {
       console.log(taskLib.loc('OnlineAgentHasLatestVersion', latestVersionAvailableOnGitHub))
-      const cachedToolDirectory = toolLib.findLocalTool('gitleaks', latestVersionAvailableOnGitHub)
+      const cachedToolDirectory: string = toolLib.findLocalTool('gitleaks', latestVersionAvailableOnGitHub)
       return Path.join(cachedToolDirectory, toolExecutable)
     } else {
       console.log(taskLib.loc('OnlineAgentHasNotTheLatestVersion', latestVersionAvailableOnGitHub))
@@ -155,7 +155,7 @@ export class GitleaksTool {
     const url = `https://github.com/zricethezav/gitleaks/releases/download/v${version}/${this.getDownloadFileName(version)}`
     const temp = await toolLib.downloadTool(url)
     taskLib.debug(taskLib.loc('Downloading', url))
-    let extractedToolLocation
+    let extractedToolLocation: string
     if (getAzureDevOpsVariable('Agent.OS') === 'Windows_NT') {
       extractedToolLocation = Path.join(await toolLib.extractZip(temp), this.getGitleaksExecutableFileName())
     } else {

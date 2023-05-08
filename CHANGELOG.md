@@ -2,6 +2,10 @@
 
 ## Taks version 2
 
+### 2.5.3
+- Update node dependencies
+- Bugfix #65
+
 ### 2.5.1
 
 - Update node dependencies
