@@ -197,6 +197,9 @@
         }
     ],
     "execution": {
+        "Node10": {
+            "target": "$(currentDirectory)/index.js"
+        },
         "Node16": {
             "target": "$(currentDirectory)/index.js"
           }
