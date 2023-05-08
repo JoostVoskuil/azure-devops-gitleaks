@@ -155,7 +155,7 @@ export class GitleaksTool {
     const url = `https://github.com/zricethezav/gitleaks/releases/download/v${version}/${this.getDownloadFileName(version)}`
     const temp = await toolLib.downloadTool(url)
     taskLib.debug(taskLib.loc('Downloading', url))
-    let extractedToolLocation
+    let extractedToolLocation: string
     if (getAzureDevOpsVariable('Agent.OS') === 'Windows_NT') {
       extractedToolLocation = Path.join(await toolLib.extractZip(temp), this.getGitleaksExecutableFileName())
     } else {

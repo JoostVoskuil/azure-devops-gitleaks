@@ -3,6 +3,7 @@
 ## Taks version 2
 
 ### 2.5.2
+- Always run under Node16
 - Update node dependencies
 - Bugfix #65
 
