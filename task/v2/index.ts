@@ -118,10 +118,8 @@ async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath:
   {
     if (uploadResult) { await uploadResultsToAzureDevOps(reportPath) }
     if (taskfail) {
-      taskLib.error(taskLib.loc('HelpOnSecretsFound'))
       taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('ResultError'))
     } else {
-      taskLib.warning(taskLib.loc('HelpOnSecretsFound'))
       taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultError'))
     }
   }

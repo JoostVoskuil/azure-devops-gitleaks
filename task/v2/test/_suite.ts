@@ -9,7 +9,7 @@ describe('Gitleaks Execution', function () {
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
     tr.run()
     assert.strictEqual(tr.failed, true, 'should have failed')
-    assert.strictEqual(tr.errorIssues.length, 2, 'should have two errors')
+    assert.strictEqual(tr.errorIssues.length, 1, 'should have one errors')
     assert.strictEqual(tr.stdout.includes('loc_mock_ResultError'), true, "Should contain 'loc_mock_ResultError'")
     assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
     done()

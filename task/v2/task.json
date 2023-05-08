@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 5,
-        "Patch": 2
+        "Patch": 3
     },
     "minimumAgentVersion": "2.144.0",
     "groups": [
@@ -214,7 +214,7 @@
         "PreValidationScan": "Only commits belonging to this Pull Request are scanned.",
         "ChangeScan": "Only commits are scanned that are ommited between this build and the previous build with a max of %s commits.",
         "PreValidationBuildInvallid": "Scanmode is 'prevalidation', however, this task is not run as part of a pull request.",
-        "ResultError": "Leaks found. See log and report for details.",
+        "ResultError": "Leaks found. See log and report for details. See https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository for information how to remove secrets.",
         "ResultErrorOnExecution": "Execution errors occured. See log for details.",
         "ResultSuccess": "Good job! No leaks.",
         "ScanFolder": "Scan Folder is set to %s",
@@ -238,7 +238,6 @@
         "InputEmpty": "Input %s is empty",
         "AdoConnectionError": "Connection cannot be made to Azure DevOps.",
         "GitLeaksNotFound": "Gitleaks cannot be found at %s",
-        "HelpOnSecretsFound": "See https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository for information how to remove secrets.",
         "OfflineAgent": "The agent has no internet connection, searching for toolversion to use on the agent.",
         "OfflineAgentToolNotAvailable": "The agent has no internet connection and the specified Gitleaks tool version is not available on the agent.",
         "OnlineAgentHasLatestVersion": "The latest version of the tool is available in the toolcache. Version is %s",
