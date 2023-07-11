@@ -187,7 +187,7 @@ interface GitHubRelease {
   name: string
 }
 
-const sortSemanticVersions = (key: string) => (a: any, b: any) => {
+const sortSemanticVersions = (key: string) => (a, b) => {
   // remove v prefix
   const tmpa = a[ key ].substring(1, a[key].length)
   const tmpb = b[ key ].substring(1, b[key].length)
