@@ -4,6 +4,11 @@
 
 ### 2.5.3
 - Update node dependencies
+- Update definitions
+- Bugfix #69 (Not quite bugfix but it will throw an message to the console instead of error)
+
+### 2.5.3
+- Update node dependencies
 - Bugfix #65
 
 ### 2.5.1
