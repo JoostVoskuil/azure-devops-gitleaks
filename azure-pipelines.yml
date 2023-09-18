@@ -29,7 +29,8 @@ stages:
         cliProjectKey: 'JoostVoskuil_azure-devops-gitleaks'
         cliProjectName: 'JoostVoskuil_azure-devops-gitleaks'
         cliSources: '.'
-
+        extraProperties: |
+          sonar.coverage.exclusions=task\2\test\*
     - template: build-and-test.yml
       parameters:
         path: task/v2
