@@ -19,12 +19,29 @@ stages:
       inputs:
         versionSpec: '16.x'
       displayName: 'Install Node.js'
-    
+
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'SonarCloud'
+        organization: 'joostvoskuil'
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: 'GitLeaks'
+        cliProjectName: 'GitLeaks'
+        cliSources: '.'
+
     - template: build-and-test.yml
       parameters:
         path: task/v2
         name: Gitleaks V2
-  
+
+    - task: SonarCloudAnalyze@1
+      inputs:
+        jdkversion: 'JAVA_HOME_17_X64'
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
+
     - task: TfxInstaller@4
       displayName: 'Use Node CLI for Azure DevOps'
       inputs:
