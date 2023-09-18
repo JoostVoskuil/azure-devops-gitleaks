@@ -9,51 +9,57 @@ export class ToolCallBuilder {
     this.argument[3] = `--source=${path.join(__dirname, '../')}`
     this.argument[7] = '--report-format=sarif'
     this.argument[8] = `--report-path=${path.join(__dirname, '/gitleaks-report-guid.sarif')}`
-    this.argument[11] = `--exit-code=99`
+    this.argument[12] = `--exit-code=99`
   }
 
-  public withVerbose (): ToolCallBuilder {
+  public withVerbose (): this {
     this.argument[10] = '--verbose'
     return this
   }
 
-  public withCustomTool (): ToolCallBuilder {
+  public withCustomTool (): this {
     this.argument[0] = 'exists/gitleaks'
     return this
   }
 
-  public withNoGit (): ToolCallBuilder {
+  public withNoGit (): this {
     this.argument[9] = '--no-git'
     return this
   }
 
-  public withDebug (): ToolCallBuilder {
+  public withDebug (): this {
     this.argument[6] = '--log-level=debug'
     return this
   }
 
-  public withRedact (): ToolCallBuilder {
+  public withRedact (): this {
     this.argument[5] = '--redact'
     return this
   }
 
-  public withLogOptions (logOptions: string): ToolCallBuilder {
+  public withLogOptions (logOptions: string): this {
     this.argument[4] = `--log-opts=${logOptions}`
     return this
   }
 
-  public withConfigPath (configPath: string): ToolCallBuilder {
+  public withConfigPath (configPath: string): this {
     this.argument[2] = `--config=${configPath}`
     return this
   }
 
-  public withReportFormat (reportFormat: string): ToolCallBuilder {
+  public withReportFormat (reportFormat: string): this {
+    const report = `/gitleaks-report-guid.${reportFormat}`
     this.argument[7] = `--report-format=${reportFormat}`
-    this.argument[8] = `--report-path=${path.join(__dirname, `/gitleaks-report-guid.${reportFormat}`)}`
+    this.argument[8] = `--report-path=${path.join(__dirname, report)}`
     return this
   }
 
-  public withWindowsExecutable (): ToolCallBuilder {
+  public withBaseLinePath (baselineFile: string): this {
+    this.argument[11] = `--baseline-path=${baselineFile}`
+    return this
+  }
+
+  public withWindowsExecutable (): this {
     this.argument[0] = '/tool/gitleaks.exe'
     return this
   }

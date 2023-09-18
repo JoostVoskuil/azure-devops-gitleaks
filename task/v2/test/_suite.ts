@@ -422,4 +422,25 @@ describe('Gitleaks with Offline Agent', function () {
     assert.strictEqual(tr.stdout.includes('loc_mock_OfflineAgentToolNotAvailable'), true, "Should contain 'loc_mock_OfflineAgentToolNotAvailable'.")
     done()
   })
+
+  describe('Baseline file', function () {
+    it('Should be called with baseline file Path', function (done: Mocha.Done) {
+      const tp = path.join(__dirname, 'Gitleaks_ScanWithBaseline')
+      const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+      tr.run()
+      assert.strictEqual(tr.succeeded, true, 'should have succeeded')
+      assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
+      done()
+    })
+    it('Should fail when baseline file does not exists', function (done: Mocha.Done) {
+      const tp = path.join(__dirname, 'Gitleaks_ScanWithBaselineFileNotFound')
+      const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+      tr.run()
+      assert.strictEqual(tr.failed, true, 'should have failed')
+      assert.strictEqual(tr.errorIssues.length, 1, 'should have one errors')
+      assert.strictEqual(tr.stdout.includes('loc_mock_BaselinePathDoesNotExists'), true, "Should contain 'loc_mock_BaselinePathDoesNotExists'")
+      assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked')
+     done()
+    })
+  })
 })

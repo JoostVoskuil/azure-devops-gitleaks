@@ -17,6 +17,7 @@ async function run(): Promise<void> {
     const scanLocation = getAzureDevOpsPathInput('scanlocation')
     const reportFormat = getAzureDevOpsInput('reportformat')
     const reportName = taskLib.getInput('reportname', false)
+    const baselinePath = taskLib.getInput('baselinePath', false)
     const debug = taskLib.getVariable('system.debug')
     const reportPath = getReportPath(reportFormat, reportName)
 
@@ -28,6 +29,11 @@ async function run(): Promise<void> {
     const gitleaksTool = await new GitleaksTool().getGitLeaksTool()
     const toolRunner: tr.ToolRunner = new tr.ToolRunner(gitleaksTool)
 
+    // Check if baseline file exists
+    if (baselinePath !== undefined && (taskLib.exist(baselinePath) === false)) {
+      throw new Error(taskLib.loc('BaselinePathDoesNotExists'))
+    }
+
     // Set Gitleaks arguments
     toolRunner.arg(['detect'])
     toolRunner.argIf(getConfigFilePath(), [`--config=${getConfigFilePath()}`])
@@ -38,6 +44,7 @@ async function run(): Promise<void> {
     toolRunner.arg([`--report-format=${reportFormat}`])
     toolRunner.arg([`--report-path=${reportPath}`])
     toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
+    toolRunner.argIf(baselinePath, [`--baseline-path=${baselinePath}`])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
     toolRunner.arg([`--exit-code=99`])
     // Set Tool options
@@ -123,12 +130,11 @@ async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath:
       taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultError'))
     }
   }
-  else {
-    if (taskfailonexecutionerror) {
+  else if (taskfailonexecutionerror) {
       taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('ResultErrorOnExecution'))
-    } else {
+  } 
+  else {
       taskLib.setResult(taskLib.TaskResult.SucceededWithIssues, taskLib.loc('ResultErrorOnExecution'))
-    }
   }
 }
 

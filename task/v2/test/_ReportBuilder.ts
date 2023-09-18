@@ -7,7 +7,7 @@ export class ReportBuilder {
     this.reportFile = path.join(__dirname, '/gitleaks-report-guid.sarif')
   }
 
-  public withReportName (reportType: string, reportName: string): ReportBuilder {
+  public withReportName (reportType: string, reportName: string): this {
     this.reportFile = path.join(__dirname, `/${reportName}.${reportType}`)
     return this
   }

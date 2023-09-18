@@ -28,71 +28,76 @@ export class TaskInputBuilder {
     return this.tmr
   }
 
-  public withPredefinedConfigFile (file: string): TaskInputBuilder {
+  public withPredefinedConfigFile (file: string): this {
     this.tmr.setInput('configtype', 'predefined')
     this.tmr.setInput('predefinedconfigfile', file)
     this.tmr.setInput('configfile', '')
     return this
   }
 
-  public withCustomConfigFile (file?: string): TaskInputBuilder {
+  public withCustomConfigFile (file?: string): this {
     this.tmr.setInput('configtype', 'custom')
     this.tmr.setInput('predefinedconfigfile', '')
     if (file !== undefined) this.tmr.setInput('configfile', file)
     return this
   }
 
-  public withScanMode (scanmode: string): TaskInputBuilder {
+  public withBaseLine (baselinePath: string): this {
+    this.tmr.setInput('baseLinePath', baselinePath)
+    return this
+  }
+
+  public withScanMode (scanmode: string): this {
     this.tmr.setInput('scanmode', scanmode)
     return this
   }
 
-  public withLogOptions (logoptions: string): TaskInputBuilder {
+  public withLogOptions (logoptions: string): this {
     this.tmr.setInput('scanmode', 'custom')
     this.tmr.setInput('logoptions', logoptions)
     return this
   }
 
-  public withRedact (redact: boolean): TaskInputBuilder {
+  public withRedact (redact: boolean): this {
     this.tmr.setInput('redact', String(redact))
     return this
   }
 
-  public withTaskFail (fail: boolean): TaskInputBuilder {
+  public withTaskFail (fail: boolean): this {
     this.tmr.setInput('taskfail', String(fail))
     return this
   }
 
-  public withUploadResults (uploadResults: boolean): TaskInputBuilder {
+  public withUploadResults (uploadResults: boolean): this {
     this.tmr.setInput('uploadresults', String(uploadResults))
     return this
   }
 
-  public withReportFormat (reportFormat: string): TaskInputBuilder {
+  public withReportFormat (reportFormat: string): this {
     this.tmr.setInput('reportformat', reportFormat)
     return this
   }
 
-  public withVerbose (verbose: boolean): TaskInputBuilder {
+  public withVerbose (verbose: boolean): this {
     this.tmr.setInput('verbose', String(verbose))
     return this
   }
 
-  public withTaskFailOnExecutionError (error: boolean): TaskInputBuilder {
+  public withTaskFailOnExecutionError (error: boolean): this {
     this.tmr.setInput('taskfailonexecutionerror', String(error))
     return this
   }
 
-  public withVersion (version: string): TaskInputBuilder {
+  public withVersion (version: string): this {
     this.tmr.setInput('version', version)
     return this
   }
 
-  public withCustomToolLocationInput (toolLocation: string): TaskInputBuilder {
+  public withCustomToolLocationInput (toolLocation: string): this {
     this.tmr.setInput('customtoollocation', toolLocation)
     return this
   }
-  public withCustomToolLocationVariable (toolLocation: string): TaskInputBuilder {
+  public withCustomToolLocationVariable (toolLocation: string): this {
     process.env['AGENT_TOOLSGITLEAKSDIRECTORY'] = toolLocation
     return this
   }

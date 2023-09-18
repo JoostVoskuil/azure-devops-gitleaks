@@ -166,7 +166,7 @@ export class GitleaksTool {
     taskLib.debug(taskLib.loc('cachedToolExecutable', cachedToolFullPath))
 
     // Set permissions
-    if (!(getAzureDevOpsVariable('Agent.OS') === 'Windows_NT')) fs.chmodSync(cachedToolFullPath, '777')
+    if ((getAzureDevOpsVariable('Agent.OS') !== 'Windows_NT')) fs.chmodSync(cachedToolFullPath, '700')
     return cachedToolFullPath
   }
 

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { IHttpClientResponse } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces'
 import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer'
 import * as mr from 'azure-pipelines-task-lib/mock-run'
 import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner'
@@ -18,7 +17,7 @@ export class TaskMockBuilder {
     return this.tmr
   }
 
-  public withOfflineAgentMocks (): TaskMockBuilder {
+  public withOfflineAgentMocks (): this {
     // Mock RESTClient for Version information
     this.tmr.registerMock('typed-rest-client/RestClient', {
       RestClient: function () {
@@ -49,7 +48,7 @@ export class TaskMockBuilder {
     return this
   }
 
-  public withOnlineAgentMocks (): TaskMockBuilder {
+  public withOnlineAgentMocks (): this {
     // Mock RESTClient for Version information
     this.tmr.registerMock('typed-rest-client/RestClient', {
       RestClient: function () {
@@ -114,7 +113,7 @@ export class TaskMockBuilder {
     return this
   }
 
-  public withEmptyToolCache (): TaskMockBuilder {
+  public withEmptyToolCache (): this {
     this.tmr.registerMock('azure-pipelines-tool-lib/tool', {
       downloadTool (url: string, downloadUri: string, toolExecutable: string) {
         return '/tool'
@@ -144,7 +143,7 @@ export class TaskMockBuilder {
     return this
   }
 
-  public withToolCache (): TaskMockBuilder {
+  public withToolCache (): this {
     this.tmr.registerMock('azure-pipelines-tool-lib/tool', {
       downloadTool (url: string, downloadUri: string, toolExecutable: string) {
         return '/tool'
@@ -175,7 +174,7 @@ export class TaskMockBuilder {
     return this
   }
 
-  public withReport (reportFile: string, exists: boolean = true): TaskMockBuilder {
+  public withReport (reportFile: string, exists: boolean = true): this {
     this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr)
     this.answers.exist = {
       [reportFile]: exists,
@@ -184,7 +183,16 @@ export class TaskMockBuilder {
     return this
   }
 
-  public withToolExecution (toolCall: string, exitCode: number = 0): TaskMockBuilder {
+  public withBaseline (baselinePath: string, exists: boolean = true): this {
+    this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr)
+    this.answers.exist = {
+      [baselinePath]: exists,
+      'exists/gitleaks': true
+    }
+    return this
+  }
+
+  public withToolExecution (toolCall: string, exitCode: number = 0): this {
     this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr)
     this.answers.exec = {
       [toolCall]: {

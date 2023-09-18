@@ -19,7 +19,7 @@ export class AzureDevOpsAPIMock {
     return this.tmr
   }
 
-  public withAzureDevOpsAPIMock (changes?: Change[], commits?: GitCommitRef[]): AzureDevOpsAPIMock {
+  public withAzureDevOpsAPIMock (changes?: Change[], commits?: GitCommitRef[]): this {
     // Mock WebApi
     if (changes === undefined) changes = this.defaultChanges
     if (commits === undefined) commits = this.defaultCommitRef
