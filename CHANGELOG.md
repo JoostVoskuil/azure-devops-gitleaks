@@ -2,7 +2,7 @@
 
 ## Taks version 2
 
-### 2.6.0
+### 2.6.2
 - Update node dependencies
 - Added feature to add a baseline file, see #73
 - Update definitions
