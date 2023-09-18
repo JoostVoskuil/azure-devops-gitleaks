@@ -26,8 +26,8 @@ stages:
         organization: 'joostvoskuil'
         scannerMode: 'CLI'
         configMode: 'manual'
-        cliProjectKey: 'azure-devops-gitleaks'
-        cliProjectName: 'azure-devops-gitleaks'
+        cliProjectKey: 'JoostVoskuil_azure-devops-gitleaks'
+        cliProjectName: 'JoostVoskuil_azure-devops-gitleaks'
         cliSources: '.'
 
     - template: build-and-test.yml
