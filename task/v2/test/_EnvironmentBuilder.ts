@@ -20,7 +20,7 @@ export class EnvironmentBuilder {
     this.environmentSettings.push(new EnvironmentSetting('ENDPOINT_URL_SYSTEMVSSCONNECTION', 'https://dev.azure.com/organisation'))
   }
 
-  public withEnvironmentalSetting(key: string, value: string): EnvironmentBuilder {
+  public withEnvironmentalSetting(key: string, value: string): this {
     this.environmentSettings.push(new EnvironmentSetting(key, value))
     return this
   }

@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 6,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.144.0",
     "groups": [
@@ -121,6 +121,14 @@
             "required": false,
             "helpMarkDown": "Check this option if you want to redact secrets from log messages and leaks.",
             "groupName": "scanoptions"
+        },
+        {
+            "name": "baselinePath",
+            "type": "string",
+            "label": "Baseline file",
+            "required": false,
+            "helpMarkDown": "Specify the baseline json file so that only new findings are reported.",
+            "groupName": "scanconfiguration"
         },
         {
             "name": "taskfail",
@@ -253,6 +261,7 @@
         "ScanningRange": "Scanning commit range: %s to %s",
         "NotGitRepository": "For prevalidation/smart scanning mode, only 'TfsGit' is supported as repository type. This repository type is '%s'",
         "ErrorFetchingGitHubAPI": "Error contacting GitHub API. Waiting for 30 seconds: %s",
-        "UploadFailed": "Failed to upload results to Azure DevOps. Error is %s"
+        "UploadFailed": "Failed to upload results to Azure DevOps. Error is %s",
+        "BaselinePathDoesNotExists": "The specified baseline file path does not exist."
     }
 }   
