@@ -25,10 +25,6 @@ steps:
     pathToSources: '$(Build.SourcesDirectory)/${{ parameters.path }}'
   condition: always()
   
-- task: WhiteSource Bolt@20
-  inputs:
-    cwd: '$(Build.SourcesDirectory)/${{ parameters.path }}'
-
 - task: Bash@3
   inputs:
     targetType: 'inline'

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build-rel": "npm ci --production && tsc index.ts",
-    "build-test": "npm install && tsc",
+    "build-test": "npm ci && tsc index.ts",
     "clean": "rm -rf ./node_modules/ && npm run clean-build",
     "clean-build": "rm -rf ./coverage/ && rm -rf ./.nyc_output/ && rm -rf test-results.xml && find . -name '*.js' -delete && find . -name '*.js.map' -delete && find . -name '.taskkey' -delete",
     "lint": "eslint . --ext .ts",
