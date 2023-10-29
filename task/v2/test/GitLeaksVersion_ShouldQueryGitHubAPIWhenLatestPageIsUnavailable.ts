@@ -14,7 +14,6 @@ new EnvironmentBuilder()
   .build()
 
 tmr = new TaskInputBuilder(tmr)
-  .withVersion('8.1.0')
   .build()
 
 tmr = new AzureDevOpsAPIMock(tmr)
@@ -32,7 +31,7 @@ tmr = new AzureDevOpsAPIMock(tmr)
   .build()
 
 tmr = new TaskMockBuilder(tmr)
-  .withOnlineAgentMocks()
+  .withGitHubAPIMocks()
   .withReport(reportCall, true)
   .withToolExecution(toolCall, 0)
   .withEmptyToolCache()

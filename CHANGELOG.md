@@ -2,6 +2,10 @@
 
 ## Taks version 2
 
+### 2.7.0
+- Fixed GitHub API throttling issue.
+- Update node dependencies
+
 ### 2.6.2
 - Update node dependencies
 - Added feature to add a baseline file, see #73

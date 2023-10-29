@@ -35,10 +35,6 @@ export function getAzureDevOpsPathInput (name: string): string {
   return value
 }
 
-export function delay(ms: number) {
-  return new Promise( resolve => setTimeout(resolve, ms) );
-}
-
 export function getRequestOptions (): IRequestOptions {
   const requestOptions: IRequestOptions = {
     socketTimeout: 10000,

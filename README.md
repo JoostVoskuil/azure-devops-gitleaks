@@ -37,12 +37,6 @@ Thanks to [Dariusz Porowski](https://github.com/DariuszPorowski) for contributin
 
 Thanks to John Lokerse for providing feedback on this extension.
 
-## GitHub API Rate Limit
-
-The task connects to GitHub for fetching the latest version of the GitLeaks tool. This is done by querying the API. Sometimes (specially on Hosted Agents) you can hit the API limit making it impossible to download the GitLeaks tool. The task does three times retry to download GitLeaks.
-
-If you hit this limitation often, please set the version of GitLeaks by specifying the version with the `version` input parameter of the task.
-
 ## FetchDepth
 
 Since September 12th ([Sprint 209](https://learn.microsoft.com/en-gb/azure/devops/release-notes/2022/sprint-209-update?tabs=yaml#do-not-sync-tags-when-fetching-a-git-repository])) release of Azure DevOps new pipelines will have a fetch depth of 1. When the fetch depth is set to 1. That means that previous commits are not fetched and cannot be scanned. This results in Gitleaks reporting: `ERR [git] fatal: bad object`
@@ -61,7 +55,7 @@ steps:
 
 See also the [Microsoft Documentation on this](https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines)
 
-For coorporate environments setting variable `Agent.Source.Git.ShallowFetchDepth` to 0 can set this for every pipeline.
+For coorporate environments setting variable `Agent.Source.Git.ShallowFetchDepth` to `0` can set this for every pipeline.
 
 ### Set the scan mode to nogit
 

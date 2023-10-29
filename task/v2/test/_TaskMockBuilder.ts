@@ -48,7 +48,7 @@ export class TaskMockBuilder {
     return this
   }
 
-  public withOnlineAgentMocks (): this {
+  public withGitHubAPIMocks (): this {
     // Mock RESTClient for Version information
     this.tmr.registerMock('typed-rest-client/RestClient', {
       RestClient: function () {
@@ -60,6 +60,7 @@ export class TaskMockBuilder {
                   { name: 'v8.9.0' },
                   { name: 'v8.9.1'},
                   { name: 'v8.9.10'},
+                  { name: 'v9.1.10'},
                   { name: 'v8.10.0'},
                   { name: 'v8.7.0' },
                   { name: 'v8.2.1' }
@@ -79,7 +80,48 @@ export class TaskMockBuilder {
               return {
                 message: { statusCode: 200 }
               }
-            } else throw Error('Wrong url')
+            } 
+            else if (url === 'https://github.com/gitleaks/gitleaks/releases/latest') {
+              return {
+                message: { 
+                  statusCode: 404, 
+                }
+              }
+            }
+            else throw Error('Wrong url')
+          }
+        }
+      }
+    })
+    this.tmr.registerMock('fs', {
+      chmodSync: function (filePath: string, rights: string) { return true },
+      existsSync: function (filePath: string) { return true },
+      readFileSync: function (filePath: string) { return true }
+    })
+    return this
+  }
+
+  public withOnlineAgentMocks (): this {
+    this.tmr.registerMock('typed-rest-client/HttpClient', {
+      HttpClient: function () {
+        return {
+          get: async function (url: string, options: string) {
+            if (url === 'https://github.com') {
+              return {
+                message: { statusCode: 200 }
+              }
+            } 
+            else if (url === 'https://github.com/gitleaks/gitleaks/releases/latest') {
+              return {
+                message: { 
+                  statusCode: 200, 
+                  req: { 
+                    path: 'github.com/gitleaks/gitleaks/releases/tag/v8.10.0'
+                  } 
+                }
+              }
+            }
+            else throw Error('Wrong url')
           }
         }
       }
