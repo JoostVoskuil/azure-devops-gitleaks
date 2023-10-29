@@ -14,8 +14,8 @@
     "author": "Joost Voskuil (joost@foxhole.nl)",
     "version": {
         "Major": 2,
-        "Minor": 6,
-        "Patch": 2
+        "Minor": 7,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.144.0",
     "groups": [
@@ -184,7 +184,7 @@
             "label": "Gitleaks version",
             "defaultValue": "latest",
             "required": false,
-            "helpMarkDown": "Specify the version of Gitleaks to use. Must be minimal major version 8. Use 'latest' for latest version.",
+            "helpMarkDown": "Specify the version of Gitleaks to use. Must be major version 8. Use 'latest' for latest version.",
             "groupName": "gitleakstool"
         },
         {
@@ -215,7 +215,7 @@
     "messages": {
         "ThanksToZacharyRice": "Thanks to Zachary Rice (https://github.com/zricethezav) for creating and maintaining gitleaks.",
         "ThanksToJesseHouwing": "Thanks to Jesse Houwing (https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.",
-        "MinimalAllowdVersion": "The minimal allowed major version of Gitleaks supported by this task is version 8. Specified version is %s",
+        "OnlySupportsGitLeaks8": "This version of the task only supports GitLeaks version 8. Specified version is %s",
         "DetectedChanges": "Detected %s Git commit(s)",
         "ScanningCommits": "Scanning for %s Git commit(s) for this build. First commit is %s, Last commit is %s",
         "LogOptionsFound": "Log options is set as input, scanmode is ignored",
@@ -237,7 +237,7 @@
         "OsArchNotSupported": "OS '%s' and architecture '%s' is not supported by %s.",
         "UploadResults": "Uploading report file to %s",
         "GettingUrl": "Getting %s to find latest version of %s",
-        "ReleaseInfo": "Downloaded release info: %s",
+        "ReleaseInfo": "GitLeaks latest release version is %s",
         "CommitsFile": "CommitsFile is set to  %s",
         "Commits": "The following commits will be scanned: %s",
         "GetEndpointUrlEmpty": "GetEndpointUrl %s is empty",
@@ -260,8 +260,12 @@
         "Downloading": "Downloading %s",
         "ScanningRange": "Scanning commit range: %s to %s",
         "NotGitRepository": "For prevalidation/smart scanning mode, only 'TfsGit' is supported as repository type. This repository type is '%s'",
-        "ErrorFetchingGitHubAPI": "Error contacting GitHub API. Waiting for 30 seconds: %s",
+        "ErrorFetchingGitHubAPI": "Error contacting GitHub API: %s",
+        "ErrorFetchingGitHub": "Error contacting GitHub Latest release page: %s",
         "UploadFailed": "Failed to upload results to Azure DevOps. Error is %s",
-        "BaselinePathDoesNotExists": "The specified baseline file path does not exist."
+        "BaselinePathDoesNotExists": "The specified baseline file path does not exist.",
+        "QueryingGitHubLatestReleasePage": "Querying Gitleaks Latest Release GitHub Page.",
+        "QueryingGitHubAPI": "Querying Gitleaks GitHubs API for latest release.",
+        "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version."
     }
 }   

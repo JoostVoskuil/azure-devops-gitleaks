@@ -4,7 +4,7 @@ import * as toolLib from 'azure-pipelines-tool-lib/tool'
 import * as restClient from 'typed-rest-client/RestClient'
 import * as httpClient from 'typed-rest-client/HttpClient'
 import taskLib = require('azure-pipelines-task-lib/task')
-import { delay, getAzureDevOpsInput, getAzureDevOpsVariable, getRequestOptions } from './helpers'
+import { getAzureDevOpsInput, getAzureDevOpsVariable, getRequestOptions } from './helpers'
 import { IHttpClientResponse } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces'
 
 export class GitleaksTool {
@@ -34,6 +34,25 @@ export class GitleaksTool {
     throw new Error(taskLib.loc('GitLeaksNotFound', toolLocation))
   }
 
+  private async getToolFromAgent (specifiedVersion: string): Promise<string> {
+    const isGitHubAvailable = await this.detectIfGitHubIsReachable()
+
+    // Detect minimal version of Gitleaks supported is version 8
+    if (specifiedVersion.toLowerCase() !== 'latest') {
+      const version = toolLib.cleanVersion(specifiedVersion)
+      const semver = version.split('.')
+      if (Number(semver[0]) !== 8 ) throw Error(taskLib.loc('OnlySupportsGitLeaks8', version))
+    }
+
+    if (!isGitHubAvailable) {
+      return await this.getToolFromOfflineAgent(specifiedVersion)
+    } else if (specifiedVersion.toLowerCase() === 'latest') {
+      return await this.getToolFromOnlineAgentBasedOnLatest(specifiedVersion.toLowerCase())
+    } else {
+      return await this.getToolFromOnlineAgentBasedOnVersion(specifiedVersion)
+    }
+  }
+
   private async findToolVersionOnAgent (version: string): Promise<string | undefined> {
     const cachedVersionsbyAgent = toolLib.findLocalToolVersions('gitleaks')
     if (cachedVersionsbyAgent === undefined || cachedVersionsbyAgent.length === 0) return undefined
@@ -54,10 +73,19 @@ export class GitleaksTool {
     return Path.join(cachedToolDirectory, toolExecutable)
   }
 
-  private async getToolFromOnlineAgentBasedOnLatest (version): Promise<string> {
-    const latestVersionAvailableOnGitHub = await this.getLatestToolVersionFromGitHub()
+  private async getToolFromOnlineAgentBasedOnLatest (version: string): Promise<string> {
+    // Try to get the easyest way through the latest page
+    let latestVersionAvailableOnGitHub = await this.getLatestToolVersionFromGitHub()
+    // If version cannot be retrieved from latest page, use API
+    if (latestVersionAvailableOnGitHub === undefined) {
+      latestVersionAvailableOnGitHub =  await this.getLatestToolVersionFromGitHubAPI()
+    }
+    
+    if (latestVersionAvailableOnGitHub === undefined) throw new Error(taskLib.loc('CouldNotQueryGitLeaksLatestVersion'))
+
     const toolExecutable: string = this.getGitleaksExecutableFileName()
     const versionOnAgent: string | undefined = await this.findToolVersionOnAgent(version)
+
     if (versionOnAgent !== undefined && versionOnAgent === latestVersionAvailableOnGitHub) {
       console.log(taskLib.loc('OnlineAgentHasLatestVersion', latestVersionAvailableOnGitHub))
       const cachedToolDirectory: string = toolLib.findLocalTool('gitleaks', latestVersionAvailableOnGitHub)
@@ -81,25 +109,6 @@ export class GitleaksTool {
     }
   }
 
-  private async getToolFromAgent (specifiedVersion: string): Promise<string> {
-    const isGitHubAvailable = await this.detectIfGitHubIsReachable()
-
-    // Detect minimal version of Gitleaks supported is version 8
-    if (specifiedVersion.toLowerCase() !== 'latest') {
-      const version = toolLib.cleanVersion(specifiedVersion)
-      const semver = version.split('.')
-      if (Number(semver[0]) < 8) throw Error(taskLib.loc('MinimalAllowdVersion', version))
-    }
-
-    if (!isGitHubAvailable) {
-      return await this.getToolFromOfflineAgent(specifiedVersion)
-    } else if (specifiedVersion.toLowerCase() === 'latest') {
-      return await this.getToolFromOnlineAgentBasedOnLatest(specifiedVersion.toLowerCase())
-    } else {
-      return await this.getToolFromOnlineAgentBasedOnVersion(specifiedVersion)
-    }
-  }
-
   private getDownloadFileName (version: string): string {
     const operatingSystem = getAzureDevOpsVariable('Agent.OS')
     const architecture = getAzureDevOpsVariable('Agent.OSArchitecture')
@@ -113,36 +122,52 @@ export class GitleaksTool {
     else throw new Error(taskLib.loc('OsArchNotSupported', operatingSystem, architecture, 'gitleaks'))
   }
 
-  private async getLatestToolVersionFromGitHub (): Promise<string> {
-    // Get information from github
-    const url = 'https://api.github.com/repos/zricethezav/gitleaks/releases'
-    let gitHubReleases
-    let retry = true
-    let tryCount = 0
 
-    while (retry) {
-      try {
-        tryCount = tryCount + 1
-        const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool', undefined, undefined, getRequestOptions())
-        gitHubReleases = (await rest.get<GitHubRelease[]>(url)).result
-        if (gitHubReleases !== undefined) retry = false
-      }
-      catch (error) {
-        console.log(taskLib.loc('ErrorFetchingGitHubAPI', error.message))
-        await delay(30000)
-      }
-      if (tryCount == 3) {
-        retry = false
+  private async getLatestToolVersionFromGitHub (): Promise<string | undefined> {
+    console.log(taskLib.loc('QueryingGitHubLatestReleasePage'))
+    try {
+      // Get information from github
+      const url = 'https://github.com/gitleaks/gitleaks/releases/latest'
+      const http: httpClient.HttpClient  = new httpClient.HttpClient('vsts-node-tool')
+      
+      const response: httpClient.HttpClientResponse = await http.get(url, getRequestOptions())
+      if (response.message.statusCode !== 200) throw new Error(taskLib.loc('CannotRetrieveVersion'))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const path = (response.message as any).req.path
+      
+      const version: string = path.split('/v')[1]
+      
+      if (version.startsWith('8')) {
+        taskLib.debug(taskLib.loc('ReleaseInfo', version))
+        return version
       }
     }
-    if (gitHubReleases === undefined) throw new Error(taskLib.loc('CannotRetrieveVersion'))
+    catch (error) {
+      console.log(taskLib.loc('ErrorFetchingGitHub', error.message))
+    }
+    return undefined
+  }
 
-    // sort releases and get top release as latest
-    const sortedVersions = gitHubReleases.sort(sortSemanticVersions('name'))
-    const version = sortedVersions[sortedVersions.length -1].name // Pick last one
-    
-    taskLib.debug(taskLib.loc('ReleaseInfo', version))
-    return version.substring(1, version.length) //remove v
+  private async getLatestToolVersionFromGitHubAPI (): Promise<string | undefined> {
+    console.log(taskLib.loc('QueryingGitHubAPI'))
+    try {
+      // Get information from github
+      const url = 'https://api.github.com/repos/zricethezav/gitleaks/releases'
+      const rest: restClient.RestClient = new restClient.RestClient('vsts-node-tool', undefined, undefined, getRequestOptions())
+      const gitHubReleases = (await rest.get<GitHubRelease[]>(url)).result
+      if (gitHubReleases === null) throw new Error(taskLib.loc('CannotRetrieveVersion'))
+      // filter only gitleaks 8
+      const filteredVersions = gitHubReleases.filter(x=>x.name.startsWith('v8'))
+      // sort releases and get top release as latest
+      const sortedVersions = filteredVersions.sort(sortSemanticVersions('name'))
+      let version = sortedVersions[sortedVersions.length -1].name // Pick last one
+      version = version.substring(1, version.length) //remove v
+      taskLib.debug(taskLib.loc('ReleaseInfo', version))
+      return version
+    }
+    catch (error) {
+      return undefined
+    }
   }
 
   private getGitleaksExecutableFileName (): string {
