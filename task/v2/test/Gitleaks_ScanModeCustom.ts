@@ -15,7 +15,7 @@ new EnvironmentBuilder()
   .build()
 tmr = new TaskInputBuilder(tmr)
   .withScanMode('custom')
-  .withLogOptions('customLogOptions')
+  .withLogOptions('custom LogOptions')
   .build()
 
 tmr = new AzureDevOpsAPIMock(tmr)
@@ -23,7 +23,7 @@ tmr = new AzureDevOpsAPIMock(tmr)
   .build()
 
 const toolCall = new ToolCallBuilder()
-  .withLogOptions('customLogOptions')
+  .withLogOptions('custom LogOptions')
   .build()
 
 const reportCall = new ReportBuilder()

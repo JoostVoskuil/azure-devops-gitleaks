@@ -9,7 +9,6 @@
 - Added reportartifactcontainer parameter to customize artifact location
 - Fixed bug, put log options between quotes
 
-
 ### 2.7
 - Fixed GitHub API throttling issue.
 - Update node dependencies
