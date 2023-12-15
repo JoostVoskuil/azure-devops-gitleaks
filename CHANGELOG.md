@@ -6,7 +6,7 @@
 - Update definitions
 - Update node dependencies
 - Added reportfolder parameter to customize report location
-- Added reportartifactcontainer parameter to customize artifact location
+- Added reportartifactname parameter to customize artifact location
 - Fixed bug, put log options between quotes
 
 ### 2.7
