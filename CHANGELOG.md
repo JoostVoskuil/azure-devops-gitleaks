@@ -2,7 +2,14 @@
 
 ## Taks version 2
 
-### 2.7.0
+### 2.8
+- Update definitions
+- Update node dependencies
+- Added reportfolder parameter to customize report location
+- Added reportartifactname parameter to customize artifact location
+- Fixed bug, put log options between quotes
+
+### 2.7
 - Fixed GitHub API throttling issue.
 - Update node dependencies
 

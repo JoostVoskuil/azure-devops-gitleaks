@@ -38,7 +38,7 @@ async function run(): Promise<void> {
     toolRunner.arg(['detect'])
     toolRunner.argIf(getConfigFilePath(), [`--config=${getConfigFilePath()}`])
     toolRunner.arg([`--source=${scanLocation}`])
-    toolRunner.argIf(logOptions, [`--log-opts=${logOptions}`])
+    toolRunner.argIf(logOptions,`--log-opts=${logOptions}`)
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
     toolRunner.argIf(debug === 'true', ['--log-level=debug'])
     toolRunner.arg([`--report-format=${reportFormat}`])
@@ -140,9 +140,10 @@ async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath:
 
 async function uploadResultsToAzureDevOps(reportPath: string): Promise<void> {
   if (taskLib.exist(reportPath)) {
-    taskLib.debug(taskLib.loc('UploadResults', 'CodeAnalysisLogs'))
+    const artifactContainer = getAzureDevOpsInput('reportartifactname')
+    taskLib.debug(taskLib.loc('UploadResults', artifactContainer))
     try {
-      taskLib.uploadArtifact('Gitleaks', reportPath, 'CodeAnalysisLogs')
+      taskLib.uploadArtifact('Gitleaks', reportPath, artifactContainer)
     }
     catch (err){
       taskLib.warning(taskLib.loc('UploadFailed', err.message))
@@ -151,14 +152,14 @@ async function uploadResultsToAzureDevOps(reportPath: string): Promise<void> {
 }
 
 function getReportPath(reportFormat: string, reportName?: string): string {
-  const agentTempDirectory = getAzureDevOpsVariable('Agent.TempDirectory')
+  const folder = getAzureDevOpsInput("reportfolder")
   const jobId = getAzureDevOpsVariable('System.JobId')
 
   if (reportName) {
-    return Path.join(agentTempDirectory, `${reportName}.${reportFormat}`)
+    return Path.join(folder, `${reportName}.${reportFormat}`)
   }
   else {
-    return Path.join(agentTempDirectory, `gitleaks-report-${jobId}.${reportFormat}`)
+    return Path.join(folder, `gitleaks-report-${jobId}.${reportFormat}`)
   }
 }
 
