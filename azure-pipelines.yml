@@ -97,9 +97,9 @@ stages:
               fileType: 'vsix'
               vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks.vsix'
               publisherId: 'foxholenl'
-              ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+              ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
                 extensionId: 'Gitleaks'
-              ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+              ${{ else }}:
                 extensionId: 'Gitleaks-Dev'
               extensionTag: '-dev'
               updateTasksVersion: false
