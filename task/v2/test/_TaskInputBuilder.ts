@@ -18,7 +18,7 @@ export class TaskInputBuilder {
     this.tmr.setInput('taskfail', 'true')
     this.tmr.setInput('uploadresults', 'true')
     this.tmr.setInput('reportfolder', __dirname)
-    this.tmr.setInput('reportartifactcontainer', 'CodeAnalysisLogs')
+    this.tmr.setInput('reportartifactname', 'CodeAnalysisLogs')
 
 
     this.tmr.setInput('reportformat', 'sarif')// csv, json
