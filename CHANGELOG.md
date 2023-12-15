@@ -2,7 +2,7 @@
 
 ## Taks version 2
 
-### 2.7.0
+### 2.8.0
 - Update definitions
 - Update node dependencies
 - Added reportfolder parameter to customize report location
