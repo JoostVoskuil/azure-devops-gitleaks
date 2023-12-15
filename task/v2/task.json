@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 8,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.144.0",
     "groups": [
@@ -148,13 +148,13 @@
             "groupName": "reporting"
         },
         {
-            "name": "reportartifactcontainer",
+            "name": "reportartifactname",
             "type": "string",
             "defaultValue": "CodeAnalysisLogs",
-            "label": "Custom Report Name",
+            "label": "Artifact Name",
             "required": false,
             "visibleRule": "uploadresults=true",
-            "helpMarkDown": "Specify the artifact container of the report how it should be uploaded to Azure DevOps.",
+            "helpMarkDown": "Specify the artifact name of the report how it should be uploaded to Azure DevOps.",
             "groupName": "reporting"
         },
         {

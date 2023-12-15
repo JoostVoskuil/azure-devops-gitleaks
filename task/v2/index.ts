@@ -140,7 +140,7 @@ async function setTaskOutcomeBasedOnGitLeaksResult(exitCode: number, reportPath:
 
 async function uploadResultsToAzureDevOps(reportPath: string): Promise<void> {
   if (taskLib.exist(reportPath)) {
-    const artifactContainer = getAzureDevOpsInput('reportartifactcontainer')
+    const artifactContainer = getAzureDevOpsInput('reportartifactname')
     taskLib.debug(taskLib.loc('UploadResults', artifactContainer))
     try {
       taskLib.uploadArtifact('Gitleaks', reportPath, artifactContainer)
