@@ -38,7 +38,7 @@ export class ToolCallBuilder {
   }
 
   public withLogOptions (logOptions: string): this {
-    this.argument[4] = `--log-opts=${logOptions}`
+    this.argument[4] = `--log-opts="${logOptions}"`
     return this
   }
 

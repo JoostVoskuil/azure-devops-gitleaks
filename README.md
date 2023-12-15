@@ -86,7 +86,9 @@ This means that commits are not scanned but flat files. In this case you scan th
 | baselinePath | Specify a baseline file (old report) so that only new findings are reported. |
 | taskfail | Sets the behavior of the task when secrets are detected.<br/>When set to `true`, fail the task. When set to `false` and secrets present end with warning. Default is `true` |
 | uploadresults | When set to `true`, the results of gitleaks will be uploaded as an artifact to Azure DevOps. Default is `true`.|
+| reportartifactcontainer | When uploadresults is set to `true`, you can specify the container in Azure DevOps. For the SARIF SAST extension to work, this should be `CodeAnalysisLogs`.|
 | reportformat | Sets gitleaks report format. Default is 'sarif'). |
+| reportfolder | Specify the report folder. Default is the agent tempdirectory. |
 | reportname | Sets the report file name. Default this will be 'gitleaks-<newguid>.<reportextension> |
 | verbose | When set to `true`, gitleaks prints verbose output. Default is `false`. |
 | version | Version of Gitleaks to be used. See the GitLeaks GitHub page.<br/>Set to 'latest' to download the latest version of GitLeaks. |

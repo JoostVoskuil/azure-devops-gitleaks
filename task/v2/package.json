@@ -31,16 +31,16 @@
   "license": "MIT",
   "dependencies": {
     "azure-devops-node-api": "^12.1.0",
-    "azure-pipelines-task-lib": "^4.6.1",
+    "azure-pipelines-task-lib": "^4.7.0",
     "azure-pipelines-tool-lib": "^2.0.7",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "@types/mocha": "^10.0.3",
-    "@types/node": "^20.8.9",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
-    "eslint": "^8.52.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.10.4",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "eslint": "^8.55.0",
     "mocha": "^10.2.0",
     "mocha-junit-reporter": "^2.2.1",
     "nyc": "^15.1.0",
