@@ -39,7 +39,7 @@ async function run(): Promise<void> {
     toolRunner.argIf(getConfigFilePath(), [`--config=${getConfigFilePath()}`])
     toolRunner.arg([`--source=${scanLocation}`])
     if (logOptions) {
-      toolRunner.line(`--log-opts="${logOptions}"`)
+      toolRunner.line(`--log-opts=\\"${logOptions}\\"`)
     }
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
     toolRunner.argIf(debug === 'true', ['--log-level=debug'])
