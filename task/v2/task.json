@@ -15,7 +15,7 @@
     "version": {
         "Major": 2,
         "Minor": 8,
-        "Patch": 1
+        "Patch": 2
     },
     "minimumAgentVersion": "2.144.0",
     "groups": [
@@ -174,10 +174,10 @@
         {
             "name": "reportfolder",
             "type": "string",
-            "label": "Report Location",
+            "label": "Report Folder",
             "required": false,
             "defaultValue": "$(Agent.TempDirectory)",
-            "helpMarkDown": "Specify the location of the report.",
+            "helpMarkDown": "Specify the folder for the report.",
             "groupName": "reporting"
         },
         {
