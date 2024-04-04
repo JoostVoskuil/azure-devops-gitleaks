@@ -2,6 +2,10 @@
 
 ## Taks version 2
 
+### 2.9
+- Update definitions
+- Update node dependencies
+
 ### 2.8
 - Update definitions
 - Update node dependencies
