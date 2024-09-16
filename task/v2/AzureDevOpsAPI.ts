@@ -1,13 +1,13 @@
 
-import * as azdev from 'azure-devops-node-api/WebApi'
-import { BuildApi } from 'azure-devops-node-api/BuildApi'
-import { GitApi } from 'azure-devops-node-api/GitApi'
-import Path = require('path')
+import type * as azdev from 'azure-devops-node-api/WebApi'
+import type { BuildApi } from 'azure-devops-node-api/BuildApi'
+import type { GitApi } from 'azure-devops-node-api/GitApi'
+import Path = require('node:path')
 import taskLib = require('azure-pipelines-task-lib/task')
 
 import { getAzureDevOpsConnection, getAzureDevOpsVariable, getEndpointAuthorizationParameter, getEndpointUrl } from './helpers'
-import { GitCommitRef } from 'azure-devops-node-api/interfaces/GitInterfaces'
-import { Change } from 'azure-devops-node-api/interfaces/BuildInterfaces'
+import type { GitCommitRef } from 'azure-devops-node-api/interfaces/GitInterfaces'
+import type { Change } from 'azure-devops-node-api/interfaces/BuildInterfaces'
 
 export class AzureDevOpsAPI {
   private readonly teamProject: string
@@ -60,10 +60,9 @@ export class AzureDevOpsAPI {
       console.log(taskLib.loc('ScanningCommits', filteredCommits.length, commitDiff.firstCommit, commitDiff.lastCommit))
       return commitDiff
     }
-    else {
+    
       taskLib.warning(taskLib.loc('NotGitRepository', repositoryProvider))
       return undefined
-    }
   }
 }
 

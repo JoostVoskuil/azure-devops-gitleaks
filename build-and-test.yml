@@ -18,7 +18,7 @@ steps:
     testRunTitle: ${{ parameters.name }}
   condition: always()
 
-- task: PublishCodeCoverageResults@1
+- task: PublishCodeCoverageResults@2
   inputs:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(Build.SourcesDirectory)/${{ parameters.path }}/coverage/cobertura-coverage.xml'
@@ -28,6 +28,6 @@ steps:
 - task: Bash@3
   inputs:
     targetType: 'inline'
-    script: 'cd ${{ parameters.path }} && npm run clean && npm run build-rel && rm *.ts && rm .eslint* && rm /tests -rf'
+    script: 'cd ${{ parameters.path }} && npm run clean && npm run build-rel && rm *.ts && rm /tests -rf'
   displayName: 'Run Build for Packaging'
   

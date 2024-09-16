@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-inferrable-types */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer'
-import * as mr from 'azure-pipelines-task-lib/mock-run'
+import type { TaskLibAnswers } from 'azure-pipelines-task-lib/mock-answer'
+import type * as mr from 'azure-pipelines-task-lib/mock-run'
 import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner'
 
 export class TaskMockBuilder {
@@ -40,7 +38,7 @@ export class TaskMockBuilder {
       }
     })
 
-    this.tmr.registerMock('fs', {
+    this.tmr.registerMock('node:fs', {
       chmodSync: function (filePath: string, rights: string) { return true },
       existsSync: function (filePath: string) { return true },
       readFileSync: function (filePath: string) { return true }
@@ -80,20 +78,20 @@ export class TaskMockBuilder {
               return {
                 message: { statusCode: 200 }
               }
-            } 
-            else if (url === 'https://github.com/gitleaks/gitleaks/releases/latest') {
+            }
+            if (url === 'https://github.com/gitleaks/gitleaks/releases/latest') {
               return {
                 message: { 
                   statusCode: 404, 
                 }
               }
             }
-            else throw Error('Wrong url')
+            throw Error('Wrong url')
           }
         }
       }
     })
-    this.tmr.registerMock('fs', {
+    this.tmr.registerMock('node:fs', {
       chmodSync: function (filePath: string, rights: string) { return true },
       existsSync: function (filePath: string) { return true },
       readFileSync: function (filePath: string) { return true }
@@ -110,8 +108,8 @@ export class TaskMockBuilder {
               return {
                 message: { statusCode: 200 }
               }
-            } 
-            else if (url === 'https://github.com/gitleaks/gitleaks/releases/latest') {
+            }
+            if (url === 'https://github.com/gitleaks/gitleaks/releases/latest') {
               return {
                 message: { 
                   statusCode: 200, 
@@ -121,12 +119,12 @@ export class TaskMockBuilder {
                 }
               }
             }
-            else throw Error('Wrong url')
+            throw Error('Wrong url')
           }
         }
       }
     })
-    this.tmr.registerMock('fs', {
+    this.tmr.registerMock('node:fs', {
       chmodSync: function (filePath: string, rights: string) { return true },
       existsSync: function (filePath: string) { return true },
       readFileSync: function (filePath: string) { return true }
@@ -216,7 +214,7 @@ export class TaskMockBuilder {
     return this
   }
 
-  public withReport (reportFile: string, exists: boolean = true): this {
+  public withReport (reportFile: string, exists = true): this {
     this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr)
     this.answers.exist = {
       [reportFile]: exists,
@@ -225,7 +223,7 @@ export class TaskMockBuilder {
     return this
   }
 
-  public withBaseline (baselinePath: string, exists: boolean = true): this {
+  public withBaseline (baselinePath: string, exists = true): this {
     this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr)
     this.answers.exist = {
       [baselinePath]: exists,
@@ -234,7 +232,7 @@ export class TaskMockBuilder {
     return this
   }
 
-  public withToolExecution (toolCall: string, exitCode: number = 0): this {
+  public withToolExecution (toolCall: string, exitCode = 0): this {
     this.tmr.registerMock('azure-pipelines-task-lib/toolrunner', mtr)
     this.answers.exec = {
       [toolCall]: {
@@ -245,6 +243,3 @@ export class TaskMockBuilder {
     return this
   }
 }
-
-/* eslint-enable @typescript-eslint/no-inferrable-types */
-/* eslint-enable @typescript-eslint/no-unused-vars */

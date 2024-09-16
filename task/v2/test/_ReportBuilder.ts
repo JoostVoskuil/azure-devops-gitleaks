@@ -1,4 +1,4 @@
-import path = require('path')
+import path = require('node:path')
 
 export class ReportBuilder {
   private reportFile: string

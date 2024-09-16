@@ -9,6 +9,9 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  system.debug: true
+
 stages:
 - stage: 'Build'
   displayName: 'Build'
@@ -17,10 +20,10 @@ stages:
     steps:
     - task: NodeTool@0
       inputs:
-        versionSpec: '16.x'
+        versionSpec: '20.x'
       displayName: 'Install Node.js'
 
-    - task: SonarCloudPrepare@1
+    - task: SonarCloudPrepare@2
       inputs:
         SonarCloud: 'SonarCloud'
         organization: 'joostvoskuil'
@@ -37,10 +40,10 @@ stages:
         path: task/v2
         name: Gitleaks V2
 
-    - task: SonarCloudAnalyze@1
+    - task: SonarCloudAnalyze@2
       inputs:
         jdkversion: 'JAVA_HOME_17_X64'
-    - task: SonarCloudPublish@1
+    - task: SonarCloudPublish@2
       inputs:
         pollingTimeoutSec: '300'
 

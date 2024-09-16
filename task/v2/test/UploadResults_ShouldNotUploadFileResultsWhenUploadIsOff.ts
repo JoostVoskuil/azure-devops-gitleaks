@@ -1,7 +1,7 @@
 import * as mr from 'azure-pipelines-task-lib/mock-run'
 import * as mtr from 'azure-pipelines-task-lib/mock-toolrunner'
 
-import path = require('path')
+import path = require('node:path')
 import { TaskInputBuilder } from './_TaskInputBuilder'
 import { EnvironmentBuilder } from './_EnvironmentBuilder'
 import { ToolCallBuilder } from './_ToolCallBuilder'
