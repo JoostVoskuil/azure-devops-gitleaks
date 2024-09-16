@@ -2,6 +2,14 @@
 
 ## Taks version 2
 
+### 2.10
+- Fixed broken definitions (See https://github.com/JoostVoskuil/azure-devops-gitleaks/pull/87). Thanx @rgmz
+- Update definitions
+- Update node dependencies
+- Switched to Biome linter and dropped eslint
+- Added Node20 support
+- Added comment that the baseline report should be in json format (thanx Daniel Dieben)
+
 ### 2.9
 - Update definitions
 - Update node dependencies
