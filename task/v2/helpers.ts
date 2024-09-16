@@ -1,7 +1,7 @@
-import * as path from 'path'
+import * as path from 'node:path'
 import taskLib = require('azure-pipelines-task-lib/task')
 import * as azdev from 'azure-devops-node-api/WebApi'
-import { IProxyConfiguration, IRequestOptions } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces'
+import type { IProxyConfiguration, IRequestOptions } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces'
 
 taskLib.setResourcePath(path.join(__dirname, 'task.json'), true)
 

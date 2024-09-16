@@ -1,5 +1,5 @@
-import * as path from 'path'
-import * as assert from 'assert'
+import * as path from 'node:path'
+import * as assert from 'node:assert'
 import * as ttm from 'azure-pipelines-task-lib/mock-test'
 import 'mocha'
 
@@ -8,6 +8,8 @@ describe('Gitleaks Execution', function () {
     const tp = path.join(__dirname, 'Execution_ShouldFailWhenGitLeaksReturnsExitCodeOne.js')
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
     tr.runAsync()
+    console.log(tr.stdout)
+    console.log(tr.stderr)
     assert.strictEqual(tr.failed, true, 'should have failed')
     assert.strictEqual(tr.errorIssues.length, 1, 'should have one errors')
     assert.strictEqual(tr.stdout.includes('loc_mock_ResultError'), true, "Should contain 'loc_mock_ResultError'")

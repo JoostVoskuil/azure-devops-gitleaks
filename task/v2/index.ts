@@ -1,10 +1,10 @@
-import * as path from 'path'
+import * as path from 'node:path'
 import taskLib = require('azure-pipelines-task-lib/task')
 import tr = require('azure-pipelines-task-lib/toolrunner')
 import { AzureDevOpsAPI } from './AzureDevOpsAPI'
 import { GitleaksTool } from './gitleakstool'
 import { getAzureDevOpsInput, getAzureDevOpsPathInput, getAzureDevOpsVariable } from './helpers'
-import Path = require('path')
+import Path = require('node:path')
 
 async function run(): Promise<void> {
   try {
@@ -46,7 +46,7 @@ async function run(): Promise<void> {
     toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
     toolRunner.argIf(baselinePath, [`--baseline-path=${baselinePath}`])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
-    toolRunner.arg([`--exit-code=99`])
+    toolRunner.arg(["--exit-code=99"])
     // Set Tool options
     const options: tr.IExecOptions = {
       failOnStdErr: false,
@@ -67,13 +67,13 @@ void run()
 
 async function determineLogOptions(scanMode: string): Promise<string | undefined> {
   const buildReason = getAzureDevOpsVariable('Build.Reason')
-  let logOptions
+  let logOptions: string | undefined
 
   if (scanMode === 'all') {
     return undefined
-  } else if (scanMode === 'nogit') {
+  }if (scanMode === 'nogit') {
     return undefined
-  } else if (scanMode === 'custom') {
+  }if (scanMode === 'custom') {
     logOptions = taskLib.getInput('logoptions')
   } else if (scanMode === 'prevalidation' && buildReason === 'PullRequest') {
     logOptions = await getLogOptionsForPreValidationBuild()
@@ -158,9 +158,8 @@ function getReportPath(reportFormat: string, reportName?: string): string {
   if (reportName) {
     return Path.join(folder, `${reportName}.${reportFormat}`)
   }
-  else {
+  
     return Path.join(folder, `gitleaks-report-${jobId}.${reportFormat}`)
-  }
 }
 
 function getConfigFilePath(): string | undefined {
@@ -169,9 +168,9 @@ function getConfigFilePath(): string | undefined {
   const configfile = taskLib.getInput('configfile')
 
   if (configType.toLowerCase() === 'default') return undefined
-  else if (configType.toLowerCase() === 'predefined' && predefinedConfigFile !== undefined) {
+  if (configType.toLowerCase() === 'predefined' && predefinedConfigFile !== undefined) {
     return Path.join(__dirname, 'configs', predefinedConfigFile)
-  } else if (configType.toLowerCase() === 'custom' && configfile !== undefined) {
+  }if (configType.toLowerCase() === 'custom' && configfile !== undefined) {
     return configfile
-  } else throw new Error(taskLib.loc('IncorrectConfig'))
+  }throw new Error(taskLib.loc('IncorrectConfig'))
 }

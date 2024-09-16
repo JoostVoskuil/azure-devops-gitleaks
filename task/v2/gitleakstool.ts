@@ -1,11 +1,11 @@
-import fs = require('fs')
-import Path = require('path')
+import fs = require('node:fs')
+import Path = require('node:path')
 import * as toolLib from 'azure-pipelines-tool-lib/tool'
 import * as restClient from 'typed-rest-client/RestClient'
 import * as httpClient from 'typed-rest-client/HttpClient'
 import taskLib = require('azure-pipelines-task-lib/task')
 import { getAzureDevOpsInput, getAzureDevOpsVariable, getRequestOptions } from './helpers'
-import { IHttpClientResponse } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces'
+import type { IHttpClientResponse } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces'
 
 export class GitleaksTool {
   constructor () {
@@ -19,12 +19,11 @@ export class GitleaksTool {
     if (customtoollocationInput !== undefined) { 
       return await this.getToolFromCustomLocation(customtoollocationInput) 
     }
-    else if (customtoollocationVariabele !== undefined) {
+    if (customtoollocationVariabele !== undefined) {
       return await this.getToolFromCustomLocation(customtoollocationVariabele) 
     }
-    else {
+    
       return await this.getToolFromAgent(specifiedVersion) 
-    }
   }
 
   private async getToolFromCustomLocation (customToolLocation: string): Promise<string> {
@@ -46,11 +45,10 @@ export class GitleaksTool {
 
     if (!isGitHubAvailable) {
       return await this.getToolFromOfflineAgent(specifiedVersion)
-    } else if (specifiedVersion.toLowerCase() === 'latest') {
+    }if (specifiedVersion.toLowerCase() === 'latest') {
       return await this.getToolFromOnlineAgentBasedOnLatest(specifiedVersion.toLowerCase())
-    } else {
-      return await this.getToolFromOnlineAgentBasedOnVersion(specifiedVersion)
     }
+      return await this.getToolFromOnlineAgentBasedOnVersion(specifiedVersion)
   }
 
   private async findToolVersionOnAgent (version: string): Promise<string | undefined> {
@@ -59,9 +57,8 @@ export class GitleaksTool {
     taskLib.debug(taskLib.loc('CachedVersions', cachedVersionsbyAgent))
     if (version.toLowerCase() === 'latest') {
       return (cachedVersionsbyAgent.sort((one, two) => (one > two ? -1 : 1)))[0]
-    } else {
-      return cachedVersionsbyAgent.find(x => x === toolLib.cleanVersion(version))
     }
+      return cachedVersionsbyAgent.find(x => x === toolLib.cleanVersion(version))
   }
 
   private async getToolFromOfflineAgent (version: string): Promise<string> {
@@ -90,10 +87,9 @@ export class GitleaksTool {
       console.log(taskLib.loc('OnlineAgentHasLatestVersion', latestVersionAvailableOnGitHub))
       const cachedToolDirectory: string = toolLib.findLocalTool('gitleaks', latestVersionAvailableOnGitHub)
       return Path.join(cachedToolDirectory, toolExecutable)
-    } else {
+    }
       console.log(taskLib.loc('OnlineAgentHasNotTheLatestVersion', latestVersionAvailableOnGitHub))
       return await this.downloadGitLeaks(latestVersionAvailableOnGitHub)
-    }
   }
 
   private async getToolFromOnlineAgentBasedOnVersion (version): Promise<string> {
@@ -103,10 +99,9 @@ export class GitleaksTool {
       console.log(taskLib.loc('AvailableInToolcache', version))
       const cachedToolDirectory = toolLib.findLocalTool('gitleaks', toolLib.cleanVersion(version))
       return Path.join(cachedToolDirectory, toolExecutable)
-    } else {
+    }
       console.log(taskLib.loc('NoToolcacheDownloading', version, version))
       return await this.downloadGitLeaks(toolLib.cleanVersion(version))
-    }
   }
 
   private getDownloadFileName (version: string): string {
@@ -114,12 +109,12 @@ export class GitleaksTool {
     const architecture = getAzureDevOpsVariable('Agent.OSArchitecture')
 
     if ((operatingSystem === 'Windows_NT') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_windows_x64.zip`
-    else if ((operatingSystem === 'Windows_NT') && (architecture.toLowerCase() === 'x86')) return `gitleaks_${version}_windows_x32.zip`
-    else if ((operatingSystem === 'Darwin') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_darwin_x64.tar.gz`
-    else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_linux_x64.tar.gz`
-    else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'x86')) return `gitleaks_${version}_linux_x32.tar.gz`
-    else if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'arm')) return `gitleaks_${version}_linux_armv7.tar.gz`
-    else throw new Error(taskLib.loc('OsArchNotSupported', operatingSystem, architecture, 'gitleaks'))
+    if ((operatingSystem === 'Windows_NT') && (architecture.toLowerCase() === 'x86')) return `gitleaks_${version}_windows_x32.zip`
+    if ((operatingSystem === 'Darwin') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_darwin_x64.tar.gz`
+    if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'x64')) return `gitleaks_${version}_linux_x64.tar.gz`
+    if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'x86')) return `gitleaks_${version}_linux_x32.tar.gz`
+    if ((operatingSystem === 'Linux') && (architecture.toLowerCase() === 'arm')) return `gitleaks_${version}_linux_armv7.tar.gz`
+    throw new Error(taskLib.loc('OsArchNotSupported', operatingSystem, architecture, 'gitleaks'))
   }
 
 
@@ -132,7 +127,7 @@ export class GitleaksTool {
       
       const response: httpClient.HttpClientResponse = await http.get(url, getRequestOptions())
       if (response.message.statusCode !== 200) throw new Error(taskLib.loc('CannotRetrieveVersion'))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny : just skip
       const path = (response.message as any).req.path
       
       const version: string = path.split('/v')[1]
@@ -172,7 +167,7 @@ export class GitleaksTool {
 
   private getGitleaksExecutableFileName (): string {
     if (getAzureDevOpsVariable('Agent.OS') === 'Windows_NT') return 'gitleaks.exe'
-    else return 'gitleaks'
+    return 'gitleaks'
   }
 
   private async downloadGitLeaks (version: string): Promise<string> {

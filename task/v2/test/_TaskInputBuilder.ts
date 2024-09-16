@@ -1,5 +1,5 @@
-import * as mr from 'azure-pipelines-task-lib/mock-run'
-import path = require('path')
+import type * as mr from 'azure-pipelines-task-lib/mock-run'
+import path = require('node:path')
 
 export class TaskInputBuilder {
   private readonly tmr: mr.TaskMockRunner
@@ -102,7 +102,7 @@ export class TaskInputBuilder {
     return this
   }
   public withCustomToolLocationVariable (toolLocation: string): this {
-    process.env['AGENT_TOOLSGITLEAKSDIRECTORY'] = toolLocation
+    process.env.AGENT_TOOLSGITLEAKSDIRECTORY = toolLocation
     return this
   }
 }
