@@ -38,7 +38,7 @@ export class TaskMockBuilder {
       }
     })
 
-    this.tmr.registerMock('fs', {
+    this.tmr.registerMock('node:fs', {
       chmodSync: function (filePath: string, rights: string) { return true },
       existsSync: function (filePath: string) { return true },
       readFileSync: function (filePath: string) { return true }
@@ -91,7 +91,7 @@ export class TaskMockBuilder {
         }
       }
     })
-    this.tmr.registerMock('fs', {
+    this.tmr.registerMock('node:fs', {
       chmodSync: function (filePath: string, rights: string) { return true },
       existsSync: function (filePath: string) { return true },
       readFileSync: function (filePath: string) { return true }
@@ -124,7 +124,7 @@ export class TaskMockBuilder {
         }
       }
     })
-    this.tmr.registerMock('fs', {
+    this.tmr.registerMock('node:fs', {
       chmodSync: function (filePath: string, rights: string) { return true },
       existsSync: function (filePath: string) { return true },
       readFileSync: function (filePath: string) { return true }
@@ -243,6 +243,3 @@ export class TaskMockBuilder {
     return this
   }
 }
-
-/* eslint-enable @typescript-eslint/no-inferrable-types */
-/* eslint-enable @typescript-eslint/no-unused-vars */

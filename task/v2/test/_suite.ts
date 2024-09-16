@@ -1,458 +1,420 @@
-import * as path from 'node:path'
-import * as assert from 'node:assert'
-import * as ttm from 'azure-pipelines-task-lib/mock-test'
-import 'mocha'
+import * as path from "node:path"
+import * as ttm from "azure-pipelines-task-lib/mock-test"
+import assert from "node:assert"
 
-describe('Gitleaks Execution', function () {
-  it('Should fail when gitleaks find leaks', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Execution_ShouldFailWhenGitLeaksReturnsExitCodeOne.js')
+describe("Gitleaks Execution", async () => {
+  it("Should fail when gitleaks find leaks", async () => {
+    const tp = path.join(__dirname, "Execution_ShouldFailWhenGitLeaksReturnsExitCodeOne.js")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    console.log(tr.stdout)
-    console.log(tr.stderr)
-    assert.strictEqual(tr.failed, true, 'should have failed')
-    assert.strictEqual(tr.errorIssues.length, 1, 'should have one errors')
-    assert.strictEqual(tr.stdout.includes('loc_mock_ResultError'), true, "Should contain 'loc_mock_ResultError'")
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.failed, true, "should have failed")
+    assert.strictEqual(tr.errorIssues.length, 1, "should have one errors")
+    assert.strictEqual(tr.stdout.includes("loc_mock_ResultError"), true, "Should contain 'loc_mock_ResultError'")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
 
-  it('Should succeed when gitleaks find no leaks', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Execution_ShouldSucceedWhenGitLeaksReturnsExitCodeZero.js')
+  it("Should succeed when gitleaks find no leaks", async () => {
+    const tp = path.join(__dirname, "Execution_ShouldSucceedWhenGitLeaksReturnsExitCodeZero.js")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
 
-  it('Should succeed with warning when gitleaks find leaks', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Execution_ShouldWarningWhenGitLeaksReturnsExitCodeOne.js')
+  it("Should succeed with warning when gitleaks find leaks", async () => {
+    const tp = path.join(__dirname, "Execution_ShouldWarningWhenGitLeaksReturnsExitCodeOne.js")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.stdout.includes('SucceededWithIssues'), true, "Should contain 'SucceededWithIssues'")
-    assert.strictEqual(tr.stdout.includes('loc_mock_ResultError'), true, "Should contain 'loc_mock_ResultError'")
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.stdout.includes("SucceededWithIssues"), true, "Should contain 'SucceededWithIssues'")
+    assert.strictEqual(tr.stdout.includes("loc_mock_ResultError"), true, "Should contain 'loc_mock_ResultError'")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should fail when download error occurs', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Execution_ShouldFailWhenDownloadError.js')
+  it("Should fail when download error occurs", async () => {
+    const tp = path.join(__dirname, "Execution_ShouldFailWhenDownloadError.js")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.failed, true, 'should have failed')
-    assert.strictEqual(tr.errorIssues.length, 1, 'should have one errors')
-    assert.strictEqual(tr.stdout.includes('download error'), true, "Should contain 'download error'")
-    assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.failed, true, "should have failed")
+    assert.strictEqual(tr.errorIssues.length, 1, "should have one errors")
+    assert.strictEqual(tr.stdout.includes("download error"), true, "Should contain 'download error'")
+    assert.strictEqual(tr.invokedToolCount, 0, "Gitleaks tool should not be invoked")
   })
-  it('Should succeed with warnings when download error occurs', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Execution_ShouldSucceedWarningWhenDownloadError.js')
+  it("Should succeed with warnings when download error occurs", async () => {
+    const tp = path.join(__dirname, "Execution_ShouldSucceedWarningWhenDownloadError.js")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.stdout.includes('SucceededWithIssues'), true, "Should contain 'SucceededWithIssues'")
-    assert.strictEqual(tr.stdout.includes('download error'), true, "Should contain 'download error'")
-    assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.stdout.includes("SucceededWithIssues"), true, "Should contain 'SucceededWithIssues'")
+    assert.strictEqual(tr.stdout.includes("download error"), true, "Should contain 'download error'")
+    assert.strictEqual(tr.invokedToolCount, 0, "Gitleaks tool should not be invoked")
   })
 })
 
-describe('Upload gitleaks results', function () {
-  it('Should upload results when file exists and upload is set to true', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'UploadResults_ShouldUploadFileResults')
+describe("Upload gitleaks results", async () => {
+  it("Should upload results when file exists and upload is set to true", async () => {
+    const tp = path.join(__dirname, "UploadResults_ShouldUploadFileResults")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.failed, true, 'should have failed')
-    assert.strictEqual(tr.stdout.includes('loc_mock_ResultError'), true, "Should contain 'loc_mock_ResultError'")
-    assert.strictEqual(tr.stdout.includes('##vso[artifact.upload containerfolder=Gitleaks;artifactname=CodeAnalysisLogs;]'), true, "Should contain '##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;].'")
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.failed, true, "should have failed")
+    assert.strictEqual(tr.stdout.includes("loc_mock_ResultError"), true, "Should contain 'loc_mock_ResultError'")
+    assert.strictEqual(
+      tr.stdout.includes("##vso[artifact.upload containerfolder=Gitleaks;artifactname=CodeAnalysisLogs;]"),
+      true,
+      "Should contain '##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;].'"
+    )
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should not upload results when upload is set to false', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'UploadResults_ShouldNotUploadFileResultsWhenUploadIsOff')
+  it("Should not upload results when upload is set to false", async () => {
+    const tp = path.join(__dirname, "UploadResults_ShouldNotUploadFileResultsWhenUploadIsOff")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.failed, true, 'should have failed')
-    assert.strictEqual(tr.stdout.includes('loc_mock_ResultError'), true, "Should contain 'loc_mock_ResultError'")
-    assert.strictEqual(tr.stdout.indexOf('##vso[artifact.upload containerfolder=Gitleaks;artifactname=gitleaks;]'), -1, "Should not contain '##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;].'")
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.failed, true, "should have failed")
+    assert.strictEqual(tr.stdout.includes("loc_mock_ResultError"), true, "Should contain 'loc_mock_ResultError'")
+    assert.strictEqual(
+      tr.stdout.indexOf("##vso[artifact.upload containerfolder=Gitleaks;artifactname=gitleaks;]"),
+      -1,
+      "Should not contain '##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;].'"
+    )
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should not upload results when report file does not exist', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'UploadResults_ShouldNotUploadFileResultsWhenUploadIsOff')
+  it("Should not upload results when report file does not exist", async () => {
+    const tp = path.join(__dirname, "UploadResults_ShouldNotUploadFileResultsWhenUploadIsOff")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.failed, true, 'should have failed')
-    assert.strictEqual(tr.stdout.includes('loc_mock_ResultError'), true, "Should contain 'loc_mock_ResultError'")
-    assert.strictEqual(tr.stdout.indexOf('##vso[artifact.upload containerfolder=Gitleaks;artifactname=gitleaks;]'), -1, "Should not contain '##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;].'")
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
-  })
-})
-
-describe('Configuration Files', function () {
-  it('Should accept no config file', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'ConfigFiles_ShouldAcceptNoConfig')
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
-  })
-  it('Should accept a predefined config file', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'ConfigFiles_ShouldAcceptPredefinedConfig')
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
-  })
-  it('Should succeed when existing custom config file is provided', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'ConfigFiles_ShouldAcceptCustomConfigFile')
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
-  })
-  it('Should fail when config file is not provided', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'ConfigFiles_ShouldFailWhenCustomConfigFileIsNotProvided')
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.failed, true, 'should have failed')
-    assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should be invoked 0 time')
-    assert.strictEqual(tr.errorIssues.length, 1, 'should have one error')
-    assert.strictEqual(tr.stdout.includes('loc_mock_IncorrectConfig'), true, "Should contain 'Incorrect configuration set.'")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.failed, true, "should have failed")
+    assert.strictEqual(tr.stdout.includes("loc_mock_ResultError"), true, "Should contain 'loc_mock_ResultError'")
+    assert.strictEqual(
+      tr.stdout.indexOf("##vso[artifact.upload containerfolder=Gitleaks;artifactname=gitleaks;]"),
+      -1,
+      "Should not contain '##vso[artifact.upload containerfolder=gitleaks;artifactname=gitleaks;].'"
+    )
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
 })
 
-describe('Gitleaks parameter calls', function () {
-  it('Should provide the --verbose parameter to gitleaks when verbose flag is on', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithVerboseParameter')
+describe("Configuration Files", async () => {
+  it("Should accept no config file", async () => {
+    const tp = path.join(__dirname, "ConfigFiles_ShouldAcceptNoConfig")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should provide the --redact parameter to gitleaks when redact flag is on', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithRedactParameter')
+  it("Should accept a predefined config file", async () => {
+    const tp = path.join(__dirname, "ConfigFiles_ShouldAcceptPredefinedConfig")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should provide the --log-level debug parameter to gitleaks when system.debug is on', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithSystemDebug')
+  it("Should succeed when existing custom config file is provided", async () => {
+    const tp = path.join(__dirname, "ConfigFiles_ShouldAcceptCustomConfigFile")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-
-  it('Should provide the --report-format to gitleaks when provided', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithReportFormat')
+  it("Should fail when config file is not provided", async () => {
+    const tp = path.join(__dirname, "ConfigFiles_ShouldFailWhenCustomConfigFileIsNotProvided")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
-  })
-  it('Should provide the correct report name to gitleaks when provided a custom name', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksCall_ShouldWorkWithReportNameCustom')
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.failed, true, "should have failed")
+    assert.strictEqual(tr.invokedToolCount, 0, "Gitleaks tool should be invoked 0 time")
+    assert.strictEqual(tr.errorIssues.length, 1, "should have one error")
+    assert.strictEqual(tr.stdout.includes("loc_mock_IncorrectConfig"), true, "Should contain 'Incorrect configuration set.'")
   })
 })
 
-describe('Set scanmode', function () {
-  it('Should scan everything with scanmode all', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Gitleaks_ScanModeAll')
+describe("Gitleaks parameter calls", async () => {
+  it("Should provide the --verbose parameter to gitleaks when verbose flag is on", async () => {
+    const tp = path.join(__dirname, "GitleaksCall_ShouldWorkWithVerboseParameter")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should scan flat with scanmode nogit', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Gitleaks_ScanModeNoGit')
+  it("Should provide the --redact parameter to gitleaks when redact flag is on", async () => {
+    const tp = path.join(__dirname, "GitleaksCall_ShouldWorkWithRedactParameter")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should scan with provided logoptions when scanmode is custom', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Gitleaks_ScanModeCustom')
+  it("Should provide the --log-level debug parameter to gitleaks when system.debug is on", async () => {
+    const tp = path.join(__dirname, "GitleaksCall_ShouldWorkWithSystemDebug")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
-  })
-  it('Should fail when logoptions are not provided and scanmode is custom', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Gitleaks_ScanModeCustomNotProvidedShouldFail')
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.stdout.includes('loc_mock_NoCommitsToScan'), true, "Should contain 'loc_mock_NoCommitsToScan'")
-    done()
-  })
-  it('Should scan pre-validation builds when scanmode is prevalidation', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Gitleaks_ScanModePrevalidation')
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
-  })
-  it('Should fail when scanmode is pre-validation builds but buildreason is manual', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Gitleaks_ScanModePrevalidationShouldFailWhenBuildReasonIsNotPullRequest')
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.failed, true, 'should have failed')
-    assert.strictEqual(tr.stdout.includes('loc_mock_PreValidationBuildInvallid'), true, "Should contain 'loc_mock_PreValidationBuildInvallid'")
-    assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked 0 time')
-    done()
-  })
-  it('Should scan pre-validation builds when scanmode is smart and buildreason is pullrequest', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Gitleaks_ScanModeSmartPullRequest')
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
 
-  it('Should scan build changes when scanmode is smart and buildreason is manual', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Gitleaks_ScanModeSmartManual')
+  it("Should provide the --report-format to gitleaks when provided", async () => {
+    const tp = path.join(__dirname, "GitleaksCall_ShouldWorkWithReportFormat")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should scan build changes when scanmode is changes', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Gitleaks_ScanModeChanges')
+  it("Should provide the correct report name to gitleaks when provided a custom name", async () => {
+    const tp = path.join(__dirname, "GitleaksCall_ShouldWorkWithReportNameCustom")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
-  })
-  it('Should fail when scanmode is unknown', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'Gitleaks_ScanModeUnknown')
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.failed, true, 'should have failed')
-    assert.strictEqual(tr.stdout.includes('loc_mock_UnknownScanMode'), true, "Should contain 'loc_mock_UnknownScanModet'")
-    assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked 0 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
 })
 
-describe('Gitleaks Releases', function () {
-  it('Should download Darwin/x64', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnDarwinX64')
+describe("Set scanmode", async () => {
+  it("Should scan everything with scanmode all", async () => {
+    const tp = path.join(__dirname, "Gitleaks_ScanModeAll")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    assert.strictEqual(tr.stdout.includes('darwin_x64'), true, "Should contain 'darwin_x64'")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should not download WindowsNT/x128 because Os/Arch not supported', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksRelease_ShouldFailOnOsArchNotSupported')
+  it("Should scan flat with scanmode nogit", async () => {
+    const tp = path.join(__dirname, "Gitleaks_ScanModeNoGit")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.failed, true, 'should have failed')
-    assert.strictEqual(tr.stdout.includes('loc_mock_OsArchNotSupported'), true, "Should contain 'loc_mock_OsArchNotSupported'")
-    assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked 0 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should download WindowsNT/x64', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnWindowsNTx64')
+  it("Should scan with provided logoptions when scanmode is custom", async () => {
+    const tp = path.join(__dirname, "Gitleaks_ScanModeCustom")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    assert.strictEqual(tr.stdout.includes('windows_x64'), true, "Should contain 'windows_x64'")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should download WindowsNT/x32', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnWindowsNTx86')
+  it("Should fail when logoptions are not provided and scanmode is custom", async () => {
+    const tp = path.join(__dirname, "Gitleaks_ScanModeCustomNotProvidedShouldFail")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    assert.strictEqual(tr.stdout.includes('windows_x32'), true, "Should contain 'windows_x32'")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.stdout.includes("loc_mock_NoCommitsToScan"), true, "Should contain 'loc_mock_NoCommitsToScan'")
   })
-  it('Should download Linux/x64', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnLinuxx64')
+  it("Should scan pre-validation builds when scanmode is prevalidation", async () => {
+    const tp = path.join(__dirname, "Gitleaks_ScanModePrevalidation")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    assert.strictEqual(tr.stdout.includes('linux_x64'), true, "Should contain 'linux_x64'")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
-  it('Should download Linux/x32', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksRelease_ShouldWorkOnLinuxx86')
+  it("Should fail when scanmode is pre-validation builds but buildreason is manual", async () => {
+    const tp = path.join(__dirname, "Gitleaks_ScanModePrevalidationShouldFailWhenBuildReasonIsNotPullRequest")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    assert.strictEqual(tr.stdout.includes('linux_x32'), true, "Should contain 'linux_x32'")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.failed, true, "should have failed")
+    assert.strictEqual(tr.stdout.includes("loc_mock_PreValidationBuildInvallid"), true, "Should contain 'loc_mock_PreValidationBuildInvallid'")
+    assert.strictEqual(tr.invokedToolCount, 0, "Gitleaks tool should not be invoked 0 time")
+  })
+  it("Should scan pre-validation builds when scanmode is smart and buildreason is pullrequest", async () => {
+    const tp = path.join(__dirname, "Gitleaks_ScanModeSmartPullRequest")
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+  })
+
+  it("Should scan build changes when scanmode is smart and buildreason is manual", async () => {
+    const tp = path.join(__dirname, "Gitleaks_ScanModeSmartManual")
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+  })
+  it("Should scan build changes when scanmode is changes", async () => {
+    const tp = path.join(__dirname, "Gitleaks_ScanModeChanges")
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+  })
+  it("Should fail when scanmode is unknown", async () => {
+    const tp = path.join(__dirname, "Gitleaks_ScanModeUnknown")
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    await tr.runAsync()
+    assert.strictEqual(tr.failed, true, "should have failed")
+    assert.strictEqual(tr.stdout.includes("loc_mock_UnknownScanMode"), true, "Should contain 'loc_mock_UnknownScanModet'")
+    assert.strictEqual(tr.invokedToolCount, 0, "Gitleaks tool should not be invoked 0 time")
   })
 })
 
-describe('Gitleaks Versions', function () {
-  it('Should get latest when input version is set to latest', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksVersion_ShouldDownloadedWhenLatest')
+describe("Gitleaks Releases", async () => {
+  it("Should download Darwin/x64", async () => {
+    const tp = path.join(__dirname, "GitleaksRelease_ShouldWorkOnDarwinX64")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    assert.strictEqual(tr.stdout.includes('loc_mock_OnlineAgentHasNotTheLatestVersion'), true, "Should contain 'loc_mock_OnlineAgentHasNotTheLatestVersion.'")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+    assert.strictEqual(tr.stdout.includes("darwin_x64"), true, "Should contain 'darwin_x64'")
   })
-  it('Should get version that is specified.', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksVersion_ShouldDownloadedWhenSpecified')
+  it("Should not download WindowsNT/x128 because Os/Arch not supported", async () => {
+    const tp = path.join(__dirname, "GitleaksRelease_ShouldFailOnOsArchNotSupported")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    assert.strictEqual(tr.stdout.includes('loc_mock_NoToolcacheDownloading'), true, "Should contain 'loc_mock_NoToolcacheDownloading.'")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.failed, true, "should have failed")
+    assert.strictEqual(tr.stdout.includes("loc_mock_OsArchNotSupported"), true, "Should contain 'loc_mock_OsArchNotSupported'")
+    assert.strictEqual(tr.invokedToolCount, 0, "Gitleaks tool should not be invoked 0 time")
   })
-  it('Should fail when version is lower then 8.0.0.', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksVersion_ShouldFailWhenVersionIsBelow8')
+  it("Should download WindowsNT/x64", async () => {
+    const tp = path.join(__dirname, "GitleaksRelease_ShouldWorkOnWindowsNTx64")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.failed, true, 'should have failed')
-    assert.strictEqual(tr.stdout.includes('loc_mock_OnlySupportsGitLeaks8'), true, "Should contain 'loc_mock_OnlySupportsGitLeaks8'")
-    assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked 0 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+    assert.strictEqual(tr.stdout.includes("windows_x64"), true, "Should contain 'windows_x64'")
   })
-  it('Should get Latest version through the GitHub API', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitLeaksVersion_ShouldQueryGitHubAPIWhenLatestPageIsUnavailable.js')
+  it("Should download WindowsNT/x32", async () => {
+    const tp = path.join(__dirname, "GitleaksRelease_ShouldWorkOnWindowsNTx86")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.stdout.includes('loc_mock_ErrorFetchingGitHub'), true, "Should contain 'loc_mock_ErrorFetchingGitHub'")
-    assert.strictEqual(tr.stdout.includes('loc_mock_QueryingGitHubAPI'), true, "Should contain 'loc_mock_QueryingGitHubAPI'")
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+    assert.strictEqual(tr.stdout.includes("windows_x32"), true, "Should contain 'windows_x32'")
   })
-})
-
-describe('Gitleaks custom location', function () {
-  it('Should fail when custom tool cannot be found', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksVersion_ShouldFailWhenCustomToolLocationCanNotBeFound.js')
+  it("Should download Linux/x64", async () => {
+    const tp = path.join(__dirname, "GitleaksRelease_ShouldWorkOnLinuxx64")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, false, 'should have failed')
-    assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should be invoked 0 times')
-    assert.strictEqual(tr.stdout.includes('loc_mock_GitLeaksNotFound'), true, "customLocation/gitleaks-darwin-amd64'")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+    assert.strictEqual(tr.stdout.includes("linux_x64"), true, "Should contain 'linux_x64'")
   })
-  it('Should succeed with custom tool as input parameter', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksVersion_ShouldSucceedWithCustomLocationInput.js')
+  it("Should download Linux/x32", async () => {
+    const tp = path.join(__dirname, "GitleaksRelease_ShouldWorkOnLinuxx86")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
-  })
-  it('Should succeed with custom tool as variabele', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksVersion_ShouldSucceedWithCustomLocationVariable.js')
-    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+    assert.strictEqual(tr.stdout.includes("linux_x32"), true, "Should contain 'linux_x32'")
   })
 })
 
-describe('Gitleaks toolcache', function () {
-  it('Should download when gitleaks version is not in toolcache', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksRelease_ShouldDownloadWhenNotInToolCache')
+describe("Gitleaks Versions", async () => {
+  it("Should get latest when input version is set to latest", async () => {
+    const tp = path.join(__dirname, "GitleaksVersion_ShouldDownloadedWhenLatest")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    assert.strictEqual(tr.stdout.includes('loc_mock_NoToolcacheDownloading'), true, "Should contain 'loc_mock_NoToolcacheDownloading'.")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+    assert.strictEqual(tr.stdout.includes("loc_mock_OnlineAgentHasNotTheLatestVersion"), true, "Should contain 'loc_mock_OnlineAgentHasNotTheLatestVersion.'")
   })
-  it('Should not download when gitleaks version is in toolcache.', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksRelease_ShouldNotDownloadWhenInToolCache')
+  it("Should get version that is specified.", async () => {
+    const tp = path.join(__dirname, "GitleaksVersion_ShouldDownloadedWhenSpecified")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    assert.strictEqual(tr.stdout.includes('loc_mock_AvailableInToolcache'), true, "Should contain 'loc_mock_AvailableInToolcache'.")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+    assert.strictEqual(tr.stdout.includes("loc_mock_NoToolcacheDownloading"), true, "Should contain 'loc_mock_NoToolcacheDownloading.'")
   })
-
-  it('Should not download when gitleaks version is in toolcache and that is the latest version.', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksRelease_ShouldNotDownloadWhenInToolCacheAndLatest')
+  it("Should fail when version is lower then 8.0.0.", async () => {
+    const tp = path.join(__dirname, "GitleaksVersion_ShouldFailWhenVersionIsBelow8")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    assert.strictEqual(tr.stdout.includes('loc_mock_OnlineAgentHasLatestVersion'), true, "loc_mock_OnlineAgentHasLatestVersion'")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.failed, true, "should have failed")
+    assert.strictEqual(tr.stdout.includes("loc_mock_OnlySupportsGitLeaks8"), true, "Should contain 'loc_mock_OnlySupportsGitLeaks8'")
+    assert.strictEqual(tr.invokedToolCount, 0, "Gitleaks tool should not be invoked 0 time")
+  })
+  it("Should get Latest version through the GitHub API", async () => {
+    const tp = path.join(__dirname, "GitLeaksVersion_ShouldQueryGitHubAPIWhenLatestPageIsUnavailable.js")
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.stdout.includes("loc_mock_ErrorFetchingGitHub"), true, "Should contain 'loc_mock_ErrorFetchingGitHub'")
+    assert.strictEqual(tr.stdout.includes("loc_mock_QueryingGitHubAPI"), true, "Should contain 'loc_mock_QueryingGitHubAPI'")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
   })
 })
 
-describe('Gitleaks with Offline Agent', function () {
-  it('Should take the latest version in toolcache when agent is offline', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksOfflineAgent_TakeLatestVersionShouldSucceed')
+describe("Gitleaks custom location", async () => {
+  it("Should fail when custom tool cannot be found", async () => {
+    const tp = path.join(__dirname, "GitleaksVersion_ShouldFailWhenCustomToolLocationCanNotBeFound.js")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-    assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-    assert.strictEqual(tr.stdout.includes('loc_mock_OfflineAgent'), true, "Should contain 'loc_mock_OfflineAgent'.")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, false, "should have failed")
+    assert.strictEqual(tr.invokedToolCount, 0, "Gitleaks tool should be invoked 0 times")
+    assert.strictEqual(tr.stdout.includes("loc_mock_GitLeaksNotFound"), true, "customLocation/gitleaks-darwin-amd64'")
+  })
+  it("Should succeed with custom tool as input parameter", async () => {
+    const tp = path.join(__dirname, "GitleaksVersion_ShouldSucceedWithCustomLocationInput.js")
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+  })
+  it("Should succeed with custom tool as variabele", async () => {
+    const tp = path.join(__dirname, "GitleaksVersion_ShouldSucceedWithCustomLocationVariable.js")
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+  })
+})
+
+describe("Gitleaks toolcache", async () => {
+  it("Should download when gitleaks version is not in toolcache", async () => {
+    const tp = path.join(__dirname, "GitleaksRelease_ShouldDownloadWhenNotInToolCache")
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+    assert.strictEqual(tr.stdout.includes("loc_mock_NoToolcacheDownloading"), true, "Should contain 'loc_mock_NoToolcacheDownloading'.")
+  })
+  it("Should not download when gitleaks version is in toolcache.", async () => {
+    const tp = path.join(__dirname, "GitleaksRelease_ShouldNotDownloadWhenInToolCache")
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+    assert.strictEqual(tr.stdout.includes("loc_mock_AvailableInToolcache"), true, "Should contain 'loc_mock_AvailableInToolcache'.")
   })
 
-  it('Should fail when there is no version in toolcache and agent is offline', function (done: Mocha.Done) {
-    const tp = path.join(__dirname, 'GitleaksOfflineAgent_TakeLatestVersionShouldFail')
+  it("Should not download when gitleaks version is in toolcache and that is the latest version.", async () => {
+    const tp = path.join(__dirname, "GitleaksRelease_ShouldNotDownloadWhenInToolCacheAndLatest")
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-    tr.runAsync()
-    assert.strictEqual(tr.succeeded, false, 'should have failed')
-    assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should be invoked 0 times')
-    assert.strictEqual(tr.stdout.includes('loc_mock_OfflineAgentToolNotAvailable'), true, "Should contain 'loc_mock_OfflineAgentToolNotAvailable'.")
-    done()
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+    assert.strictEqual(tr.stdout.includes("loc_mock_OnlineAgentHasLatestVersion"), true, "loc_mock_OnlineAgentHasLatestVersion'")
+  })
+})
+
+describe("Gitleaks with Offline Agent", async () => {
+  it("Should take the latest version in toolcache when agent is offline", async () => {
+    const tp = path.join(__dirname, "GitleaksOfflineAgent_TakeLatestVersionShouldSucceed")
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, true, "should have succeeded")
+    assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
+    assert.strictEqual(tr.stdout.includes("loc_mock_OfflineAgent"), true, "Should contain 'loc_mock_OfflineAgent'.")
   })
 
-  describe('Baseline file', function () {
-    it('Should be called with baseline file Path', function (done: Mocha.Done) {
-      const tp = path.join(__dirname, 'Gitleaks_ScanWithBaseline')
+  it("Should fail when there is no version in toolcache and agent is offline", async () => {
+    const tp = path.join(__dirname, "GitleaksOfflineAgent_TakeLatestVersionShouldFail")
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
+    await tr.runAsync()
+    assert.strictEqual(tr.succeeded, false, "should have failed")
+    assert.strictEqual(tr.invokedToolCount, 0, "Gitleaks tool should be invoked 0 times")
+    assert.strictEqual(tr.stdout.includes("loc_mock_OfflineAgentToolNotAvailable"), true, "Should contain 'loc_mock_OfflineAgentToolNotAvailable'.")
+  })
+
+  describe("Baseline file", async () => {
+    it("Should be called with baseline file Path", async () => {
+      const tp = path.join(__dirname, "Gitleaks_ScanWithBaseline")
       const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-      tr.runAsync()
-      assert.strictEqual(tr.succeeded, true, 'should have succeeded')
-      assert.strictEqual(tr.invokedToolCount, 1, 'Gitleaks tool should be invoked 1 time')
-      done()
+      await tr.runAsync()
+      assert.strictEqual(tr.succeeded, true, "should have succeeded")
+      assert.strictEqual(tr.invokedToolCount, 1, "Gitleaks tool should be invoked 1 time")
     })
-    it('Should fail when baseline file does not exists', function (done: Mocha.Done) {
-      const tp = path.join(__dirname, 'Gitleaks_ScanWithBaselineFileNotFound')
+    it("Should fail when baseline file does not exists", async () => {
+      const tp = path.join(__dirname, "Gitleaks_ScanWithBaselineFileNotFound")
       const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp)
-      tr.runAsync()
-      assert.strictEqual(tr.failed, true, 'should have failed')
-      assert.strictEqual(tr.errorIssues.length, 1, 'should have one errors')
-      assert.strictEqual(tr.stdout.includes('loc_mock_BaselinePathDoesNotExists'), true, "Should contain 'loc_mock_BaselinePathDoesNotExists'")
-      assert.strictEqual(tr.invokedToolCount, 0, 'Gitleaks tool should not be invoked')
-     done()
+      await tr.runAsync()
+      assert.strictEqual(tr.failed, true, "should have failed")
+      assert.strictEqual(tr.errorIssues.length, 1, "should have one errors")
+      assert.strictEqual(tr.stdout.includes("loc_mock_BaselinePathDoesNotExists"), true, "Should contain 'loc_mock_BaselinePathDoesNotExists'")
+      assert.strictEqual(tr.invokedToolCount, 0, "Gitleaks tool should not be invoked")
     })
   })
 })
