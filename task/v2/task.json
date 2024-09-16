@@ -1,290 +1,289 @@
 {
-    "id": "11bd67d8-bfe7-497b-967d-e800eb673119",
-    "name": "Gitleaks",
-    "friendlyName": "Gitleaks scan",
-    "description": "Scan git repos (or files) for secrets using regex and entropy.",
-    "helpMarkDown": "[More information](https://github.com/JoostVoskuil/azure-devops-gitleaks)",
-    "category": "Utility",
-    "visibility": [
-        "Build"
-    ],
-    "runsOn": [
-        "Agent"
-    ],
-    "author": "Joost Voskuil (joost@foxhole.nl)",
-    "version": {
-        "Major": 2,
-        "Minor": 9,
-        "Patch": 0
+  "id": "11bd67d8-bfe7-497b-967d-e800eb673119",
+  "name": "Gitleaks",
+  "friendlyName": "Gitleaks scan",
+  "description": "Scan git repos (or files) for secrets using regex and entropy.",
+  "helpMarkDown": "[More information](https://github.com/JoostVoskuil/azure-devops-gitleaks)",
+  "category": "Utility",
+  "visibility": ["Build"],
+  "runsOn": ["Agent"],
+  "author": "Joost Voskuil (joost@foxhole.nl)",
+  "version": {
+    "Major": 2,
+    "Minor": 9,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.144.0",
+  "groups": [
+    {
+      "name": "scanconfiguration",
+      "displayName": "Scan configuration",
+      "isExpanded": true
     },
-    "minimumAgentVersion": "2.144.0",
-    "groups": [
-        {
-            "name": "scanconfiguration",
-            "displayName": "Scan configuration",
-            "isExpanded": true
-        },
-        {
-            "name": "scanoptions",
-            "displayName": "Scan options",
-            "isExpanded": true
-        },
-        {
-            "name": "reporting",
-            "displayName": "Reporting",
-            "isExpanded": false
-        },
-        {
-            "name": "gitleakstool",
-            "displayName": "Gitleaks Tool location and version",
-            "isExpanded": false
-        }
-    ],
-    "inputs": [
-        {
-            "name": "scanlocation",
-            "type": "string",
-            "label": "Scan Location",
-            "defaultValue": "$(Build.SourcesDirectory)",
-            "required": true,
-            "helpMarkDown": "Specify the location to scan. Defaults to your sources directory."
-        },
-        {
-            "name": "configtype",
-            "type": "pickList",
-            "label": "Configuration Type",
-            "defaultValue": "predefined",
-            "required": true,
-            "options": {
-                "default": "Default",
-                "predefined": "Predefined",
-                "custom": "Custom configuration"
-            },
-            "helpMarkDown": "Specify if you want to use the default, predefined config or a custom config.",
-            "groupName": "scanconfiguration"
-        },
-        {
-            "name": "predefinedconfigfile",
-            "type": "pickList",
-            "label": "Predefined config file",
-            "defaultValue": "GitleaksUdmCombo.toml",
-            "required": true,
-            "options": {
-                "UDMSecretChecksv8.toml": "UDMSecretChecksv8.toml",
-                "GitleaksUdmCombo.toml": "GitleaksUdmCombo.toml"
-            },
-            "helpMarkDown": "Select a predefined config file.",
-            "visibleRule": "configtype=predefined",
-            "groupName": "scanconfiguration"
-        },
-        {
-            "name": "configfile",
-            "type": "string",
-            "label": "Config file",
-            "defaultValue": "$(Build.SourcesDirectory)/.gitleaks.toml",
-            "required": true,
-            "helpMarkDown": "Specify a custom config file.",
-            "visibleRule": "configtype=custom",
-            "groupName": "scanconfiguration"
-        },
-        {
-            "name": "scanmode",
-            "type": "pickList",
-            "label": "Scan range",
-            "defaultValue": "smart",
-            "required": false,
-            "options": {
-                "all": "All commits",
-                "prevalidation": "Pull request commits",
-                "changes": "Commits (changes) between builds",
-                "smart": "Smart",
-                "nogit": "Flat (no-git)",
-                "custom": "Custom"
-            },
-            "helpMarkDown": "Set the mode of what the scope is of the commits to be scanned.",
-            "groupName": "scanoptions"
-        },
-        {
-            "name": "logoptions",
-            "type": "string",
-            "label": "--log-opts parameters",
-            "helpMarkDown": "Provide log-opts arguments to Gitleaks",
-            "required": false,
-            "visibleRule": "scanmode=custom",
-            "groupName": "scanoptions"
-        },
-        {
-            "name": "redact",
-            "type": "boolean",
-            "label": "Redact",
-            "defaultValue": "true",
-            "required": false,
-            "helpMarkDown": "Check this option if you want to redact secrets from log messages and leaks.",
-            "groupName": "scanoptions"
-        },
-        {
-            "name": "baselinePath",
-            "type": "string",
-            "label": "Baseline file",
-            "required": false,
-            "helpMarkDown": "Specify the baseline json file so that only new findings are reported.",
-            "groupName": "scanconfiguration"
-        },
-        {
-            "name": "taskfail",
-            "type": "boolean",
-            "label": "Fail the task if secrets are found.",
-            "defaultValue": "true",
-            "required": false,
-            "groupName": "reporting"
-        },
-        {
-            "name": "uploadresults",
-            "type": "boolean",
-            "label": "Upload results",
-            "defaultValue": "true",
-            "required": false,
-            "helpMarkDown": "Check this option if you want to upload the results as an artifact.",
-            "groupName": "reporting"
-        },
-        {
-            "name": "reportartifactname",
-            "type": "string",
-            "defaultValue": "CodeAnalysisLogs",
-            "label": "Artifact Name",
-            "required": false,
-            "visibleRule": "uploadresults=true",
-            "helpMarkDown": "Specify the artifact name of the report how it should be uploaded to Azure DevOps.",
-            "groupName": "reporting"
-        },
-        {
-            "name": "reportformat",
-            "type": "pickList",
-            "label": "Report format",
-            "defaultValue": "sarif",
-            "required": true,
-            "options": {
-                "json": "json",
-                "sarif": "sarif",
-                "csv": "csv"
-            },
-            "helpMarkDown": "Select a report format: json, sarif, csv (default: sarif)",
-            "groupName": "reporting"
-        },
-        {
-            "name": "reportfolder",
-            "type": "string",
-            "label": "Report Folder",
-            "required": false,
-            "defaultValue": "$(Agent.TempDirectory)",
-            "helpMarkDown": "Specify the folder for the report.",
-            "groupName": "reporting"
-        },
-        {
-            "name": "reportname",
-            "type": "string",
-            "label": "Report Name",
-            "required": false,
-            "helpMarkDown": "Specify the filename of the report without the extension.",
-            "groupName": "reporting"
-        },
-        {
-            "name": "verbose",
-            "type": "boolean",
-            "label": "Verbose output",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Check this option if you want gitleaks to print verbose output.",
-            "groupName": "gitleakstool"
-        },
-        {
-            "name": "version",
-            "type": "string",
-            "label": "Gitleaks version",
-            "defaultValue": "latest",
-            "required": false,
-            "helpMarkDown": "Specify the version of Gitleaks to use. Must be major version 8. Use 'latest' for latest version.",
-            "groupName": "gitleakstool"
-        },
-        {
-            "name": "customtoollocation",
-            "type": "string",
-            "label": "Gitleaks custom tool location",
-            "required": false,
-            "helpMarkDown": "Specify the custom directory of Gitleaks, when provided, Gitleaks will not be downloaded.",
-            "groupName": "gitleakstool"
-        },
-        {
-            "name": "taskfailonexecutionerror",
-            "type": "boolean",
-            "label": "Fail the task if this task produces an error (including download errors).",
-            "defaultValue": "true",
-            "required": false,
-            "groupName": "gitleakstool"
-        }
-    ],
-    "execution": {
-        "Node10": {
-            "target": "$(currentDirectory)/index.js"
-        },
-        "Node16": {
-            "target": "$(currentDirectory)/index.js"
-          }
+    {
+      "name": "scanoptions",
+      "displayName": "Scan options",
+      "isExpanded": true
     },
-    "messages": {
-        "ThanksToZacharyRice": "Thanks to Zachary Rice (https://github.com/zricethezav) for creating and maintaining gitleaks.",
-        "ThanksToJesseHouwing": "Thanks to Jesse Houwing (https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.",
-        "OnlySupportsGitLeaks8": "This version of the task only supports GitLeaks version 8. Specified version is %s",
-        "DetectedChanges": "Detected %s Git commit(s)",
-        "ScanningCommits": "Scanning for %s Git commit(s) for this build. First commit is %s, Last commit is %s",
-        "LogOptionsFound": "Log options is set as input, scanmode is ignored",
-        "PreValidationScan": "Only commits belonging to this Pull Request are scanned.",
-        "ChangeScan": "Only commits are scanned that are ommited between this build and the previous build with a max of %s commits.",
-        "PreValidationBuildInvallid": "Scanmode is 'prevalidation', however, this task is not run as part of a pull request.",
-        "ResultError": "Leaks found. See log and report for details. See https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository for information how to remove secrets.",
-        "ResultErrorOnExecution": "Execution errors occured. See log for details.",
-        "ResultSuccess": "Good job! No leaks.",
-        "ScanFolder": "Scan Folder is set to %s",
-        "ReportPath": "Report path is set to %s",
-        "IncorrectConfig": "Incorrect configuration set.",
-        "ConfigFile": "Config file parameter is set to %s",
-        "CachedTool": "Cached tool is %s",
-        "CannotParseVersion": "Cannot parse version %s",
-        "DownloadUri": "%s download uri is %s",
-        "CannotRetrieveVersion": "Cannot retrieve version from GitHub. Maybe it hitted the API throttling.",
-        "CannotDownloadUri": "Cannot retreive download from url %s",
-        "OsArchNotSupported": "OS '%s' and architecture '%s' is not supported by %s.",
-        "UploadResults": "Uploading report file to %s",
-        "GettingUrl": "Getting %s to find latest version of %s",
-        "ReleaseInfo": "GitLeaks latest release version is %s",
-        "CommitsFile": "CommitsFile is set to  %s",
-        "Commits": "The following commits will be scanned: %s",
-        "GetEndpointUrlEmpty": "GetEndpointUrl %s is empty",
-        "GetEndpointAuthorizationParameterEmpty": "GetEndpointAuthorizationParameter %s is empty",
-        "VariableEmpty": "Variable %s is empty",
-        "InputEmpty": "Input %s is empty",
-        "AdoConnectionError": "Connection cannot be made to Azure DevOps.",
-        "GitLeaksNotFound": "Gitleaks cannot be found at %s",
-        "OfflineAgent": "The agent has no internet connection, searching for toolversion to use on the agent.",
-        "OfflineAgentToolNotAvailable": "The agent has no internet connection and the specified Gitleaks tool version is not available on the agent.",
-        "OnlineAgentHasLatestVersion": "The latest version of the tool is available in the toolcache. Version is %s",
-        "OnlineAgentHasNotTheLatestVersion": "The latest version of Gitleaks (%s) must be downloaded...",
-        "NoToolcacheDownloading": "Version %s is not available in toolcache. Downloading version %s.",
-        "AvailableInToolcache": "Version %s of gitleaks is already available in toolcache.",
-        "DownloadFromGitHub": "Downloading %s from GitHub.",
-        "CachedVersions": "Cached versions of Gitleaks on the agent are: %s",
-        "NoCommitsToScan": "No commits to scan; exiting.",
-        "UnknownScanMode": "Unknown scanmode: %s",
-        "cachedToolExecutable": "cachedToolExecutable: %s",       
-        "Downloading": "Downloading %s",
-        "ScanningRange": "Scanning commit range: %s to %s",
-        "NotGitRepository": "For prevalidation/smart scanning mode, only 'TfsGit' is supported as repository type. This repository type is '%s'",
-        "ErrorFetchingGitHubAPI": "Error contacting GitHub API: %s",
-        "ErrorFetchingGitHub": "Error contacting GitHub Latest release page: %s",
-        "UploadFailed": "Failed to upload results to Azure DevOps. Error is %s",
-        "BaselinePathDoesNotExists": "The specified baseline file path does not exist.",
-        "QueryingGitHubLatestReleasePage": "Querying Gitleaks Latest Release GitHub Page.",
-        "QueryingGitHubAPI": "Querying Gitleaks GitHubs API for latest release.",
-        "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version."
+    {
+      "name": "reporting",
+      "displayName": "Reporting",
+      "isExpanded": false
+    },
+    {
+      "name": "gitleakstool",
+      "displayName": "Gitleaks Tool location and version",
+      "isExpanded": false
     }
-}   
+  ],
+  "inputs": [
+    {
+      "name": "scanlocation",
+      "type": "string",
+      "label": "Scan Location",
+      "defaultValue": "$(Build.SourcesDirectory)",
+      "required": true,
+      "helpMarkDown": "Specify the location to scan. Defaults to your sources directory."
+    },
+    {
+      "name": "configtype",
+      "type": "pickList",
+      "label": "Configuration Type",
+      "defaultValue": "predefined",
+      "required": true,
+      "options": {
+        "default": "Default",
+        "predefined": "Predefined",
+        "custom": "Custom configuration"
+      },
+      "helpMarkDown": "Specify if you want to use the default, predefined config or a custom config.",
+      "groupName": "scanconfiguration"
+    },
+    {
+      "name": "predefinedconfigfile",
+      "type": "pickList",
+      "label": "Predefined config file",
+      "defaultValue": "GitleaksUdmCombo.toml",
+      "required": true,
+      "options": {
+        "UDMSecretChecksv8.toml": "UDMSecretChecksv8.toml",
+        "GitleaksUdmCombo.toml": "GitleaksUdmCombo.toml"
+      },
+      "helpMarkDown": "Select a predefined config file.",
+      "visibleRule": "configtype=predefined",
+      "groupName": "scanconfiguration"
+    },
+    {
+      "name": "configfile",
+      "type": "string",
+      "label": "Config file",
+      "defaultValue": "$(Build.SourcesDirectory)/.gitleaks.toml",
+      "required": true,
+      "helpMarkDown": "Specify a custom config file.",
+      "visibleRule": "configtype=custom",
+      "groupName": "scanconfiguration"
+    },
+    {
+      "name": "scanmode",
+      "type": "pickList",
+      "label": "Scan range",
+      "defaultValue": "smart",
+      "required": false,
+      "options": {
+        "all": "All commits",
+        "prevalidation": "Pull request commits",
+        "changes": "Commits (changes) between builds",
+        "smart": "Smart",
+        "nogit": "Flat (no-git)",
+        "custom": "Custom"
+      },
+      "helpMarkDown": "Set the mode of what the scope is of the commits to be scanned.",
+      "groupName": "scanoptions"
+    },
+    {
+      "name": "logoptions",
+      "type": "string",
+      "label": "--log-opts parameters",
+      "helpMarkDown": "Provide log-opts arguments to Gitleaks",
+      "required": false,
+      "visibleRule": "scanmode=custom",
+      "groupName": "scanoptions"
+    },
+    {
+      "name": "redact",
+      "type": "boolean",
+      "label": "Redact",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Check this option if you want to redact secrets from log messages and leaks.",
+      "groupName": "scanoptions"
+    },
+    {
+      "name": "baselinePath",
+      "type": "string",
+      "label": "Baseline file",
+      "required": false,
+      "helpMarkDown": "Specify the baseline json file so that only new findings are reported.",
+      "groupName": "scanconfiguration"
+    },
+    {
+      "name": "taskfail",
+      "type": "boolean",
+      "label": "Fail the task if secrets are found.",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "reporting"
+    },
+    {
+      "name": "uploadresults",
+      "type": "boolean",
+      "label": "Upload results",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Check this option if you want to upload the results as an artifact.",
+      "groupName": "reporting"
+    },
+    {
+      "name": "reportartifactname",
+      "type": "string",
+      "defaultValue": "CodeAnalysisLogs",
+      "label": "Artifact Name",
+      "required": false,
+      "visibleRule": "uploadresults=true",
+      "helpMarkDown": "Specify the artifact name of the report how it should be uploaded to Azure DevOps.",
+      "groupName": "reporting"
+    },
+    {
+      "name": "reportformat",
+      "type": "pickList",
+      "label": "Report format",
+      "defaultValue": "sarif",
+      "required": true,
+      "options": {
+        "json": "json",
+        "sarif": "sarif",
+        "csv": "csv"
+      },
+      "helpMarkDown": "Select a report format: json, sarif, csv (default: sarif)",
+      "groupName": "reporting"
+    },
+    {
+      "name": "reportfolder",
+      "type": "string",
+      "label": "Report Folder",
+      "required": false,
+      "defaultValue": "$(Agent.TempDirectory)",
+      "helpMarkDown": "Specify the folder for the report.",
+      "groupName": "reporting"
+    },
+    {
+      "name": "reportname",
+      "type": "string",
+      "label": "Report Name",
+      "required": false,
+      "helpMarkDown": "Specify the filename of the report without the extension.",
+      "groupName": "reporting"
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "label": "Verbose output",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Check this option if you want gitleaks to print verbose output.",
+      "groupName": "gitleakstool"
+    },
+    {
+      "name": "version",
+      "type": "string",
+      "label": "Gitleaks version",
+      "defaultValue": "latest",
+      "required": false,
+      "helpMarkDown": "Specify the version of Gitleaks to use. Must be major version 8. Use 'latest' for latest version.",
+      "groupName": "gitleakstool"
+    },
+    {
+      "name": "customtoollocation",
+      "type": "string",
+      "label": "Gitleaks custom tool location",
+      "required": false,
+      "helpMarkDown": "Specify the custom directory of Gitleaks, when provided, Gitleaks will not be downloaded.",
+      "groupName": "gitleakstool"
+    },
+    {
+      "name": "taskfailonexecutionerror",
+      "type": "boolean",
+      "label": "Fail the task if this task produces an error (including download errors).",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "gitleakstool"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "$(currentDirectory)/index.js"
+    },
+    "Node16": {
+      "target": "$(currentDirectory)/index.js"
+    },
+    "Node20": {
+      "target": "$(currentDirectory)/index.js"
+    }
+  },
+  "messages": {
+    "ThanksToZacharyRice": "Thanks to Zachary Rice (https://github.com/zricethezav) for creating and maintaining gitleaks.",
+    "ThanksToJesseHouwing": "Thanks to Jesse Houwing (https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.",
+    "OnlySupportsGitLeaks8": "This version of the task only supports GitLeaks version 8. Specified version is %s",
+    "DetectedChanges": "Detected %s Git commit(s)",
+    "ScanningCommits": "Scanning for %s Git commit(s) for this build. First commit is %s, Last commit is %s",
+    "LogOptionsFound": "Log options is set as input, scanmode is ignored",
+    "PreValidationScan": "Only commits belonging to this Pull Request are scanned.",
+    "ChangeScan": "Only commits are scanned that are ommited between this build and the previous build with a max of %s commits.",
+    "PreValidationBuildInvallid": "Scanmode is 'prevalidation', however, this task is not run as part of a pull request.",
+    "ResultError": "Leaks found. See log and report for details. See https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository for information how to remove secrets.",
+    "ResultErrorOnExecution": "Execution errors occured. See log for details.",
+    "ResultSuccess": "Good job! No leaks.",
+    "ScanFolder": "Scan Folder is set to %s",
+    "ReportPath": "Report path is set to %s",
+    "IncorrectConfig": "Incorrect configuration set.",
+    "ConfigFile": "Config file parameter is set to %s",
+    "CachedTool": "Cached tool is %s",
+    "CannotParseVersion": "Cannot parse version %s",
+    "DownloadUri": "%s download uri is %s",
+    "CannotRetrieveVersion": "Cannot retrieve version from GitHub. Maybe it hitted the API throttling.",
+    "CannotDownloadUri": "Cannot retreive download from url %s",
+    "OsArchNotSupported": "OS '%s' and architecture '%s' is not supported by %s.",
+    "UploadResults": "Uploading report file to %s",
+    "GettingUrl": "Getting %s to find latest version of %s",
+    "ReleaseInfo": "GitLeaks latest release version is %s",
+    "CommitsFile": "CommitsFile is set to  %s",
+    "Commits": "The following commits will be scanned: %s",
+    "GetEndpointUrlEmpty": "GetEndpointUrl %s is empty",
+    "GetEndpointAuthorizationParameterEmpty": "GetEndpointAuthorizationParameter %s is empty",
+    "VariableEmpty": "Variable %s is empty",
+    "InputEmpty": "Input %s is empty",
+    "AdoConnectionError": "Connection cannot be made to Azure DevOps.",
+    "GitLeaksNotFound": "Gitleaks cannot be found at %s",
+    "OfflineAgent": "The agent has no internet connection, searching for toolversion to use on the agent.",
+    "OfflineAgentToolNotAvailable": "The agent has no internet connection and the specified Gitleaks tool version is not available on the agent.",
+    "OnlineAgentHasLatestVersion": "The latest version of the tool is available in the toolcache. Version is %s",
+    "OnlineAgentHasNotTheLatestVersion": "The latest version of Gitleaks (%s) must be downloaded...",
+    "NoToolcacheDownloading": "Version %s is not available in toolcache. Downloading version %s.",
+    "AvailableInToolcache": "Version %s of gitleaks is already available in toolcache.",
+    "DownloadFromGitHub": "Downloading %s from GitHub.",
+    "CachedVersions": "Cached versions of Gitleaks on the agent are: %s",
+    "NoCommitsToScan": "No commits to scan; exiting.",
+    "UnknownScanMode": "Unknown scanmode: %s",
+    "cachedToolExecutable": "cachedToolExecutable: %s",
+    "Downloading": "Downloading %s",
+    "ScanningRange": "Scanning commit range: %s to %s",
+    "NotGitRepository": "For prevalidation/smart scanning mode, only 'TfsGit' is supported as repository type. This repository type is '%s'",
+    "ErrorFetchingGitHubAPI": "Error contacting GitHub API: %s",
+    "ErrorFetchingGitHub": "Error contacting GitHub Latest release page: %s",
+    "UploadFailed": "Failed to upload results to Azure DevOps. Error is %s",
+    "BaselinePathDoesNotExists": "The specified baseline file path does not exist.",
+    "QueryingGitHubLatestReleasePage": "Querying Gitleaks Latest Release GitHub Page.",
+    "QueryingGitHubAPI": "Querying Gitleaks GitHubs API for latest release.",
+    "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version."
+  }
+}
