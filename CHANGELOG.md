@@ -8,7 +8,7 @@
 - Update node dependencies
 - Switched to Biome linter and dropped eslint
 - Added Node20 support
-- Added comment that the baseline report should be in json format (thanx Daniel Dieben)
+- Added comment that the baseline report should be in json format (thanx @GlashelderWhatever)
 
 ### 2.9
 - Update definitions

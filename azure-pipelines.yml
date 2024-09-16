@@ -9,6 +9,9 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  system.debug: true
+
 stages:
 - stage: 'Build'
   displayName: 'Build'
