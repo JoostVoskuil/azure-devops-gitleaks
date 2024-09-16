@@ -11,7 +11,7 @@
     "lint": "npx @biomejs/biome lint",
     "lint:unsafe": "npx @biomejs/biome lint --write --unsafe",
     "test": "npm run build-test && npm run lint && nyc mocha test/_suite.js --timeout 20000 && rm -rf ./.nyc_output/",
-    "test-ci": "npm run lint && nyc --reporter=cobertura --reporter=html mocha test/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml --timeout 10000"
+    "test-ci": "npm run lint && nyc --reporter=cobertura --reporter=html mocha test/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml --timeout 20000"
   },
   "nyc": {
     "extension": [
