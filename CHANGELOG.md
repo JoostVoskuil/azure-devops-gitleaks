@@ -2,6 +2,9 @@
 
 ## Taks version 2
 
+### 2.11
+- No longer supporting Node10 agents
+
 ### 2.10
 - Fixed broken definitions (See https://github.com/JoostVoskuil/azure-devops-gitleaks/pull/87). Thanx @rgmz
 - Update definitions

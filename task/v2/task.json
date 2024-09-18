@@ -8,10 +8,11 @@
   "visibility": ["Build"],
   "runsOn": ["Agent"],
   "author": "Joost Voskuil (joost@foxhole.nl)",
+  "minumumAgentVersion": "2.206.1",
   "version": {
     "Major": 2,
-    "Minor": 10,
-    "Patch": 0
+    "Minor": 11,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "groups": [
@@ -220,9 +221,6 @@
     }
   ],
   "execution": {
-    "Node10": {
-      "target": "$(currentDirectory)/index.js"
-    },
     "Node16": {
       "target": "$(currentDirectory)/index.js"
     },
