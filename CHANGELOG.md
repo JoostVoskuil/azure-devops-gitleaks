@@ -2,6 +2,9 @@
 
 ## Taks version 2
 
+### 2.12
+- Fix config
+
 ### 2.11
 - No longer supporting Node10 agents
 
