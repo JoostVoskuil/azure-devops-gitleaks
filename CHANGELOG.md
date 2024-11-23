@@ -2,6 +2,10 @@
 
 ## Taks version 2
 
+### 2.13
+- Update dependencies
+- Update config
+
 ### 2.12
 - Fix config
 - Update config
