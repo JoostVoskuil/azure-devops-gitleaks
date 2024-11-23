@@ -23,7 +23,7 @@ stages:
         versionSpec: '20.x'
       displayName: 'Install Node.js'
 
-    - task: SonarCloudPrepare@2
+    - task: SonarCloudPrepare@3
       inputs:
         SonarCloud: 'SonarCloud'
         organization: 'joostvoskuil'
@@ -40,7 +40,7 @@ stages:
         path: task/v2
         name: Gitleaks V2
 
-    - task: SonarCloudAnalyze@2
+    - task: SonarCloudAnalyze@3
       inputs:
         jdkversion: 'JAVA_HOME_17_X64'
     - task: SonarCloudPublish@2
