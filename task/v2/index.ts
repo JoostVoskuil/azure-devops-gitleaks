@@ -35,15 +35,14 @@ async function run(): Promise<void> {
     }
 
     // Set Gitleaks arguments
-    toolRunner.arg(['detect'])
+    toolRunner.arg(scanMode === 'nogit' ? ['dir'] : ['git'])
+    toolRunner.arg([`${scanLocation}`])
     toolRunner.argIf(getConfigFilePath(), [`--config=${getConfigFilePath()}`])
-    toolRunner.arg([`--source=${scanLocation}`])
     toolRunner.argIf(logOptions,`--log-opts=${logOptions}`)
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
     toolRunner.argIf(debug === 'true', ['--log-level=debug'])
     toolRunner.arg([`--report-format=${reportFormat}`])
     toolRunner.arg([`--report-path=${reportPath}`])
-    toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
     toolRunner.argIf(baselinePath, [`--baseline-path=${baselinePath}`])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
     toolRunner.arg(["--exit-code=99"])

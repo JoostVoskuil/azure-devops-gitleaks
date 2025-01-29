@@ -5,8 +5,8 @@ export class ToolCallBuilder {
 
   constructor () {
     this.argument[0] = '/tool/gitleaks'
-    this.argument[1] = 'detect'
-    this.argument[3] = `--source=${path.join(__dirname, '../')}`
+    this.argument[1] = 'git'
+    this.argument[3] = `${path.join(__dirname, '../')}`
     this.argument[7] = '--report-format=sarif'
     this.argument[8] = `--report-path=${path.join(__dirname, '/gitleaks-report-guid.sarif')}`
     this.argument[12] = "--exit-code=99"
@@ -23,7 +23,7 @@ export class ToolCallBuilder {
   }
 
   public withNoGit (): this {
-    this.argument[9] = '--no-git'
+    this.argument[1] = 'dir'
     return this
   }
 
