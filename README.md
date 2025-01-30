@@ -72,7 +72,7 @@ This means that commits are not scanned but flat files. In this case you scan th
     reportformat: 'sarif'
 ```
 
-## Arguments for Version 2 of the Task
+## Arguments for Version 3 of the Task
 
 | Name | Description |
 | :-----|:------------ |
@@ -80,10 +80,11 @@ This means that commits are not scanned but flat files. In this case you scan th
 | configtype | Can be 'default', 'predefined', 'custom'.<br/>'default' for GitLeaks default configuration.<br/>'predefined' allows you to select a predefined configurations.<br/>'custom' allows you to set a custom configuration file. |
 | predefinedconfigfile | Can be 'UDMSecretChecksv8.toml' or 'GitleaksUdmCombo.toml'.<br/>'UDMSecretChecksv8.toml' uses the Credscan config file provided by Jesse Houwing.<br/>'GitleaksUdmCombo.toml' uses the default GitLeaks configuration icm the CredScan configuration.|
 | configfile | Sets the custom configfile in your repo. |
-| scanmode | 'all' will scan all commits.<br/>'prevalidation' will scan only the commits that are part of a Pull Request.<br/>'changes' will scan only the changes between this build and the previous build.<br/>'smart' will detect the best scanmode.<br/>'nogit' will run GitLeaks in no-git mode (flat file scan).<br/>'custom' will allow you to provide custom -log-opts.|
+| scanmode | 'all' will scan all commits.<br/>'prevalidation' will scan only the commits that are part of a Pull Request.<br/>'changes' will scan only the changes between this build and the previous build.<br/>'smart' will detect the best scanmode.<br/>'directory' will run GitLeaks in no-git mode (flat file scan).<br/>'custom' will allow you to provide custom -log-opts.|
 | logoptions | When scanmode is set to 'custom', this allows you to fill in custom log-options that are passed to GitLeaks |
 | redact | Redact secrets from log messages and leaks. Default is `true`. |
 | baselinePath | Specify a baseline file (old report) so that only new findings are reported. The baseline file/report should be in json format. |
+| gitLeaksIgnoreFilePath | Specify a .gitleaksignore or folder that contains one. |
 | taskfail | Sets the behavior of the task when secrets are detected.<br/>When set to `true`, fail the task. When set to `false` and secrets present end with warning. Default is `true` |
 | uploadresults | When set to `true`, the results of gitleaks will be uploaded as an artifact to Azure DevOps. Default is `true`.|
 | reportartifactname | When uploadresults is set to `true`, you can specify the artifact name in Azure DevOps. For the SARIF SAST extension to work, this should be `CodeAnalysisLogs`.|

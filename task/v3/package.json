@@ -1,0 +1,51 @@
+{
+  "name": "gitleaks",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-rel": "npm ci --production && tsc index.ts",
+    "build-test": "npm ci && tsc",
+    "clean": "rm -rf ./node_modules/ && npm run clean-build",
+    "clean-build": "rm -rf ./coverage/ && rm -rf ./.nyc_output/ && rm -rf test-results.xml && find . -name '*.js' -delete && find . -name '*.js.map' -delete && find . -name '.taskkey' -delete",
+    "lint": "npx @biomejs/biome lint",
+    "lint:unsafe": "npx @biomejs/biome lint --write --unsafe",
+    "test": "npm run build-test && npm run lint && nyc mocha test/_suite.js --timeout 90000 && rm -rf ./.nyc_output/",
+    "test-ci": "npm run lint && nyc --reporter=cobertura --reporter=html mocha test/_suite.js --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml --timeout 0"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "**/.*.js",
+      "**/test/*.ts",
+      "coverage/**/*.js"
+    ],
+    "all": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JoostVoskuil/azure-devops-gitleaks"
+  },
+  "author": "Joost Voskuil (joost@foxhole.nl)",
+  "license": "MIT",
+  "dependencies": {
+    "azure-devops-node-api": "^14.1.0",
+    "azure-pipelines-task-lib": "^4.17.3",
+    "azure-pipelines-tool-lib": "^2.0.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.12.0",
+    "@biomejs/biome": "1.9.4",
+    "mocha": "^11.1.0",
+    "mocha-junit-reporter": "^2.2.1",
+    "nyc": "^17.1.0",
+    "source-map-support": "^0.5.21",
+    "sync-request": "^6.1.0"
+  }
+}
