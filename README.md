@@ -65,7 +65,7 @@ This means that commits are not scanned but flat files. In this case you scan th
 
 ```yaml
 # Run Gitleaks on Source Repository
-- task: Gitleaks@2
+- task: Gitleaks@3
   inputs:
     scanlocation: '$(Build.SourcesDirectory)'
     configtype: 'predefined'
