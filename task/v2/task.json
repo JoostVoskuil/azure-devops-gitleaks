@@ -12,7 +12,7 @@
   "version": {
     "Major": 2,
     "Minor": 13,
-    "Patch": 1
+    "Patch": 2
 
   },
   "groups": [
@@ -283,6 +283,6 @@
     "QueryingGitHubLatestReleasePage": "Querying Gitleaks Latest Release GitHub Page.",
     "QueryingGitHubAPI": "Querying Gitleaks GitHubs API for latest release.",
     "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version.",
-    "NewTaskVersionAvailable": "There is a new version of this task available. Please update to version 3."
+    "TaskIsDeprecated": "There is a new version of this task available. Version 2 is deprecated. Please update to version 3."
   }
 }
