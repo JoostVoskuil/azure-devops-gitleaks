@@ -11,6 +11,7 @@ async function run(): Promise<void> {
     taskLib.setResourcePath(path.join(__dirname, 'task.json'), true)
     console.log(taskLib.loc('ThanksToZacharyRice'))
     console.log(taskLib.loc('ThanksToJesseHouwing'))
+    console.log(taskLib.loc('ThanksToRichardGomez'))
     console.log()
 
     // Get inputs on Task Behaviour

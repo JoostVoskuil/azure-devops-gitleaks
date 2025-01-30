@@ -82,7 +82,7 @@ export class TaskMockBuilder {
         return {
           message: {
             statusCode: 200,
-            req: { path: 'github.com/gitleaks/gitleaks/releases/tag/v8.10.0' }
+            req: { path: 'github.com/gitleaks/gitleaks/releases/tag/v8.20.0' }
           }
         };
       }
@@ -106,7 +106,7 @@ export class TaskMockBuilder {
 
   public withToolCache(): this {
     this.registerToolMock({
-      findLocalToolVersions: () => ['8.0.0', '8.10.0'],
+      findLocalToolVersions: () => ['8.0.0', '8.20.0'],
       findLocalTool: () => '/tool'
     });
     return this;

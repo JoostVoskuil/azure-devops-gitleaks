@@ -48,7 +48,6 @@ export function isSemanticVersionGreaterOrEqualThen(versionA: string, versionB: 
     const a = v1[i] || 0
     const b = v2[i] || 0
     if (a < b) return false
-    if (a === b) return true
     if (a > b) return true
   }
   return false

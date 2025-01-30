@@ -1,19 +1,30 @@
 # Changelog
 
+## Task version 3
+
+- Only compatible with GitLeaks 8.19.0 and higher. Uses the new command structure
+- Update dependencies
+- Update configs
+- Introduced 'gitLeaksIgnoreFilePath' parameter to specify the GitLeaks Ignore Path
+
 ## Taks version 2
 
 ### 2.13
+
 - Update dependencies
 - Update config
 
 ### 2.12
+
 - Fix config
 - Update config
 
 ### 2.11
+
 - No longer supporting Node10 agents
 
 ### 2.10
+
 - Fixed broken definitions (See https://github.com/JoostVoskuil/azure-devops-gitleaks/pull/87). Thanx @rgmz
 - Update definitions
 - Update node dependencies
@@ -22,10 +33,12 @@
 - Added comment that the baseline report should be in json format (thanx @GlashelderWhatever)
 
 ### 2.9
+
 - Update definitions
 - Update node dependencies
 
 ### 2.8
+
 - Update definitions
 - Update node dependencies
 - Added reportfolder parameter to customize report location
@@ -33,21 +46,25 @@
 - Fixed bug, put log options between quotes
 
 ### 2.7
+
 - Fixed GitHub API throttling issue.
 - Update node dependencies
 
 ### 2.6.2
+
 - Update node dependencies
 - Added feature to add a baseline file, see #73
 - Update definitions
 - Fixed code smells
 
-### 2.5.3
+### 2.5.4
+
 - Update node dependencies
 - Update definitions
 - Bugfix #69 (Not quite bugfix but it will throw an message to the console instead of error)
 
 ### 2.5.3
+
 - Update node dependencies
 - Bugfix #65
 
@@ -71,7 +88,6 @@
 ### 2.2.16
 
 - Updated Config File (GitleaksUdmCombo.toml)
-
 
 ### 2.2.15
 

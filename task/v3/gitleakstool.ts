@@ -36,8 +36,8 @@ export class GitleaksTool {
     // Detect minimal version of Gitleaks supported is version 8
     if (specifiedVersion.toLowerCase() !== 'latest') {
       const version = toolLib.cleanVersion(specifiedVersion)
-      const isAtLeastVersionEight = isSemanticVersionGreaterOrEqualThen(version, '8.19.0')
-      if (!isAtLeastVersionEight) throw Error(taskLib.loc('OnlySupportsGitLeaks819', version))
+      const isAtLeastVersionEightNineteen = isSemanticVersionGreaterOrEqualThen(version, '8.19.0')
+      if (!isAtLeastVersionEightNineteen) throw Error(taskLib.loc('OnlySupportsGitLeaks819', version))
     }
 
     if (isGitHubAvailable) {
