@@ -11,19 +11,20 @@ async function run(): Promise<void> {
     taskLib.setResourcePath(path.join(__dirname, 'task.json'), true)
     console.log(taskLib.loc('ThanksToZacharyRice'))
     console.log(taskLib.loc('ThanksToJesseHouwing'))
+    console.log(taskLib.loc('ThanksToRichardGomez'))
     console.log()
-    taskLib.warning(taskLib.loc('TaskIsDeprecated'))
 
     // Get inputs on Task Behaviour
     const scanLocation = getAzureDevOpsPathInput('scanlocation')
     const reportFormat = getAzureDevOpsInput('reportformat')
     const reportName = taskLib.getInput('reportname', false)
     const baselinePath = taskLib.getInput('baselinePath', false)
+    const igorefilePath = taskLib.getInput('gitLeaksIgnoreFilePath', false)
     const debug = taskLib.getVariable('system.debug')
     const reportPath = getReportPath(reportFormat, reportName)
 
     // Determine scanmode
-    const scanMode = getAzureDevOpsInput('scanmode')
+    const scanMode = getAzureDevOpsInput('scanmode').toLowerCase()
     const logOptions = await determineLogOptions(scanMode)
 
     // Get Tool
@@ -34,18 +35,23 @@ async function run(): Promise<void> {
     if (baselinePath !== undefined && (taskLib.exist(baselinePath) === false)) {
       throw new Error(taskLib.loc('BaselinePathDoesNotExists'))
     }
+    // Check if Ignore file exists
+    if (igorefilePath !== undefined && (taskLib.exist(igorefilePath) === false)) {
+      throw new Error(taskLib.loc('IgnoreFilePathDoesNotExists'))
+    }
 
     // Set Gitleaks arguments
-    toolRunner.arg(['detect'])
+    toolRunner.argIf(scanMode !== 'directory', ['detect'])
+    toolRunner.argIf(scanMode === 'directory', ['directory'])
+    toolRunner.arg([`${scanLocation}`])
     toolRunner.argIf(getConfigFilePath(), [`--config=${getConfigFilePath()}`])
-    toolRunner.arg([`--source=${scanLocation}`])
     toolRunner.argIf(logOptions,`--log-opts=${logOptions}`)
     toolRunner.argIf(taskLib.getBoolInput('redact'), ['--redact'])
     toolRunner.argIf(debug === 'true', ['--log-level=debug'])
     toolRunner.arg([`--report-format=${reportFormat}`])
     toolRunner.arg([`--report-path=${reportPath}`])
-    toolRunner.argIf(scanMode === 'nogit', ['--no-git'])
     toolRunner.argIf(baselinePath, [`--baseline-path=${baselinePath}`])
+    toolRunner.argIf(igorefilePath, [`--gitleaks-ignore-path=${igorefilePath}`])
     toolRunner.argIf(taskLib.getBoolInput('verbose'), ['--verbose'])
     toolRunner.arg(["--exit-code=99"])
     // Set Tool options
@@ -56,7 +62,7 @@ async function run(): Promise<void> {
     }
 
     // Execute and determine outcome
-    const result: number = await toolRunner.exec(options)
+    const result: number = await toolRunner.execAsync(options)
     await setTaskOutcomeBasedOnGitLeaksResult(result, reportPath)
   } catch (err) {
     const taskfailonexecutionerror = taskLib.getBoolInput('taskfailonexecutionerror')
@@ -70,11 +76,9 @@ async function determineLogOptions(scanMode: string): Promise<string | undefined
   const buildReason = getAzureDevOpsVariable('Build.Reason')
   let logOptions: string | undefined
 
-  if (scanMode === 'all') {
-    return undefined
-  }if (scanMode === 'nogit') {
-    return undefined
-  }if (scanMode === 'custom') {
+  if (['all', 'directory'].includes(scanMode)) return undefined
+
+  if (scanMode === 'custom') {
     logOptions = taskLib.getInput('logoptions')
   } else if (scanMode === 'prevalidation' && buildReason === 'PullRequest') {
     logOptions = await getLogOptionsForPreValidationBuild()

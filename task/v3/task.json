@@ -10,10 +10,9 @@
   "author": "Joost Voskuil (joost@foxhole.nl)",
   "minumumAgentVersion": "2.206.1",
   "version": {
-    "Major": 2,
-    "Minor": 13,
+    "Major": 3,
+    "Minor": 0,
     "Patch": 2
-
   },
   "groups": [
     {
@@ -95,7 +94,7 @@
         "prevalidation": "Pull request commits",
         "changes": "Commits (changes) between builds",
         "smart": "Smart",
-        "nogit": "Flat (no-git)",
+        "directory": "Directory (no-git)",
         "custom": "Custom"
       },
       "helpMarkDown": "Set the mode of what the scope is of the commits to be scanned.",
@@ -125,6 +124,14 @@
       "label": "Baseline file",
       "required": false,
       "helpMarkDown": "Specify the baseline json file so that only new findings are reported.",
+      "groupName": "scanconfiguration"
+    },
+    {
+      "name": "gitLeaksIgnoreFilePath",
+      "type": "string",
+      "label": "GitLeaks ignore file path",
+      "required": false,
+      "helpMarkDown": "path to .gitleaksignore file or folder containing one (default '.').",
       "groupName": "scanconfiguration"
     },
     {
@@ -231,7 +238,8 @@
   "messages": {
     "ThanksToZacharyRice": "Thanks to Zachary Rice (https://github.com/zricethezav) for creating and maintaining gitleaks.",
     "ThanksToJesseHouwing": "Thanks to Jesse Houwing (https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.",
-    "OnlySupportsGitLeaks8": "This version of the task only supports GitLeaks version 8. Specified version is %s",
+    "ThanksToRichardGomez": "Thanks to Richard Gomez (https://github.com/rgmz) for keeping track of possible issues with the extension and config file updates.",
+    "OnlySupportsGitLeaks819": "This version of the task only supports GitLeaks version 8.19.0 or higher. Specified version is %s. If you want to use a lower version, please use version 2 of this task.",
     "DetectedChanges": "Detected %s Git commit(s)",
     "ScanningCommits": "Scanning for %s Git commit(s) for this build. First commit is %s, Last commit is %s",
     "LogOptionsFound": "Log options is set as input, scanmode is ignored",
@@ -280,9 +288,9 @@
     "ErrorFetchingGitHub": "Error contacting GitHub Latest release page: %s",
     "UploadFailed": "Failed to upload results to Azure DevOps. Error is %s",
     "BaselinePathDoesNotExists": "The specified baseline file path does not exist.",
+    "IgnoreFilePathDoesNotExists": "The specified ignore file path does not exist.",
     "QueryingGitHubLatestReleasePage": "Querying Gitleaks Latest Release GitHub Page.",
     "QueryingGitHubAPI": "Querying Gitleaks GitHubs API for latest release.",
-    "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version.",
-    "TaskIsDeprecated": "There is a new version of this task available. Version 2 is deprecated. Please update to version 3."
+    "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version."
   }
 }

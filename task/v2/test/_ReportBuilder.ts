@@ -12,7 +12,7 @@ export class ReportBuilder {
     return this
   }
 
-  public withReportFormat (reportType: string): ReportBuilder {
+  public withReportFormat (reportType: string): this {
     this.reportFile = path.join(__dirname, `/gitleaks-report-guid.${reportType}`)
     return this
   }
