@@ -1,7 +1,6 @@
 import type * as mr from 'azure-pipelines-task-lib/mock-run'
 import type { GitCommitRef } from 'azure-devops-node-api/interfaces/GitInterfaces'
 import type { Change } from 'azure-devops-node-api/interfaces/BuildInterfaces'
-import type { WebApi } from 'azure-devops-node-api/WebApi'
 
 interface MockBuildApi {
   getBuildChanges(teamProject: string, buildId: number, continuationToken?: string, numberOfCommits?: number): Promise<Change[]>;

@@ -17,7 +17,7 @@ export class ReportBuilder {
     return this;
   }
 
-  public withReportFormat(reportType: string): ReportBuilder {
+  public withReportFormat(reportType: string): this {
     this.validateInputs(reportType);
     this.reportFile = this.buildPath(reportType, ReportBuilder.DEFAULT_NAME);
     return this;

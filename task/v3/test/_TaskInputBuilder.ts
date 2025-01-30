@@ -42,7 +42,7 @@ export class TaskInputBuilder {
   }
 
   public withCustomConfigFile(file?: string): this {
-    this.setConfigInputs(ConfigType.CUSTOM, file || '');
+    this.setConfigInputs(ConfigType.CUSTOM, file ?? '');
     return this;
   }
 
