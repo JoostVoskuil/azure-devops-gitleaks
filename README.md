@@ -11,7 +11,7 @@ Please note that task v1 will no longer work since gitleaks v7 is no longer down
 
 ```yaml
 # Run Gitleaks on Source Repository
-- task: Gitleaks@2
+- task: Gitleaks@3
   inputs:
     scanlocation: '$(Build.SourcesDirectory)'
     configtype: 'predefined'
@@ -35,7 +35,9 @@ Any feedback on the Azure configuration file ('UDMSecretChecks.toml') is welcome
 
 Thanks to [Dariusz Porowski](https://github.com/DariuszPorowski) for contributing and making awesome adjustments!
 
-Thanks to John Lokerse for providing feedback on this extension.
+Thanks to [Dariusz Porowski](https://github.com/DariuszPorowski) for contributing and making awesome adjustments!
+
+Thanks to [Richard Gomez](https://github.com/rgmz) for keeping track of possible issues with the extension and config file updates.
 
 ## FetchDepth
 
