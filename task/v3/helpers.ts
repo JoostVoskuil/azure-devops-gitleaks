@@ -40,6 +40,7 @@ export function getAzureDevOpsVariable(name: string): string {
 }
 
 export function isSemanticVersionGreaterOrEqualThen(versionA: string, versionB: string): boolean {
+  if (versionA === versionB) return true
   const v1 = versionA.split('.').map(Number)
   const v2 = versionB.split('.').map(Number)
   const len = Math.max(v1.length, v2.length)
