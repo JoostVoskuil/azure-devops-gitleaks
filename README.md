@@ -35,8 +35,6 @@ Any feedback on the Azure configuration file ('UDMSecretChecks.toml') is welcome
 
 Thanks to [Dariusz Porowski](https://github.com/DariuszPorowski) for contributing and making awesome adjustments!
 
-Thanks to [Dariusz Porowski](https://github.com/DariuszPorowski) for contributing and making awesome adjustments!
-
 Thanks to [Richard Gomez](https://github.com/rgmz) for keeping track of possible issues with the extension and config file updates.
 
 ## FetchDepth

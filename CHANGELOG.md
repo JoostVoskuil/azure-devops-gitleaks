@@ -1,5 +1,9 @@
 # Changelog
 
+## Task version 3.1
+
+- Default config is now default task setting
+
 ## Task version 3
 
 - Only compatible with GitLeaks 8.19.0 and higher. Uses the new command structure
