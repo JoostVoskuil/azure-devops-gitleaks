@@ -94,7 +94,7 @@
         "prevalidation": "Pull request commits",
         "changes": "Commits (changes) between builds",
         "smart": "Smart",
-        "directory": "Directory (no-git)",
+        "directory": "Directory",
         "custom": "Custom"
       },
       "helpMarkDown": "Set the mode of what the scope is of the commits to be scanned.",
