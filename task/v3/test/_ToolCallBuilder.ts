@@ -21,7 +21,7 @@ type ToolArguments = Partial<Record<ArgumentPosition, string>>;
 
 export class ToolCallBuilder {
   private static readonly DEFAULT_EXECUTABLE = '/tool/gitleaks';
-  private static readonly DEFAULT_COMMAND = 'detect';
+  private static readonly DEFAULT_COMMAND = 'git';
   private static readonly DEFAULT_EXIT_CODE = '99';
   
   private readonly arguments: ToolArguments;

@@ -586,7 +586,7 @@ regexes = [
 [[rules.allowlists]]
 regexTarget = "match"
 regexes = [
-    '''(?i)(?:access(?:ibility|or)|access[_.-]?id|random[_.-]?access|api[_.-]?(?:id|name|version)|rapid|capital|[a-z0-9-]*?api[a-z0-9-]*?:jar:|author|X-MS-Exchange-Organization-Auth|Authentication-Results|(?:credentials?[_.-]?id|withCredentials)|(?:bucket|foreign|hot|idx|natural|primary|pub(?:lic)?|schema|sequence)[_.-]?key|key[_.-]?(?:alias|board|code|frame|id|length|mesh|name|pair|ring|selector|signature|size|stone|storetype|word|up|down|left|right)|key[_.-]?vault[_.-]?(?:id|name)|keyVaultToStoreSecrets|key(?:store|tab)[_.-]?(?:file|path)|issuerkeyhash|(?-i:[DdMm]onkey|[DM]ONKEY)|keying|(?:secret)[_.-]?(?:length|name|size)|UserSecretsId|(?:io\.jsonwebtoken[ \t]?:[ \t]?[\w-]+)|(?:api|credentials|token)[_.-]?(?:endpoint|ur[il])|public[_.-]?token|(?:key|token)[_.-]?file|(?-i:(?:[A-Z_]+=\n[A-Z_]+=|[a-z_]+=\n[a-z_]+=)(?:\n|\z))|(?-i:(?:[A-Z.]+=\n[A-Z.]+=|[a-z.]+=\n[a-z.]+=)(?:\n|\z)))''',
+    '''(?i)(?:access(?:ibility|or)|access[_.-]?id|random[_.-]?access|api[_.-]?(?:id|name|version)|rapid|capital|[a-z0-9-]*?api[a-z0-9-]*?:jar:|author|X-MS-Exchange-Organization-Auth|Authentication-Results|(?:credentials?[_.-]?id|withCredentials)|(?:bucket|foreign|hot|idx|natural|primary|pub(?:lic)?|schema|sequence)[_.-]?key|(?:turkey)|key[_.-]?(?:alias|board|code|frame|id|length|mesh|name|pair|press(?:ed)?|ring|selector|signature|size|stone|storetype|word|up|down|left|right)|key[_.-]?vault[_.-]?(?:id|name)|keyVaultToStoreSecrets|key(?:store|tab)[_.-]?(?:file|path)|issuerkeyhash|(?-i:[DdMm]onkey|[DM]ONKEY)|keying|(?:secret)[_.-]?(?:length|name|size)|UserSecretsId|(?:csrf)[_.-]?token|(?:io\.jsonwebtoken[ \t]?:[ \t]?[\w-]+)|(?:api|credentials|token)[_.-]?(?:endpoint|ur[il])|public[_.-]?token|(?:key|token)[_.-]?file|(?-i:(?:[A-Z_]+=\n[A-Z_]+=|[a-z_]+=\n[a-z_]+=)(?:\n|\z))|(?-i:(?:[A-Z.]+=\n[A-Z.]+=|[a-z.]+=\n[a-z.]+=)(?:\n|\z)))''',
 ]
 stopwords = [
     "000000",
@@ -2071,6 +2071,18 @@ stopwords = [
 regexTarget = "line"
 regexes = [
     '''--mount=type=secret,''',
+    '''import[ \t]+{[ \t\w,]+}[ \t]+from[ \t]+['"][^'"]+['"]''',
+]
+[[rules.allowlists]]
+condition = "AND"
+paths = [
+    '''\.bb$''','''\.bbappend$''','''\.bbclass$''','''\.inc$''',
+]
+regexTarget = "line"
+regexes = [
+    '''LICENSE[^=]*=\s*"[^"]+''',
+    '''LIC_FILES_CHKSUM[^=]*=\s*"[^"]+''',
+    '''SRC[^=]*=\s*"[a-zA-Z0-9]+''',
 ]
 
 [[rules]]
@@ -2621,6 +2633,11 @@ entropy = 3.5
 keywords = ["sha256~"]
 
 [[rules]]
+id = "pkcs12-file"
+description = "Found a PKCS #12 file, which commonly contain bundled private keys."
+path = '''(?i)(?:^|\/)[^\/]+\.p(?:12|fx)$'''
+
+[[rules]]
 id = "plaid-api-token"
 description = "Discovered a Plaid API Token, potentially compromising financial data aggregation and banking services."
 regex = '''(?i)[\w.-]{0,50}?(?:plaid)(?:[ \t\w.-]{0,20})[\s'"]{0,3}(?:=|>|:{1,3}=|\|\||:|=>|\?=|,)[\x60'"\s=]{0,5}(access-(?:sandbox|development|production)-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})(?:[\x60'"\s;]|\\[nr]|$)'''
@@ -2678,7 +2695,7 @@ keywords = ["pnu_"]
 [[rules]]
 id = "private-key"
 description = "Identified a Private Key, which may compromise cryptographic security and sensitive data encryption."
-regex = '''(?i)-----BEGIN[ A-Z0-9_-]{0,100}PRIVATE KEY(?: BLOCK)?-----[\s\S-]*?KEY(?: BLOCK)?-----'''
+regex = '''(?i)-----BEGIN[ A-Z0-9_-]{0,100}PRIVATE KEY(?: BLOCK)?-----[\s\S-]{64,}?KEY(?: BLOCK)?-----'''
 keywords = ["-----begin"]
 
 [[rules]]
@@ -2769,7 +2786,7 @@ keywords = ["sentry"]
 [[rules]]
 id = "sentry-org-token"
 description = "Found a Sentry.io Organization Token, risking unauthorized access to error tracking services and sensitive application data."
-regex = '''\bsntrys_eyJpYXQiO[a-zA-Z0-9+/]{10,200}(?:LCJyZWdpb25fdXJs|InJlZ2lvbl91cmwi|cmVnaW9uX3VybCI6)[a-zA-Z0-9+/]{10,200}={0,2}_[a-zA-Z0-9+/]{43}\b'''
+regex = '''\bsntrys_eyJpYXQiO[a-zA-Z0-9+/]{10,200}(?:LCJyZWdpb25fdXJs|InJlZ2lvbl91cmwi|cmVnaW9uX3VybCI6)[a-zA-Z0-9+/]{10,200}={0,2}_[a-zA-Z0-9+/]{43}(?:[^a-zA-Z0-9+/]|\z)'''
 entropy = 4.5
 keywords = ["sntrys_eyjpyxqio"]
 
@@ -2935,6 +2952,22 @@ regex = '''(?i)[\w.-]{0,50}?(?:snyk[_.-]?(?:(?:api|oauth)[_.-]?)?(?:key|token))(
 keywords = ["snyk"]
 
 [[rules]]
+id = "sonar-api-token"
+description = "Uncovered a Sonar API token, potentially compromising software vulnerability scanning and code security."
+regex = '''(?i)[\w.-]{0,50}?(?:sonar[_.-]?(login|token))(?:[ \t\w.-]{0,20})[\s'"]{0,3}(?:=|>|:{1,3}=|\|\||:|=>|\?=|,)[\x60'"\s=]{0,5}([a-z0-9=_\-]{40})(?:[\x60'"\s;]|\\[nr]|$)'''
+keywords = ["sonar"]
+
+[[rules]]
+id = "sourcegraph-access-token"
+description = "Sourcegraph is a code search and navigation engine."
+regex = '''(?i)\b(\b(sgp_(?:[a-fA-F0-9]{16}|local)_[a-fA-F0-9]{40}|sgp_[a-fA-F0-9]{40}|[a-fA-F0-9]{40})\b)(?:[\x60'"\s;]|\\[nr]|$)'''
+entropy = 3
+keywords = [
+    "sgp_",
+    "sourcegraph",
+]
+
+[[rules]]
 id = "square-access-token"
 description = "Detected a Square Access Token, risking unauthorized payment processing and financial transaction exposure."
 regex = '''\b((?:EAAA|sq0atp-)[\w-]{22,60})(?:[\x60'"\s;]|\\[nr]|$)'''
@@ -3084,10 +3117,7 @@ description = "Detected a Zendesk Secret Key, risking unauthorized access to cus
 regex = '''(?i)[\w.-]{0,50}?(?:zendesk)(?:[ \t\w.-]{0,20})[\s'"]{0,3}(?:=|>|:{1,3}=|\|\||:|=>|\?=|,)[\x60'"\s=]{0,5}([a-z0-9]{40})(?:[\x60'"\s;]|\\[nr]|$)'''
 keywords = ["zendesk"]
 
-
 ### AZURE
-
-
 
 [[rules]]
 id = "CSCAN0210" 

@@ -13,3 +13,4 @@ test-results.xml
 ### VisualStudioCode ###
 .vscode/launch.json
 .vscode/settings.json
+.DS_Store
