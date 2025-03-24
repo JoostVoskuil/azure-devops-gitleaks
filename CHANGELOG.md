@@ -1,5 +1,11 @@
 # Changelog
 
+## Task version 3.2
+
+- Fix bug. Removed detect (because it is deprecated)
+- Update NPM dependencies
+- Update config
+
 ## Task version 3.1
 
 - Default config is now default task setting

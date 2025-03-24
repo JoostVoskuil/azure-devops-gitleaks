@@ -41,7 +41,7 @@ async function run(): Promise<void> {
     }
 
     // Set Gitleaks arguments
-    toolRunner.argIf(scanMode !== 'directory', ['detect'])
+    toolRunner.argIf(scanMode !== 'directory', ['git'])
     toolRunner.argIf(scanMode === 'directory', ['directory'])
     toolRunner.arg([`${scanLocation}`])
     toolRunner.argIf(getConfigFilePath(), [`--config=${getConfigFilePath()}`])
