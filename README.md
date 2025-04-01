@@ -68,7 +68,7 @@ This means that commits are not scanned but flat files. In this case you scan th
     scanlocation: '$(Build.SourcesDirectory)'
     configtype: 'predefined'
     predefinedconfigfile: 'GitleaksUdmCombo.toml'
-    scanmode: 'nogit'
+    scanmode: 'directory'
     reportformat: 'sarif'
 ```
 
