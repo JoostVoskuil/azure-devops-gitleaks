@@ -57,7 +57,7 @@ See also the [Microsoft Documentation on this](https://learn.microsoft.com/en-us
 
 For coorporate environments setting variable `Agent.Source.Git.ShallowFetchDepth` to `0` can set this for every pipeline.
 
-### Set the scan mode to nogit
+### Set the scan mode to `directory`
 
 This means that commits are not scanned but flat files. In this case you scan the as-if situation. Secrets  commited but that are not in the HEAD will not be found. 
 
