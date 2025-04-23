@@ -59,7 +59,7 @@ For coorporate environments setting variable `Agent.Source.Git.ShallowFetchDepth
 
 ### Set the scan mode to `directory`
 
-This means that commits are not scanned but flat files. In this case you scan the as-if situation. Secrets  commited but that are not in the HEAD will not be found. 
+This means that commits are not scanned but flat files. In this case you scan the as-if situation. Secrets commited but that are not in the HEAD will not be found.
 
 ```yaml
 # Run Gitleaks on Source Repository
