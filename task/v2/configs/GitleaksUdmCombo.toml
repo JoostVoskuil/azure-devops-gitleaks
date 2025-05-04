@@ -10,7 +10,7 @@
 
 title = "gitleaks config with azure"
 
-[allowlist]
+[[allowlists]]
 description = "global allow lists"
 regexes = [
     '''(?i)^true|false|null$''',
@@ -168,7 +168,7 @@ keywords = [
     "acca",
 ]
 # NOTE: Gitleaks >= v8.21.0 should use [[rules.allowlists] instead.
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = [
     '''.+EXAMPLE$''',
 ]
@@ -295,7 +295,7 @@ regex = '''\bcurl\b(?:.*|.*(?:[\r\n]{1,2}.*){1,5})[ \t\n\r](?:-u|--user)(?:=|[ \
 entropy = 2
 keywords = ["curl"]
 # NOTE: Gitleaks >= v8.21.0 should use [[rules.allowlists] instead.
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = [
     '''[^:]+:(change(it|me)|pass(word)?|pwd|test|token|\*+|x+)''',
     '''['"]?<[^>]+>['"]?:['"]?<[^>]+>|<[^:]+:[^>]+>['"]?''',
@@ -552,7 +552,7 @@ keywords = [
     "token",
 ]
 # NOTE: Gitleaks >= v8.21.0 should use [[rules.allowlists] instead.
-[rules.allowlist]
+[[rules.allowlists]]
 regexTarget = "match"
 regexes = [
     '''(?i)(accessor|access[_.-]?id|api[_.-]?(version|id)|rapid|capital|[a-z0-9-]*?api[a-z0-9-]*?:jar:|author|X-MS-Exchange-Organization-Auth|Authentication-Results|(credentials?[_.-]?id|withCredentials)|(bucket|foreign|hot|natural|primary|schema|sequence)[_.-]?key|key[_.-]?(alias|board|code|ring|selector|size|stone|storetype|word|up|down|left|right)|key(store|tab)[_.-]?(file|path)|issuerkeyhash|(?-i:[DdMm]onkey|[DM]ONKEY)|keying|(secret)[_.-]?name|UserSecretsId|(api|credentials|token)[_.-]?(endpoint|ur[il])|public[_.-]?(key|token)|(key|token)[_.-]?file)''',
@@ -2046,7 +2046,7 @@ keywords = [
     "ghs_",
 ]
 # NOTE: Gitleaks >= v8.21.0 should use [[rules.allowlists] instead.
-[rules.allowlist]
+[[rules.allowlists]]
 paths = [
     '''(^|/)@octokit/auth-token/README\.md$''',
 ]
@@ -2072,7 +2072,7 @@ regex = '''ghp_[0-9a-zA-Z]{36}'''
 entropy = 3
 keywords = ["ghp_"]
 # NOTE: Gitleaks >= v8.21.0 should use [[rules.allowlists] instead.
-[rules.allowlist]
+[[rules.allowlists]]
 paths = [
     '''(^|/)@octokit/auth-token/README\.md$''',
 ]
@@ -2337,7 +2337,7 @@ regex = '''(?i)(?:\bkind:[ \t]*["']?secret["']?(?:.|\s){0,200}?\bdata:(?:.|\s){0
 path = '''(?i)\.ya?ml$'''
 keywords = ["secret"]
 # NOTE: Gitleaks >= v8.21.0 should use [[rules.allowlists] instead.
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = [
     '''[\w.-]+:(?:[ \t]*(?:\||>[-+]?)\s+)?[ \t]*(?:\{\{[ \t\w"|$:=,.-]+}}|""|'')''',
 ]
@@ -2530,7 +2530,7 @@ path = '''(?i)nuget\.config$'''
 entropy = 1
 keywords = ["<add key="]
 # NOTE: Gitleaks >= v8.21.0 should use [[rules.allowlists] instead.
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = [
     '''33f!!lloppa''',
     '''hal\+9ooo_da!sY''',
@@ -2990,7 +2990,7 @@ keywords = [
     "s.",
 ]
 # NOTE: Gitleaks >= v8.21.0 should use [[rules.allowlists] instead.
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = [
     '''s\.[A-Za-z]{24}''',
 ]
@@ -3052,7 +3052,7 @@ id = "CSCAN0030"
 description = "PublishSettings"
 regex = '''userPWD="[a-zA-Z0-9\+\/]{60}"'''
 path = '''(?i)(publishsettings|\.pubxml$)'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3067,7 +3067,7 @@ id = "CSCAN0091 1"
 description = "AspNetMachineKeyInConfig 1" 
 path = '''\.(?:xml|pubxml|definitions|ps1|wadcfgx|ccf|config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''<machineKey[^>]+(?:decryptionKey\s*\=\s*"[a-fA-F0-9]{48,}|validationKey\s*\=\s*"[a-fA-F0-9]{48,})[^>]+>'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3076,7 +3076,7 @@ id = "CSCAN0091 2"
 description = "AspNetMachineKeyInConfig 2" 
 path = '''\.(?:xml|pubxml|definitions|ps1|wadcfgx|ccf|config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''(?:decryptionKey|validationKey)="[a-zA-Z0-9]+"'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3085,7 +3085,7 @@ id = "CSCAN0092 1"
 description = "SqlConnectionStringInConfig 1"
 path = '''\.(?:xml|pubxml|definitions|ps1|wadcfgx|ccf|config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''(?i)(?:connection[sS]tring|connString)[^=]*=["'][^"']*[pP]assword\s*=\s*[^\s;][^"']*(?:'|")'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = '''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager'''
 
 [[rules]]
@@ -3093,7 +3093,7 @@ id = "CSCAN0092 / CSCAN0043"
 description = "SqlConnectionStringInConfig 2 / SqlConnectionStringInCode" 
 path = '''\.(?:xml|pubxml|definitions|ps1|wadcfgx|ccf|config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties|policy_and_key\.hpp|AccountConfig\.h)$|hubot'''
 regex = '''(?i)(?:User ID|uid|UserId).*(?:Password|[^a-z]pwd)=[^'\$%<@'";\[\{][^;/"]{4,128}(?:;|")'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:prefix <<|guestaccesstoken|skiptoken|cookie|tsm|fake|example|badlyFormatted|Invalid|sha512|sha256|"input"|ENCRYPTED|"EncodedRequestUri"|looks like|myStorageAccountName|(?:0|x|\*){8,})''']
 
@@ -3138,7 +3138,7 @@ id = "CSCAN0095 1"
 description = "GeneralSecretInConfig 1" 
 path = '''\.(?:config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''<add\skey="[^"]+(?:key(?:s|[0-9])?|credentials?|secret(?:s|[0-9])?|password|token|KeyPrimary|KeySecondary|KeyOrSas|KeyEncrypted)"\s*value\s*="[^"]+"[^>]*/>'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''key\s*=\s*"[^"]*AppKey[^"]*"\s+value\s*=\s*"[a-z]+"''',
 '''value\s*=\s*"(?:[a-z]+(?: [a-z]+)+"|_+[a-z]+_+"|[a-z]+-[a-z]+-[a-z]+["-]|[a-z]+-[a-z]+"|[a-z]+\\[a-z]+"|\d+"|[^"]*ConnectionString")''',
 '''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
@@ -3151,7 +3151,7 @@ id = "CSCAN0095 2"
 description = "GeneralSecretInConfig 2" 
 path = '''\.(?:config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''<add\skey="[^"]+"\s*value="[^"]*EncryptedSecret:[^"]+"\s*/>'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''key\s*=\s*"[^"]*AppKey[^"]*"\s+value\s*=\s*"[a-z]+"''',
 '''value\s*=\s*"(?:[a-z]+(?: [a-z]+)+"|_+[a-z]+_+"|[a-z]+-[a-z]+-[a-z]+["-]|[a-z]+-[a-z]+"|[a-z]+\\[a-z]+"|\d+"|[^"]*ConnectionString")''',
 '''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
@@ -3164,7 +3164,7 @@ id = "CSCAN0095 3"
 description = "GeneralSecretInConfig 3" 
 path = '''\.(?:config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''<Credential\sname="[^"]*(?:key(?:s|[0-9])?|credentials?|secret(?:s|[0-9])?|password|token|KeyPrimary|KeySecondary|KeyOrSas|KeyEncrypted)"(\s*value\s*="[^"]+".*?/>|[^>]*>.*?</Credential>)'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''key\s*=\s*"[^"]*AppKey[^"]*"\s+value\s*=\s*"[a-z]+"''',
 '''value\s*=\s*"(?:[a-z]+(?: [a-z]+)+"|_+[a-z]+_+"|[a-z]+-[a-z]+-[a-z]+["-]|[a-z]+-[a-z]+"|[a-z]+\\[a-z]+"|\d+"|[^"]*ConnectionString")''',
 '''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
@@ -3177,7 +3177,7 @@ id = "CSCAN0095 4"
 description = "GeneralSecretInConfig 4" 
 path = '''\.(?:config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''<setting\sname="[^"]*Password".*[\r?\n]*\s*<value>.+</value>'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''key\s*=\s*"[^"]*AppKey[^"]*"\s+value\s*=\s*"[a-z]+"''',
 '''value\s*=\s*"(?:[a-z]+(?: [a-z]+)+"|_+[a-z]+_+"|[a-z]+-[a-z]+-[a-z]+["-]|[a-z]+-[a-z]+"|[a-z]+\\[a-z]+"|\d+"|[^"]*ConnectionString")''',
 '''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
@@ -3208,7 +3208,7 @@ id = "CSCAN0220 1"
 description = "DefaultPasswordContexts 1" 
 path = '''\.(?:ps1|psm1|)$'''
 regex = '''ConvertTo-SecureString(?:\s*-String)?\s*"[^$"\r?\n]+"'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3217,7 +3217,7 @@ id = "CSCAN0220 2"
 description = "DefaultPasswordContexts 2" 
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''new\sX509Certificate2\([^()]*,\s*"[^"\r?\n]+"[^)]*\)'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3226,7 +3226,7 @@ id = "CSCAN0220 3"
 description = "DefaultPasswordContexts 3" 
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''AdminPassword\s*=\s*"[^"\r?\n]+"'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3235,7 +3235,7 @@ id = "CSCAN0220 4"
 description = "DefaultPasswordContexts 4" 
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''(?i)<password>.+</password>'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3244,7 +3244,7 @@ id = "CSCAN0220 5"
 description = "DefaultPasswordContexts 5" 
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''ClearTextPassword"?\s*[:=]\s*"[^"\r?\n]+"'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3253,7 +3253,7 @@ id = "CSCAN0220 6"
 description = "DefaultPasswordContexts 6" 
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''certutil.*?\-p\s+("[^"%]+"|'[^'%]+'|[^"']\S*\s)'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3262,7 +3262,7 @@ id = "CSCAN0220 7"
 description = "DefaultPasswordContexts 7" 
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''password\s*=\s*N?(["][^"\r?\n]{4,}["]|['][^'\r?\n]{4,}['])'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3271,7 +3271,7 @@ id = "CSCAN0160"
 description = "DomainPassword"
 regex = '''new(?:-object)?\s+System.Net.NetworkCredential\(?:.*?,\s*"[^"]+"'''
 path = '''\.cs$|\.c$|\.cpp$|\.ps1$|\.ps$|\.cmd$|\.bat$|\.log$|\.psd$|\.psm1$'''
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = '''(%1%|\$MIGUSER_PASSWORD|%miguser_pwd%)'''
 description = "ignore placeholders"
 
