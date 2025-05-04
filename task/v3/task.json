@@ -11,8 +11,8 @@
   "minumumAgentVersion": "2.206.1",
   "version": {
     "Major": 3,
-    "Minor": 2,
-    "Patch": 0
+    "Minor": 3,
+    "Patch": 2
   },
   "groups": [
     {
@@ -291,6 +291,7 @@
     "IgnoreFilePathDoesNotExists": "The specified ignore file path does not exist.",
     "QueryingGitHubLatestReleasePage": "Querying Gitleaks Latest Release GitHub Page.",
     "QueryingGitHubAPI": "Querying Gitleaks GitHubs API for latest release.",
-    "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version."
+    "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version.",
+    "LookingForNewMaintainer": "This extension for Azure DevOps needs a new maintainer. If you are interesed, please raise an issue on GitHub."
   }
 }

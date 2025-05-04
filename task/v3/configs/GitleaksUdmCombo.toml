@@ -2,31 +2,25 @@
 # If you would like to contribute new rules, please use
 # cmd/generate/config/main.go and follow the contributing guidelines
 # at https://github.com/gitleaks/gitleaks/blob/master/CONTRIBUTING.md
-
+#
+# How the hell does secret scanning work? Read this:
+#   https://lookingatcomputer.substack.com/p/regex-is-almost-all-you-need
+#
 # This is the default gitleaks configuration file.
 # Rules and allowlists are defined within this file.
 # Rules instruct gitleaks on what should be considered a secret.
 # Allowlists instruct gitleaks on what is allowed, i.e. not a secret.
 
-title = "gitleaks config with azure"
+title = "gitleaks config"
 
+# TODO: change to [[allowlists]]
 [allowlist]
 description = "global allow lists"
-regexes = [
-    '''(?i)^true|false|null$''',
-    '''^(?i:a+|b+|c+|d+|e+|f+|g+|h+|i+|j+|k+|l+|m+|n+|o+|p+|q+|r+|s+|t+|u+|v+|w+|x+|y+|z+|\*+|\.+)$''',
-    '''^\$(?:\d+|{\d+})$''',
-    '''^\$(?:[A-Z_]+|[a-z_]+)$''',
-    '''^\${(?:[A-Z_]+|[a-z_]+)}$''',
-    '''^\{\{[ \t]*[\w ().|]+[ \t]*}}$''',
-    '''^\$\{\{[ \t]*(?:(?:env|github|secrets|vars)(?:\.[A-Za-z]\w+)+[\w "'&./=|]*)[ \t]*}}$''',
-    '''^%(?:[A-Z_]+|[a-z_]+)%$''',
-    '''^%[+\-# 0]?[bcdeEfFgGoOpqstTUvxX]$''',
-    '''^\{\d{0,2}}$''',
-    '''^@(?:[A-Z_]+|[a-z_]+)@$''',
-]
 paths = [
     '''gitleaks\.toml''',
+    '''UDMSecretChecks.toml$''',
+    '''UDMSecretChecksv8.toml$''',
+    '''GitleaksUdmCombo.toml$''',
     '''(?i)\.(?:bmp|gif|jpe?g|png|svg|tiff?)$''',
     '''(?i)\.(?:eot|[ot]tf|woff2?)$''',
     '''(?i)\.(?:docx?|xlsx?|pdf|bin|socket|vsidx|v2|suo|wsuo|.dll|pdb|exe|gltf|zip)$''',
@@ -38,7 +32,7 @@ paths = [
     '''(?:^|/)mvnw(?:\.cmd)?$''',
     '''(?:^|/)\.mvn/wrapper/MavenWrapperDownloader\.java$''',
     '''(?:^|/)node_modules(?:/.*)?$''',
-    '''(?:^|/)(?:npm-shrinkwrap\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$''',
+    '''(?:^|/)(?:deno\.lock|npm-shrinkwrap\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$''',
     '''(?:^|/)bower_components(?:/.*)?$''',
     '''(?:^|/)(?:angular|bootstrap|jquery(?:-?ui)?|plotly|swagger-?ui)[a-zA-Z0-9.-]*(?:\.min)?\.js(?:\.map)?$''',
     '''(?:^|/)javascript\.json$''',
@@ -51,10 +45,32 @@ paths = [
     '''verification-metadata\.xml''',
     '''Database.refactorlog''',
 ]
+regexes = [
+    '''(?i)^true|false|null$''',
+    '''^(?i:a+|b+|c+|d+|e+|f+|g+|h+|i+|j+|k+|l+|m+|n+|o+|p+|q+|r+|s+|t+|u+|v+|w+|x+|y+|z+|\*+|\.+)$''',
+    '''^\$(?:\d+|{\d+})$''',
+    '''^\$(?:[A-Z_]+|[a-z_]+)$''',
+    '''^\${(?:[A-Z_]+|[a-z_]+)}$''',
+    '''^\{\{[ \t]*[\w ().|]+[ \t]*}}$''',
+    '''^\$\{\{[ \t]*(?:(?:env|github|secrets|vars)(?:\.[A-Za-z]\w+)+[\w "'&./=|]*)[ \t]*}}$''',
+    '''^%(?:[A-Z_]+|[a-z_]+)%$''',
+    '''^%[+\-# 0]?[bcdeEfFgGoOpqstTUvxX]$''',
+    '''^\{\d{0,2}}$''',
+    '''^@(?:[A-Z_]+|[a-z_]+)@$''',
+    '''^/Users/(?i)[a-z0-9]+/[\w .-/]+$''',
+    '''^/(?:bin|etc|home|opt|tmp|usr|var)/[\w ./-]+$''',
+]
 stopwords = [
     "abcdefghijklmnopqrstuvwxyz",
     "014df517-39d1-4453-b7b3-9930c563627c",
 ]
+
+[[rules]]
+id = "1password-secret-key"
+description = "Uncovered a possible 1Password secret key, potentially compromising access to secrets in vaults."
+regex = '''\bA3-[A-Z0-9]{6}-(?:(?:[A-Z0-9]{11})|(?:[A-Z0-9]{6}-[A-Z0-9]{5}))-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}\b'''
+entropy = 3.8
+keywords = ["a3-"]
 
 [[rules]]
 id = "1password-service-account-token"
@@ -211,6 +227,13 @@ description = "Cisco Meraki is a cloud-managed IT solution that provides network
 regex = '''[\w.-]{0,50}?(?i:[\w.-]{0,50}?(?:(?-i:[Mm]eraki|MERAKI))(?:[ \t\w.-]{0,20})[\s'"]{0,3})(?:=|>|:{1,3}=|\|\||:|=>|\?=|,)[\x60'"\s=]{0,5}([0-9a-f]{40})(?:[\x60'"\s;]|\\[nr]|$)'''
 entropy = 3
 keywords = ["meraki"]
+
+[[rules]]
+id = "clickhouse-cloud-api-secret-key"
+description = "Identified a pattern that may indicate clickhouse cloud API secret key, risking unauthorized clickhouse cloud api access and data breaches on ClickHouse Cloud platforms."
+regex = '''\b(4b1d[A-Za-z0-9]{38})\b'''
+entropy = 3
+keywords = ["4b1d"]
 
 [[rules]]
 id = "clojars-api-token"
@@ -540,7 +563,7 @@ keywords = ["freshbooks"]
 id = "gcp-api-key"
 description = "Uncovered a GCP API key, which could lead to unauthorized access to Google Cloud services and data breaches."
 regex = '''\b(AIza[\w-]{35})(?:[\x60'"\s;]|\\[nr]|$)'''
-entropy = 3
+entropy = 4
 keywords = ["aiza"]
 [[rules.allowlists]]
 regexes = [
@@ -584,12 +607,15 @@ regexes = [
     '''^[a-zA-Z_.-]+$''',
 ]
 [[rules.allowlists]]
+description = "Allowlist for Generic API Keys"
 regexTarget = "match"
 regexes = [
     '''(?i)(?:access(?:ibility|or)|access[_.-]?id|random[_.-]?access|api[_.-]?(?:id|name|version)|rapid|capital|[a-z0-9-]*?api[a-z0-9-]*?:jar:|author|X-MS-Exchange-Organization-Auth|Authentication-Results|(?:credentials?[_.-]?id|withCredentials)|(?:bucket|foreign|hot|idx|natural|primary|pub(?:lic)?|schema|sequence)[_.-]?key|(?:turkey)|key[_.-]?(?:alias|board|code|frame|id|length|mesh|name|pair|press(?:ed)?|ring|selector|signature|size|stone|storetype|word|up|down|left|right)|key[_.-]?vault[_.-]?(?:id|name)|keyVaultToStoreSecrets|key(?:store|tab)[_.-]?(?:file|path)|issuerkeyhash|(?-i:[DdMm]onkey|[DM]ONKEY)|keying|(?:secret)[_.-]?(?:length|name|size)|UserSecretsId|(?:csrf)[_.-]?token|(?:io\.jsonwebtoken[ \t]?:[ \t]?[\w-]+)|(?:api|credentials|token)[_.-]?(?:endpoint|ur[il])|public[_.-]?token|(?:key|token)[_.-]?file|(?-i:(?:[A-Z_]+=\n[A-Z_]+=|[a-z_]+=\n[a-z_]+=)(?:\n|\z))|(?-i:(?:[A-Z.]+=\n[A-Z.]+=|[a-z.]+=\n[a-z.]+=)(?:\n|\z)))''',
 ]
 stopwords = [
     "000000",
+    "6fe4476ee5a1832882e326b506d14126",
+    "_ec2_",
     "aaaaaa",
     "about",
     "abstract",
@@ -605,9 +631,9 @@ stopwords = [
     "activity",
     "adapter",
     "add-",
+    "add-on",
     "add.",
     "add_",
-    "add-on",
     "addon",
     "addres",
     "admin",
@@ -650,10 +676,7 @@ stopwords = [
     "any_",
     "apache",
     "app-",
-    "app-",
     "app.",
-    "app.",
-    "app_",
     "app_",
     "apple",
     "arch",
@@ -676,7 +699,6 @@ stopwords = [
     "audit",
     "aura",
     "auth",
-    "author",
     "author",
     "authorize",
     "auto",
@@ -798,7 +820,6 @@ stopwords = [
     "cli.",
     "cli_",
     "client",
-    "client",
     "clojure",
     "clone",
     "closure",
@@ -832,7 +853,6 @@ stopwords = [
     "con_",
     "concept",
     "conf",
-    "config",
     "config",
     "connect",
     "connector",
@@ -892,7 +912,6 @@ stopwords = [
     "dead",
     "debian",
     "debug",
-    "debug",
     "debugger",
     "deck",
     "define",
@@ -924,10 +943,7 @@ stopwords = [
     "dns-",
     "dns_",
     "doc-",
-    "doc-",
     "doc.",
-    "doc.",
-    "doc_",
     "doc_",
     "docker",
     "docpad",
@@ -941,8 +957,8 @@ stopwords = [
     "dom.",
     "dom_",
     "domain",
-    "done",
     "don't",
+    "done",
     "dot-",
     "dot.",
     "dot_",
@@ -962,7 +978,6 @@ stopwords = [
     "dsl_",
     "dynamic",
     "easy",
-    "_ec2_",
     "ecdsa",
     "eclipse",
     "edit",
@@ -991,7 +1006,6 @@ stopwords = [
     "espresso",
     "event",
     "evented",
-    "example",
     "example",
     "exchange",
     "exercise",
@@ -1240,10 +1254,7 @@ stopwords = [
     "koan",
     "kohana",
     "lab-",
-    "lab-",
     "lab.",
-    "lab.",
-    "lab_",
     "lab_",
     "lambda",
     "lamp",
@@ -1328,10 +1339,7 @@ stopwords = [
     "manifest",
     "manual",
     "map-",
-    "map-",
     "map.",
-    "map.",
-    "map_",
     "map_",
     "mapper",
     "mapping",
@@ -1417,10 +1425,7 @@ stopwords = [
     "nette",
     "network",
     "new-",
-    "new-",
     "new.",
-    "new.",
-    "new_",
     "new_",
     "next",
     "nginx",
@@ -1488,7 +1493,6 @@ stopwords = [
     "pack",
     "package",
     "packet",
-    "page",
     "page",
     "panel",
     "paper",
@@ -1606,8 +1610,8 @@ stopwords = [
     "readme",
     "ready",
     "real",
-    "reality",
     "real-time",
+    "reality",
     "realtime",
     "recipe",
     "recorder",
@@ -1673,7 +1677,6 @@ stopwords = [
     "rvm_",
     "salt",
     "sample",
-    "sample",
     "sandbox",
     "sas-",
     "sas.",
@@ -1723,7 +1726,6 @@ stopwords = [
     "set-",
     "set.",
     "set_",
-    "setting",
     "setting",
     "setup",
     "sha1",
@@ -1847,19 +1849,12 @@ stopwords = [
     "synopsi",
     "syntax",
     "system",
-    "system",
-    "tab-",
     "tab-",
     "tab.",
-    "tab.",
-    "tab_",
     "tab_",
     "table",
     "tag-",
-    "tag-",
     "tag.",
-    "tag.",
-    "tag_",
     "tag_",
     "talk",
     "target",
@@ -1998,7 +1993,6 @@ stopwords = [
     "website",
     "websocket",
     "welcome",
-    "welcome",
     "what",
     "what'",
     "when",
@@ -2065,7 +2059,6 @@ stopwords = [
     "zsh-",
     "zsh.",
     "zsh_",
-    "6fe4476ee5a1832882e326b506d14126",
 ]
 [[rules.allowlists]]
 regexTarget = "line"
@@ -2213,6 +2206,13 @@ id = "gitlab-runner-authentication-token"
 description = "Discovered a GitLab Runner Authentication Token, posing a risk to CI/CD pipeline integrity and unauthorized access."
 regex = '''glrt-[0-9a-zA-Z_\-]{20}'''
 entropy = 3
+keywords = ["glrt-"]
+
+[[rules]]
+id = "gitlab-runner-authentication-token-routable"
+description = "Discovered a GitLab Runner Authentication Token (Routable), posing a risk to CI/CD pipeline integrity and unauthorized access."
+regex = '''\bglrt-t\d_[0-9a-zA-Z_\-]{27,300}\.[0-9a-z]{2}[0-9a-z]{7}\b'''
+entropy = 4
 keywords = ["glrt-"]
 
 [[rules]]
@@ -2387,7 +2387,7 @@ keywords = ["kraken"]
 [[rules]]
 id = "kubernetes-secret-yaml"
 description = "Possible Kubernetes Secret detected, posing a risk of leaking credentials/tokens from your deployments"
-regex = '''(?i)(?:\bkind:[ \t]*["']?\bsecret\b["']?(?:.|\s){0,200}?\bdata:(?:.|\s){0,100}?\s+([\w.-]+:(?:[ \t]*(?:\||>[-+]?)\s+)?[ \t]*(?:["']?[a-z0-9+/]{10,}={0,3}["']?|\{\{[ \t\w"|$:=,.-]+}}|""|''))|\bdata:(?:.|\s){0,100}?\s+([\w.-]+:(?:[ \t]*(?:\||>[-+]?)\s+)?[ \t]*(?:["']?[a-z0-9+/]{10,}={0,3}["']?|\{\{[ \t\w"|$:=,.-]+}}|""|''))(?:.|\s){0,200}?\bkind:[ \t]*["']?\bsecret\b["']?)'''
+regex = '''(?i)(?:\bkind:[ \t]*["']?\bsecret\b["']?(?s:.){0,200}?\bdata:(?s:.){0,100}?\s+([\w.-]+:(?:[ \t]*(?:\||>[-+]?)\s+)?[ \t]*(?:["']?[a-z0-9+/]{10,}={0,3}["']?|\{\{[ \t\w"|$:=,.-]+}}|""|''))|\bdata:(?s:.){0,100}?\s+([\w.-]+:(?:[ \t]*(?:\||>[-+]?)\s+)?[ \t]*(?:["']?[a-z0-9+/]{10,}={0,3}["']?|\{\{[ \t\w"|$:=,.-]+}}|""|''))(?s:.){0,200}?\bkind:[ \t]*["']?\bsecret\b["']?)'''
 path = '''(?i)\.ya?ml$'''
 keywords = ["secret"]
 [[rules.allowlists]]
@@ -2397,7 +2397,7 @@ regexes = [
 [[rules.allowlists]]
 regexTarget = "match"
 regexes = [
-    '''(kind:(?:.|\s)+\n---\n(?:.|\s)+\bdata:|data:(?:.|\s)+\n---\n(?:.|\s)+\bkind:)''',
+    '''(kind:(?s:.)+\n---\n(?s:.)+\bdata:|data:(?s:.)+\n---\n(?s:.)+\bkind:)''',
 ]
 
 [[rules]]
@@ -2508,6 +2508,13 @@ id = "mattermost-access-token"
 description = "Identified a Mattermost Access Token, which may compromise team communication channels and data privacy."
 regex = '''(?i)[\w.-]{0,50}?(?:mattermost)(?:[ \t\w.-]{0,20})[\s'"]{0,3}(?:=|>|:{1,3}=|\|\||:|=>|\?=|,)[\x60'"\s=]{0,5}([a-z0-9]{26})(?:[\x60'"\s;]|\\[nr]|$)'''
 keywords = ["mattermost"]
+
+[[rules]]
+id = "maxmind-license-key"
+description = "Discovered a potential MaxMind license key."
+regex = '''\b([A-Za-z0-9]{6}_[A-Za-z0-9]{29}_mmk)(?:[\x60'"\s;]|\\[nr]|$)'''
+entropy = 4
+keywords = ["_mmk"]
 
 [[rules]]
 id = "messagebird-api-token"
@@ -2621,7 +2628,7 @@ keywords = ["okta"]
 [[rules]]
 id = "openai-api-key"
 description = "Found an OpenAI API Key, posing a risk of unauthorized access to AI services and data manipulation."
-regex = '''\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:[\x60'"\s;]|\\[nr]|$)'''
+regex = '''\b(sk-(?:proj|svcacct|admin)-(?:[A-Za-z0-9_-]{74}|[A-Za-z0-9_-]{58})T3BlbkFJ(?:[A-Za-z0-9_-]{74}|[A-Za-z0-9_-]{58})\b|sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:[\x60'"\s;]|\\[nr]|$)'''
 entropy = 3
 keywords = ["t3blbkfj"]
 
@@ -2631,6 +2638,13 @@ description = "Found an OpenShift user token, potentially compromising an OpenSh
 regex = '''\b(sha256~[\w-]{43})(?:[^\w-]|\z)'''
 entropy = 3.5
 keywords = ["sha256~"]
+
+[[rules]]
+id = "perplexity-api-key"
+description = "Detected a Perplexity API key, which could lead to unauthorized access to Perplexity AI services and data exposure."
+regex = '''\b(pplx-[a-zA-Z0-9]{48})(?:[\x60'"\s;]|\\[nr]|$|\b)'''
+entropy = 4
+keywords = ["pplx-"]
 
 [[rules]]
 id = "pkcs12-file"
@@ -2942,7 +2956,7 @@ keywords = [
 [[rules]]
 id = "slack-webhook-url"
 description = "Discovered a Slack Webhook, which could lead to unauthorized message posting and data leakage in Slack channels."
-regex = '''(?:https?://)?hooks.slack.com/(?:services|workflows)/[A-Za-z0-9+/]{43,46}'''
+regex = '''(?:https?://)?hooks.slack.com/(?:services|workflows|triggers)/[A-Za-z0-9+/]{43,56}'''
 keywords = ["hooks.slack.com"]
 
 [[rules]]
@@ -3117,7 +3131,9 @@ description = "Detected a Zendesk Secret Key, risking unauthorized access to cus
 regex = '''(?i)[\w.-]{0,50}?(?:zendesk)(?:[ \t\w.-]{0,20})[\s'"]{0,3}(?:=|>|:{1,3}=|\|\||:|=>|\?=|,)[\x60'"\s=]{0,5}([a-z0-9]{40})(?:[\x60'"\s;]|\\[nr]|$)'''
 keywords = ["zendesk"]
 
+
 ### AZURE
+title = "gitleaks config"
 
 [[rules]]
 id = "CSCAN0210" 
@@ -3152,7 +3168,8 @@ description = "PublishSettings"
 path = '''(?i)(publishsettings|\.pubxml$)'''
 regex = '''userPWD="[a-zA-Z0-9\+\/]{60}"'''
 keywords = ["userPWD="]
-[rules.allowlist]
+
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3169,7 +3186,7 @@ description = "AspNetMachineKeyInConfig 1"
 path = '''\.(?:xml|pubxml|definitions|ps1|wadcfgx|ccf|config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''<machineKey[^>]+(?:decryptionKey\s*\=\s*"[a-fA-F0-9]{48,}|validationKey\s*\=\s*"[a-fA-F0-9]{48,})[^>]+>'''
 keywords = ["machineKey"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3179,7 +3196,7 @@ description = "AspNetMachineKeyInConfig 2"
 path = '''\.(?:xml|pubxml|definitions|ps1|wadcfgx|ccf|config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''(?:decryption|validation)Key="[a-zA-Z0-9]+"'''
 keywords = ["decryptionKey", "validationKey"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3189,7 +3206,7 @@ description = "SqlConnectionStringInConfig 1"
 path = '''\.(?:xml|pubxml|definitions|ps1|wadcfgx|ccf|config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''(?i)(?:connectionString|connString)[^=]*=["'][^"']*Password\s*=\s*[^\s;][^"']*(?:'|")'''
 keywords = ["connectionString", "connString"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = '''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager'''
 
 [[rules]]
@@ -3198,7 +3215,7 @@ description = "SqlConnectionStringInConfig 2 / SqlConnectionStringInCode"
 path = '''\.(?:xml|pubxml|definitions|ps1|wadcfgx|ccf|config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties|policy_and_key\.hpp|AccountConfig\.h)$|hubot'''
 regex = '''(?i)(?:User ?ID|uid).*(?:Password|[^a-z]pwd)=[^'\$%<@'";\[\{][^;/"]{4,128}(?:;|")'''
 keywords = ["User ID", "UserId", "uid"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:prefix <<|guestaccesstoken|skiptoken|cookie|tsm|fake|example|badlyFormatted|Invalid|sha512|sha256|"input"|ENCRYPTED|"EncodedRequestUri"|looks like|myStorageAccountName|(?:0|x|\*){8,})''']
 
@@ -3250,7 +3267,7 @@ description = "GeneralSecretInConfig 1"
 path = '''\.(?:config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''<add\skey="[^"]+(?:key(?:s|[0-9])?|credentials?|secret(?:s|[0-9])?|password|token|KeyPrimary|KeySecondary|KeyOrSas|KeyEncrypted)"\s*value\s*="[^"]+"[^>]*/>'''
 keywords = ["<add"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''key\s*=\s*"[^"]*AppKey[^"]*"\s+value\s*=\s*"[a-z]+"''',
 '''value\s*=\s*"(?:[a-z]+(?: [a-z]+)+"|_+[a-z]+_+"|[a-z]+-[a-z]+-[a-z]+["-]|[a-z]+-[a-z]+"|[a-z]+\\[a-z]+"|\d+"|[^"]*ConnectionString")''',
 '''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
@@ -3264,7 +3281,7 @@ description = "GeneralSecretInConfig 2"
 path = '''\.(?:config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''<add\skey="[^"]+"\s*value="[^"]*EncryptedSecret:[^"]+"\s*/>'''
 keywords = ["EncryptedSecret:"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''key\s*=\s*"[^"]*AppKey[^"]*"\s+value\s*=\s*"[a-z]+"''',
 '''value\s*=\s*"(?:[a-z]+(?: [a-z]+)+"|_+[a-z]+_+"|[a-z]+-[a-z]+-[a-z]+["-]|[a-z]+-[a-z]+"|[a-z]+\\[a-z]+"|\d+"|[^"]*ConnectionString")''',
 '''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
@@ -3278,7 +3295,7 @@ description = "GeneralSecretInConfig 3"
 path = '''\.(?:config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''<Credential\sname="[^"]*(?:key(?:s|[0-9])?|credentials?|secret(?:s|[0-9])?|password|token|KeyPrimary|KeySecondary|KeyOrSas|KeyEncrypted)"(\s*value\s*="[^"]+".*?/>|[^>]*>.*?</Credential>)'''
 keywords = ["<credential"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''key\s*=\s*"[^"]*AppKey[^"]*"\s+value\s*=\s*"[a-z]+"''',
 '''value\s*=\s*"(?:[a-z]+(?: [a-z]+)+"|_+[a-z]+_+"|[a-z]+-[a-z]+-[a-z]+["-]|[a-z]+-[a-z]+"|[a-z]+\\[a-z]+"|\d+"|[^"]*ConnectionString")''',
 '''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
@@ -3292,7 +3309,7 @@ description = "GeneralSecretInConfig 4"
 path = '''\.(?:config|cscfg|json|js|txt|cpp|sql|dtsx|md|java|FF|template|settings|ini|BF|ste|isml|test|ts|resx|Azure|sample|backup|rd|hpp|psm1|cshtml|htm|bat|waz|yml|Beta|py|sh|m|php|xaml|keys|cmd|rds|loadtest|properties)$|hubot'''
 regex = '''<setting\sname="[^"]*Password".*[\r?\n]*\s*<value>.+</value>'''
 keywords = ["<setting"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''key\s*=\s*"[^"]*AppKey[^"]*"\s+value\s*=\s*"[a-z]+"''',
 '''value\s*=\s*"(?:[a-z]+(?: [a-z]+)+"|_+[a-z]+_+"|[a-z]+-[a-z]+-[a-z]+["-]|[a-z]+-[a-z]+"|[a-z]+\\[a-z]+"|\d+"|[^"]*ConnectionString")''',
 '''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
@@ -3327,7 +3344,7 @@ description = "DefaultPasswordContexts 1"
 path = '''\.(?:ps1|psm1|)$'''
 regex = '''ConvertTo-SecureString(?:\s*-String)?\s*"[^$"\r?\n]+"'''
 keywords = ["ConverTo-SecureString"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3337,7 +3354,7 @@ description = "DefaultPasswordContexts 2"
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''new\sX509Certificate2\([^()]*,\s*"[^"\r?\n]+"[^)]*\)'''
 keywords = ["X509Certificate2"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3347,7 +3364,7 @@ description = "DefaultPasswordContexts 3"
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''AdminPassword\s*=\s*"[^"\r?\n]+"'''
 keywords = ["AdminPassword"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3357,7 +3374,7 @@ description = "DefaultPasswordContexts 4"
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''(?i)<password>.+</password>'''
 keywords = ["<password>"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3367,7 +3384,7 @@ description = "DefaultPasswordContexts 5"
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''ClearTextPassword"?\s*[:=]\s*"[^"\r?\n]+"'''
 keywords = ["ClearTextPassword"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3377,7 +3394,7 @@ description = "DefaultPasswordContexts 6"
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''certutil.*?\-p\s+("[^"%]+"|'[^'%]+'|[^"']\S*\s)'''
 keywords = ["certutil"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3387,7 +3404,7 @@ description = "DefaultPasswordContexts 7"
 path = '''\.(?:cs|xml|config|json|ts|cfg|txt|ps1|bat|cscfg|publishsettings|cmd|psm1|aspx|asmx|vbs|added_cluster|clean|pubxml|ccf|ini|svd|sql|c|xslt|csv|FF|ExtendedTests|settings|cshtml|template|trd|argpath)$|(config|certificate|publish|UT)\.js$|(commands|user|tests)\.cpp$'''
 regex = '''password\s*=\s*N?(["][^"\r?\n]{4,}["]|['][^'\r?\n]{4,}['])'''
 keywords = ["password"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = ['''Credentials?Type|ConnectionStringKey|notasecret|PartitionKey|notreal|insertkey|LookupKey|IgnoreKeys|SecretsService|SecretsTenantId|(?:Password|pwd|secret|credentials?)(?:Key|Location)|KeyManager''',
 '''(?:_AppKey"|(?:(?:credential|password|token)s?|(?:Account|access)Key=)"[\s\r?\n]*/|Username"|\.dll|(?:Secret|Token|Key|Credential)s?(?:Encryption|From|(?:Signing)?Certificate|Options|Thumbprint|Contacts|String|UserId)|Key(1;value1|word|s?Path|Index|Id|Store|WillDoWithoutValidation|:NamePattern|Name"|Ref")|(Secret|Credential)s?(Name|Path)"|(StrongName|Chaos\s?Mon|Redis|Registry|Registery|User|Insights?|Instrumentation|Match\()Key|(Certificate|cert)(Issuer|Subject)|rollingdate|skuId|HKEY_|AddServicePrincipalCredentials|Password Resets|SecretStore|(0|x|\*){8,})''']
 
@@ -3397,7 +3414,7 @@ description = "DomainPassword"
 path = '''\.cs$|\.c$|\.cpp$|\.ps1$|\.ps$|\.cmd$|\.bat$|\.log$|\.psd$|\.psm1$'''
 regex = '''new(?:-object)?\s+System.Net.NetworkCredential\(?:.*?,\s*"[^"]+"'''
 keywords = ["System.Net.NetworkCredential"]
-[rules.allowlist]
+[[rules.allowlists]]
 regexes = '''(%1%|\$MIGUSER_PASSWORD|%miguser_pwd%)'''
 description = "ignore placeholders"
 

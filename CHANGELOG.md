@@ -1,5 +1,10 @@
 # Changelog
 
+## Task version 3.3
+
+- Update NPM dependencies
+- Update config
+
 ## Task version 3.2
 
 - Fix bug. Removed detect (because it is deprecated)
