@@ -1,6 +1,7 @@
 # Changelog
 
 ## Task version 3.3
+
 - Update NPM dependencies
 - Update config
 
