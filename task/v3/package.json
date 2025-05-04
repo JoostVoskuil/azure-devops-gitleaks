@@ -33,16 +33,16 @@
   "license": "MIT",
   "dependencies": {
     "azure-devops-node-api": "^14.1.0",
-    "azure-pipelines-task-lib": "^5.0.0",
+    "azure-pipelines-task-lib": "^5.2.0",
     "azure-pipelines-tool-lib": "^2.0.8",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.13.13",
+    "@types/node": "^22.15.3",
     "@biomejs/biome": "1.9.4",
-    "mocha": "^11.1.0",
+    "mocha": "^11.2.2",
     "mocha-junit-reporter": "^2.2.1",
     "nyc": "^17.1.0",
     "source-map-support": "^0.5.21",
