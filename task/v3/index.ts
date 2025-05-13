@@ -13,8 +13,6 @@ async function run(): Promise<void> {
     console.log(taskLib.loc('ThanksToJesseHouwing'))
     console.log(taskLib.loc('ThanksToRichardGomez'))
     console.log()
-    taskLib.warning(taskLib.loc('LookingForNewMaintainer'))
-    console.log()
     // Get inputs on Task Behaviour
     const scanLocation = getAzureDevOpsPathInput('scanlocation')
     const reportFormat = getAzureDevOpsInput('reportformat')

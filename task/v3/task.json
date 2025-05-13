@@ -291,7 +291,6 @@
     "IgnoreFilePathDoesNotExists": "The specified ignore file path does not exist.",
     "QueryingGitHubLatestReleasePage": "Querying Gitleaks Latest Release GitHub Page.",
     "QueryingGitHubAPI": "Querying Gitleaks GitHubs API for latest release.",
-    "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version.",
-    "LookingForNewMaintainer": "This extension for Azure DevOps needs a new maintainer. If you are interesed, please raise an issue on GitHub."
+    "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version."
   }
 }
