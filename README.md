@@ -1,8 +1,6 @@
-> I no longer use this extension and don't have the time to maintain it. I'm looking for someone who would be interested in taking over its ownership. If you're interested in managing this extension, please get in touch, and I'd be happy to transfer the ownership to you.
-
 # Gitleaks for Azure DevOps
 
-This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specified location. 
+This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specified location.
 
 - Thanks to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining gitleaks.
 - Thanks to [Jesse Houwing](https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.
