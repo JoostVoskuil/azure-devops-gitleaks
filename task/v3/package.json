@@ -1,6 +1,6 @@
 {
   "name": "gitleaks",
-  "version": "0.0.1",
+  "version": "3.3.3",
   "description": "",
   "main": "index.js",
   "scripts": {
