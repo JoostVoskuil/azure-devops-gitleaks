@@ -18,14 +18,13 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  system.debug: true
-
 stages:
   - stage: Build
     displayName: Build
     jobs:
       - job: 
+        variables:
+          system.debug: true
         steps:
           - task: NodeTool@0
             inputs:
