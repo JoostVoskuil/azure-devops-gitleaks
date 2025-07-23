@@ -5,31 +5,27 @@ parameters:
     type: string
 
 steps:
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'cd ${{ parameters.path }} && npm run build-test && npm run test-ci'
-  displayName: 'Run Build for Test and Execute tests (${{ parameters.name }})'
-
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/test-results.xml'
-    testRunTitle: ${{ parameters.name }}
-  displayName: 'Publish test results (${{ parameters.name }})'
-  condition: always()
-
-- task: PublishCodeCoverageResults@2
-  inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Build.SourcesDirectory)/${{ parameters.path }}/coverage/cobertura-coverage.xml'
-    pathToSources: '$(Build.SourcesDirectory)/${{ parameters.path }}'
-  displayName: 'Publish code coverage results (${{ parameters.name }})'
-  condition: always()
-  
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'cd ${{ parameters.path }} && npm run clean && npm run build-rel && rm *.ts && rm /tests -rf'
-  displayName: 'Run Build for Packaging (${{ parameters.name }})'
-  
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: 'cd ${{ parameters.path }} && npm run build-test && npm run test-ci'
+    displayName: 'Run Build for Test and Execute tests (${{ parameters.name }})'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/test-results.xml'
+      testRunTitle: ${{ parameters.name }}
+    displayName: 'Publish test results (${{ parameters.name }})'
+    condition: always()
+  - task: PublishCodeCoverageResults@2
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: '$(Build.SourcesDirectory)/${{ parameters.path }}/coverage/cobertura-coverage.xml'
+      pathToSources: '$(Build.SourcesDirectory)/${{ parameters.path }}'
+    displayName: 'Publish code coverage results (${{ parameters.name }})'
+    condition: always()
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: 'cd ${{ parameters.path }} && npm run clean && npm run build-rel && rm *.ts && rm /tests -rf'
+    displayName: 'Run Build for Packaging (${{ parameters.name }})'
