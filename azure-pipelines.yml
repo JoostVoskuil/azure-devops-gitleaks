@@ -9,6 +9,10 @@ trigger:
       - features/*
       - bugfix/*
       - fix/*
+  paths:
+    exclude:
+      - LICENSE.md
+      - README.md
 
 pool:
   vmImage: 'ubuntu-latest'
