@@ -18,6 +18,11 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variable:
+  publisher: 'foxholenl'
+  extensionId: 'Gitleaks'
+  extensionName: 'Gitleaks'
+
 stages:
   - stage: Build
     displayName: Build
@@ -66,13 +71,24 @@ stages:
             name: 'packageStep'
             inputs:
               rootFolder: '$(Build.SourcesDirectory)'
-              outputPath: '$(Build.ArtifactStagingDirectory)/foxholenl-gitleaks.vsix'
-              publisherId: 'foxholenl'
-              extensionId: 'Gitleaks'
-              extensionName: 'Gitleaks'
-              extensionTag: '-build'
+              outputPath: '$(Build.ArtifactStagingDirectory)/foxholenl-gitleaks-private.vsix'
+              publisherId: $(publisher)
+              extensionId: $(extensionId)
+              extensionName: $(extensionName)
+              extensionTag: '-dev'
               extensionVersion: '$(Build.BuildNumber)'
-              extensionVisibility: private
+              extensionVisibility: privatepreview
+          - task: PackageAzureDevOpsExtension@4
+            displayName: 'Package Extension: $(Build.SourcesDirectory)'
+            name: 'packageStep'
+            inputs:
+              rootFolder: '$(Build.SourcesDirectory)'
+              outputPath: '$(Build.ArtifactStagingDirectory)/foxholenl-gitleaks-public.vsix'
+              publisherId: $(publisher)
+              extensionId: $(extensionId)
+              extensionName: $(extensionName)
+              extensionVersion: '$(Build.BuildNumber)'
+              extensionVisibility: public
           - task: PublishPipelineArtifact@1
             displayName: 'Publish vsix'
             inputs:
@@ -83,7 +99,7 @@ stages:
 
   - stage: DeployDEV
     displayName: 'Publish to Marketplace (private)'
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
     dependsOn: [Build]
     jobs:
       - deployment:
@@ -94,6 +110,7 @@ stages:
               steps:
                 - download: current
                   artifact: vsix
+                  patterns: "**/*-private.vsix"
                 - task: TfxInstaller@4
                   displayName: 'Use Node CLI for Azure DevOps'
                   inputs:
@@ -105,11 +122,8 @@ stages:
                     connectTo: 'VsTeam'
                     connectedServiceName: 'Marketplace'
                     fileType: 'vsix'
-                    vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks.vsix'
-                    publisherId: 'foxholenl'
-                    extensionTag: '-dev'
+                    vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks-private.vsix'
                     updateTasksVersion: false
-                    extensionVisibility: 'privatepreview'
                     shareWith: 'foxholenl'
                     noWaitValidation: true
 
@@ -126,6 +140,7 @@ stages:
               steps:
                 - download: current
                   artifact: vsix
+                  patterns: "**/*-public.vsix"
                 - task: TfxInstaller@4
                   displayName: 'Use Node CLI for Azure DevOps'
                   inputs:
@@ -137,9 +152,6 @@ stages:
                     connectTo: 'VsTeam'
                     connectedServiceName: 'Marketplace'
                     fileType: 'vsix'
-                    vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks.vsix'
-                    publisherId: 'foxholenl'
-                    extensionId: 'Gitleaks'
+                    vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks-public.vsix'
                     updateTasksVersion: false
-                    extensionVisibility: 'public'
                     noWaitValidation:  true

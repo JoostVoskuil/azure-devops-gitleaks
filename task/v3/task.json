@@ -228,10 +228,10 @@
     }
   ],
   "execution": {
-    "Node16": {
+    "Node20_1": {
       "target": "$(currentDirectory)/index.js"
     },
-    "Node20_1": {
+    "Node16": {
       "target": "$(currentDirectory)/index.js"
     }
   },
