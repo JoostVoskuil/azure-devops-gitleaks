@@ -1,11 +1,14 @@
 name: '2.0$(rev:.r)'
 
 trigger:
-  - main
-  - feature/*
-  - features/*
-  - bugfix/*
-  - fix/*
+  batch: true
+  branches:
+    include:
+      - main
+      - feature/*
+      - features/*
+      - bugfix/*
+      - fix/*
 
 pool:
   vmImage: 'ubuntu-latest'
