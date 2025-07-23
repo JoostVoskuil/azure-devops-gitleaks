@@ -7,8 +7,6 @@ trigger:
       - main
       - develop
       - feature/*
-      - features/*
-      - bugfix/*
       - fix/*
   paths:
     exclude:
@@ -18,7 +16,7 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-variable:
+variables:
   publisher: 'foxholenl'
   extensionId: 'Gitleaks'
   extensionName: 'Gitleaks'
