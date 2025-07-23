@@ -11,7 +11,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  system.debug: true
+  system.debug: false
 
 stages:
 - stage: 'Build'
