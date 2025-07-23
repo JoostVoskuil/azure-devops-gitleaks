@@ -12,7 +12,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 3
+    "Patch": 4
   },
   "groups": [
     {
@@ -231,7 +231,7 @@
     "Node16": {
       "target": "$(currentDirectory)/index.js"
     },
-    "Node20": {
+    "Node20_1": {
       "target": "$(currentDirectory)/index.js"
     }
   },
