@@ -65,8 +65,7 @@ stages:
               version: '0.x'
               checkLatest: true
           - task: PackageAzureDevOpsExtension@4
-            displayName: 'Package Extension: $(Build.SourcesDirectory)'
-            name: 'packageStep'
+            displayName: 'Package Extension DEV'
             inputs:
               rootFolder: '$(Build.SourcesDirectory)'
               outputPath: '$(Build.ArtifactStagingDirectory)/foxholenl-gitleaks-private.vsix'
@@ -77,8 +76,7 @@ stages:
               extensionVersion: '$(Build.BuildNumber)'
               extensionVisibility: privatepreview
           - task: PackageAzureDevOpsExtension@4
-            displayName: 'Package Extension: $(Build.SourcesDirectory)'
-            name: 'packageStep'
+            displayName: 'Package Extension PROD'
             inputs:
               rootFolder: '$(Build.SourcesDirectory)'
               outputPath: '$(Build.ArtifactStagingDirectory)/foxholenl-gitleaks-public.vsix'
