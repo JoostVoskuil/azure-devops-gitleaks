@@ -2,6 +2,7 @@
   "id": "11bd67d8-bfe7-497b-967d-e800eb673119",
   "name": "Gitleaks",
   "friendlyName": "Gitleaks scan",
+  "instanceNameFormat":"Gitleaks",
   "description": "Scan git repos (or files) for secrets using regex and entropy.",
   "helpMarkDown": "[More information](https://github.com/JoostVoskuil/azure-devops-gitleaks)",
   "category": "Utility",
