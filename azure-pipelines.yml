@@ -5,6 +5,7 @@ trigger:
 - feature/*
 - features/*
 - bugfix/*
+- develop
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -35,6 +36,7 @@ stages:
         extraProperties: |
           sonar.coverage.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
           sonar.cpd.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
+          sonar.exclusions=node_modules/*
     - template: build-and-test.yml
       parameters:
         path: task/v2
@@ -50,13 +52,13 @@ stages:
       inputs:
         pollingTimeoutSec: '300'
 
-    - task: TfxInstaller@4
+    - task: TfxInstaller@5
       displayName: 'Use Node CLI for Azure DevOps'
       inputs:
-        version: '0.x'
+        version: 'v0.x'
         checkLatest: true
 
-    - task: PackageAzureDevOpsExtension@4
+    - task: PackageAzureDevOpsExtension@5
       displayName: 'Package Extension: $(Build.SourcesDirectory)'
       name: 'packageStep'
       inputs:
@@ -73,9 +75,9 @@ stages:
       displayName: 'Publish vsix'
       inputs:
         publishLocation: pipeline
-        targetPath: '$(packageStep.Extension.OutputPath)'
+        targetPath: '$(Build.ArtifactStagingDirectory)/'
         artifact: 'vsix'
-      condition: succeededOrFailed()
+      condition: succeeded()
 
 - stage: Test
   displayName: 'Publish to Marketplace (private)'
@@ -89,13 +91,13 @@ stages:
          deploy:
           steps:
 
-          - task: TfxInstaller@4
+          - task: TfxInstaller@5
             displayName: 'Use Node CLI for Azure DevOps'
             inputs:
-              version: '0.x'
+              version: 'v0.x'
               checkLatest: true
 
-          - task: PublishAzureDevOpsExtension@4
+          - task: PublishAzureDevOpsExtension@5
             name: 'PublishTest'
             inputs:
               connectTo: 'VsTeam'
@@ -106,7 +108,7 @@ stages:
               extensionTag: '-dev'
               updateTasksVersion: false
               extensionVisibility: 'privatepreview'
-              shareWith: 'foxholenl'
+              shareWith: 'foxholenl, sebiweise'
               noWaitValidation: true
 
 - stage: Production
@@ -120,13 +122,13 @@ stages:
         runOnce:
           deploy:
             steps:
-            - task: TfxInstaller@4
+            - task: TfxInstaller@5
               displayName: 'Use Node CLI for Azure DevOps'
               inputs:
-                version: '0.x'
+                version: 'v0.x'
                 checkLatest: true
 
-            - task: PublishAzureDevOpsExtension@4
+            - task: PublishAzureDevOpsExtension@5
               name: 'PublishProd'
               inputs:
                 connectTo: 'VsTeam'
