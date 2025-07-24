@@ -64,7 +64,7 @@ stages:
             inputs:
               version: '0.x'
               checkLatest: true
-          - task: PackageAzureDevOpsExtension@4
+          - task: PackageAzureDevOpsExtension@5
             displayName: 'Package Extension DEV'
             inputs:
               rootFolder: '$(Build.SourcesDirectory)'
@@ -75,7 +75,7 @@ stages:
               extensionTag: '-dev'
               extensionVersion: '$(Build.BuildNumber)'
               extensionVisibility: privatepreview
-          - task: PackageAzureDevOpsExtension@4
+          - task: PackageAzureDevOpsExtension@5
             displayName: 'Package Extension PROD'
             inputs:
               rootFolder: '$(Build.SourcesDirectory)'
@@ -112,7 +112,7 @@ stages:
                   inputs:
                     version: '0.x'
                     checkLatest: true
-                - task: PublishAzureDevOpsExtension@4
+                - task: PublishAzureDevOpsExtension@5
                   displayName: 'Publish Extension'
                   inputs:
                     connectTo: 'VsTeam'
@@ -142,7 +142,7 @@ stages:
                   inputs:
                     version: '0.x'
                     checkLatest: true
-                - task: PublishAzureDevOpsExtension@4
+                - task: PublishAzureDevOpsExtension@5
                   displayName: 'Publish Extension'
                   inputs:
                     connectTo: 'VsTeam'
