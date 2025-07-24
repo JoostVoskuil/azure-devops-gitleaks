@@ -52,10 +52,10 @@ stages:
       inputs:
         pollingTimeoutSec: '300'
 
-    - task: TfxInstaller@4
+    - task: TfxInstaller@5
       displayName: 'Use Node CLI for Azure DevOps'
       inputs:
-        version: '0.x'
+        version: 'v0.x'
         checkLatest: true
 
     - task: PackageAzureDevOpsExtension@5
@@ -91,10 +91,10 @@ stages:
          deploy:
           steps:
 
-          - task: TfxInstaller@4
+          - task: TfxInstaller@5
             displayName: 'Use Node CLI for Azure DevOps'
             inputs:
-              version: '0.x'
+              version: 'v0.x'
               checkLatest: true
 
           - task: PublishAzureDevOpsExtension@5
@@ -122,10 +122,10 @@ stages:
         runOnce:
           deploy:
             steps:
-            - task: TfxInstaller@4
+            - task: TfxInstaller@5
               displayName: 'Use Node CLI for Azure DevOps'
               inputs:
-                version: '0.x'
+                version: 'v0.x'
                 checkLatest: true
 
             - task: PublishAzureDevOpsExtension@5
