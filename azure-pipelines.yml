@@ -56,7 +56,7 @@ stages:
         version: '0.x'
         checkLatest: true
 
-    - task: PackageAzureDevOpsExtension@4
+    - task: PackageAzureDevOpsExtension@5
       displayName: 'Package Extension: $(Build.SourcesDirectory)'
       name: 'packageStep'
       inputs:
@@ -75,7 +75,7 @@ stages:
         publishLocation: pipeline
         targetPath: '$(Build.ArtifactStagingDirectory)/'
         artifact: 'vsix'
-      condition: succeededOrFailed()
+      condition: succeeded()
 
 - stage: Test
   displayName: 'Publish to Marketplace (private)'
@@ -95,7 +95,7 @@ stages:
               version: '0.x'
               checkLatest: true
 
-          - task: PublishAzureDevOpsExtension@4
+          - task: PublishAzureDevOpsExtension@5
             name: 'PublishTest'
             inputs:
               connectTo: 'VsTeam'
@@ -126,7 +126,7 @@ stages:
                 version: '0.x'
                 checkLatest: true
 
-            - task: PublishAzureDevOpsExtension@4
+            - task: PublishAzureDevOpsExtension@5
               name: 'PublishProd'
               inputs:
                 connectTo: 'VsTeam'
