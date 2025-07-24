@@ -44,7 +44,8 @@ stages:
               cliSources: '.'
               extraProperties: |
                 sonar.coverage.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
-                sonar.cpd.exclusions=task/v2/test/*.ts,task/v3/test/*.ts,**/node_modules/**
+                sonar.cpd.exclusions=task/v2/test/*.ts,task/v3/test/*.task
+                sonar.exclusions=node_modules/**/*
           - template: build-and-test.yml
             parameters:
               path: task/v2
@@ -151,3 +152,4 @@ stages:
                     vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks-public.vsix'
                     updateTasksVersion: false
                     noWaitValidation:  true
+

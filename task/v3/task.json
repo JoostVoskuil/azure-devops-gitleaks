@@ -7,7 +7,7 @@
   "category": "Utility",
   "visibility": ["Build"],
   "runsOn": ["Agent"],
-  "author": "Joost Voskuil (joost@foxhole.nl)",
+  "author": "Joost Voskuil / Sebastian Goscinski'",
   "minumumAgentVersion": "2.206.1",
   "version": {
     "Major": 3,
