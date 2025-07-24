@@ -36,6 +36,7 @@ stages:
         extraProperties: |
           sonar.coverage.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
           sonar.cpd.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
+          sonar.exclusions=node_modules/*
     - template: build-and-test.yml
       parameters:
         path: task/v2
@@ -107,7 +108,7 @@ stages:
               extensionTag: '-dev'
               updateTasksVersion: false
               extensionVisibility: 'privatepreview'
-              shareWith: 'foxholenl'
+              shareWith: 'foxholenl, sebiweise'
               noWaitValidation: true
 
 - stage: Production
