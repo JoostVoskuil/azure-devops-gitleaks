@@ -44,7 +44,7 @@ stages:
               cliSources: '.'
               extraProperties: |
                 sonar.coverage.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
-                sonar.cpd.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
+                sonar.cpd.exclusions=task/v2/test/*.ts,task/v3/test/*.ts,**/node_modules/**
           - template: build-and-test.yml
             parameters:
               path: task/v2
@@ -89,7 +89,7 @@ stages:
             displayName: 'Publish vsix'
             inputs:
               publishLocation: pipeline
-              targetPath: '$(packageStep.Extension.OutputPath)'
+              targetPath: '$(Build.ArtifactStagingDirectory)/*.vsix'
               artifact: 'vsix'
             condition: succeededOrFailed()
 
