@@ -1,60 +1,48 @@
 {
-    "manifestVersion": 1,
-    "id": "Gitleaks",
-    "name": "Gitleaks",
-    "publisher": "foxholenl",
-    "description": "This extension provides scanning your repo's for leaks with gitleaks. Alternative to Credscan.",
-    "version": "2.0.0",
-    "public": false,
-    "targets": [
-        {
-            "id": "Microsoft.VisualStudio.Services"
-        }
-    ],
-    "content": {
-        "details": {
-            "path": "README.md"
-        }
-    },
-    "icons": {
-        "default": "images/logo.png"
-    },
-    "links": {
-        "support": {
-            "uri": "https://github.com/JoostVoskuil/azure-devops-gitleaks"
-        }
-    },
-    "repository": {
-        "type": "git",
-        "uri": "https://github.com/JoostVoskuil/azure-devops-gitleaks"
-    },
-    "tags": [
-        "sast",
-        "gitleaks",
-        "detect-secrets",
-        "search-secrets",
-        "security-scanner",
-        "secrets-management",
-        "security"
-    ],
-    "categories": [
-        "Azure Pipelines"
-    ],
-    "files": [
-        {
-            "path": "task"
-        }
-    ],
-    "contributions": [
-        {
-            "id": "foxholenl-gitleaks",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "task"
-            }
-        }
-    ]
+  "manifestVersion": 1,
+  "id": "Gitleaks",
+  "name": "Gitleaks",
+  "publisher": "foxholenl",
+  "description": "This extension provides scanning your repo's for leaks with gitleaks. Alternative to Credscan.",
+  "version": "2.0.0",
+  "public": false,
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "content": {
+    "details": {
+      "path": "README.md"
+    }
+  },
+  "icons": {
+    "default": "images/logo.png"
+  },
+  "links": {
+    "support": {
+      "uri": "https://github.com/JoostVoskuil/azure-devops-gitleaks"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "uri": "https://github.com/JoostVoskuil/azure-devops-gitleaks"
+  },
+  "tags": ["sast", "gitleaks", "detect-secrets", "search-secrets", "security-scanner", "secrets-management", "security"],
+  "categories": ["Azure Pipelines"],
+  "files": [
+    {
+      "path": "task"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "foxholenl-gitleaks",
+      "type": "ms.vss-distributed-task.task",
+      "targets": ["ms.vss-distributed-task.tasks"],
+      "properties": {
+        "name": "task"
+      }
+    }
+  ]
 }
