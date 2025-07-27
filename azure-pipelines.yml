@@ -97,7 +97,7 @@ stages:
               version: 'v0.x'
               checkLatest: true
 
-          - task: PublishAzureDevOpsExtension@5
+          - task: PublishAzureDevOpsExtension@5.0.357
             name: 'PublishTest'
             inputs:
               connectTo: 'VsTeam'
@@ -128,7 +128,7 @@ stages:
                 version: 'v0.x'
                 checkLatest: true
 
-            - task: PublishAzureDevOpsExtension@5
+            - task: PublishAzureDevOpsExtension@5.0.357
               name: 'PublishProd'
               inputs:
                 connectTo: 'VsTeam'
