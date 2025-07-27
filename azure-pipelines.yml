@@ -1,143 +1,163 @@
 name: '2.0$(rev:.r)'
 
 trigger:
-- main
-- feature/*
-- features/*
-- bugfix/*
-- develop
+  batch: true
+  branches:
+    include:
+      - main
+      - develop
+      - feature/*
+      - fix/*
+  paths:
+    exclude:
+      - LICENSE.md
+      - README.md
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  system.debug: true
+  publisher: 'foxholenl'
+  extensionId: 'Gitleaks'
+  extensionName: 'Gitleaks'
 
 stages:
-- stage: 'Build'
-  displayName: 'Build'
-  jobs:
-  - job: 
-    steps:
-    - task: NodeTool@0
-      inputs:
-        versionSpec: '20.x'
-      displayName: 'Install Node.js'
+  - stage: ScanRepo
+    displayName: ScanRepo
+    dependsOn: []
+    jobs:
+      - job:
+        steps:
+          - task: SonarCloudPrepare@3
+            inputs:
+              SonarCloud: 'SonarCloud'
+              organization: 'joostvoskuil'
+              scannerMode: 'CLI'
+              configMode: 'manual'
+              cliProjectKey: 'JoostVoskuil_azure-devops-gitleaks'
+              cliProjectName: 'JoostVoskuil_azure-devops-gitleaks'
+              cliSources: '.'
+              extraProperties: |
+                sonar.coverage.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
+                sonar.cpd.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
+                sonar.exclusions=node_modules/*
+          - task: SonarCloudAnalyze@3
+            inputs:
+              jdkversion: 'JAVA_HOME_17_X64'
+          - task: SonarCloudPublish@3
+            inputs:
+              pollingTimeoutSec: '300'
 
-    - task: SonarCloudPrepare@3
-      inputs:
-        SonarCloud: 'SonarCloud'
-        organization: 'joostvoskuil'
-        scannerMode: 'CLI'
-        configMode: 'manual'
-        cliProjectKey: 'JoostVoskuil_azure-devops-gitleaks'
-        cliProjectName: 'JoostVoskuil_azure-devops-gitleaks'
-        cliSources: '.'
-        extraProperties: |
-          sonar.coverage.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
-          sonar.cpd.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
-          sonar.exclusions=node_modules/*
-    - template: build-and-test.yml
-      parameters:
-        path: task/v2
-        name: Gitleaks V2
-    - template: build-and-test.yml
-      parameters:
-        path: task/v3
-        name: Gitleaks V3
-    - task: SonarCloudAnalyze@3
-      inputs:
-        jdkversion: 'JAVA_HOME_17_X64'
-    - task: SonarCloudPublish@3
-      inputs:
-        pollingTimeoutSec: '300'
-
-    - task: TfxInstaller@5
-      displayName: 'Use Node CLI for Azure DevOps'
-      inputs:
-        version: 'v0.x'
-        checkLatest: true
-
-    - task: PackageAzureDevOpsExtension@5
-      displayName: 'Package Extension: $(Build.SourcesDirectory)'
-      name: 'packageStep'
-      inputs:
-        rootFolder: '$(Build.SourcesDirectory)'
-        outputPath: '$(Build.ArtifactStagingDirectory)/foxholenl-gitleaks.vsix'
-        publisherId: 'foxholenl'
-        extensionId: 'Gitleaks'
-        extensionName: 'Gitleaks'
-        extensionTag: '-build'
-        extensionVersion: '$(Build.BuildNumber)'
-        extensionVisibility: private
-
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish vsix'
-      inputs:
-        publishLocation: pipeline
-        targetPath: '$(Build.ArtifactStagingDirectory)/'
-        artifact: 'vsix'
-      condition: succeeded()
-
-- stage: Test
-  displayName: 'Publish to Marketplace (private)'
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-  dependsOn: 'Build'
-  jobs:
-    - deployment:
-      environment: Test
-      strategy: 
-        runOnce:
-         deploy:
-          steps:
-
+  - stage: Build
+    displayName: Build
+    dependsOn: []
+    jobs:
+      - job:
+        variables:
+          system.debug: true
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '20.x'
+            displayName: 'Install Node.js'
+          - template: build-and-test.yml
+            parameters:
+              path: task/v2
+              name: Gitleaks V2
+          - template: build-and-test.yml
+            parameters:
+              path: task/v3
+              name: Gitleaks V3
           - task: TfxInstaller@5
             displayName: 'Use Node CLI for Azure DevOps'
             inputs:
               version: 'v0.x'
               checkLatest: true
-
-          - task: PublishAzureDevOpsExtension@5.0.357
-            name: 'PublishTest'
+          - task: PackageAzureDevOpsExtension@4
+            displayName: 'Package Extension DEV'
             inputs:
-              connectTo: 'VsTeam'
-              connectedServiceName: 'Marketplace'
-              fileType: 'vsix'
-              vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks.vsix'
-              publisherId: 'foxholenl'
+              rootFolder: '$(Build.SourcesDirectory)'
+              outputPath: '$(Build.ArtifactStagingDirectory)/foxholenl-gitleaks-private.vsix'
+              publisherId: $(publisher)
+              extensionId: $(extensionId)
+              extensionName: $(extensionId)
               extensionTag: '-dev'
-              updateTasksVersion: false
-              extensionVisibility: 'privatepreview'
-              shareWith: 'foxholenl, sebiweise'
-              noWaitValidation: true
+              extensionVersion: '$(Build.BuildNumber)'
+              extensionVisibility: private
+          - task: PackageAzureDevOpsExtension@4
+            displayName: 'Package Extension PROD'
+            inputs:
+              rootFolder: '$(Build.SourcesDirectory)'
+              outputPath: '$(Build.ArtifactStagingDirectory)/foxholenl-gitleaks-public.vsix'
+              publisherId: $(publisher)
+              extensionId: $(extensionId)
+              extensionName: $(extensionName)
+              extensionVersion: '$(Build.BuildNumber)'
+              extensionVisibility: public
+          - task: PublishPipelineArtifact@1
+            displayName: 'Publish vsix'
+            inputs:
+              publishLocation: pipeline
+              targetPath: '$(Build.ArtifactStagingDirectory)'
+              artifact: 'vsix'
+            condition: succeededOrFailed()
 
-- stage: Production
-  displayName: 'Publish to Marketplace (Public)'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-  dependsOn: 'Test'
-  jobs:
-    - deployment:
-      environment: Production
-      strategy: 
-        runOnce:
-          deploy:
-            steps:
-            - task: TfxInstaller@5
-              displayName: 'Use Node CLI for Azure DevOps'
-              inputs:
-                version: 'v0.x'
-                checkLatest: true
+  - stage: DeployDEV
+    displayName: 'Publish to Marketplace (private)'
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    dependsOn: [ScanRepo, Build]
+    jobs:
+      - deployment:
+        environment: Test
+        strategy: 
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: vsix
+                  patterns: "**/*-private.vsix"
+                - task: TfxInstaller@5
+                  displayName: 'Use Node CLI for Azure DevOps'
+                  inputs:
+                    version: '0.x'
+                    checkLatest: true
+                - task: PublishAzureDevOpsExtension@5.0.357
+                  displayName: 'Publish Extension'
+                  inputs:
+                    connectTo: 'VsTeam'
+                    connectedServiceName: 'Marketplace'
+                    fileType: 'vsix'
+                    vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks-private.vsix'
+                    updateTasksVersion: false
+                    shareWith: 'foxholenl, sebiweise'
+                    noWaitValidation: true
 
-            - task: PublishAzureDevOpsExtension@5.0.357
-              name: 'PublishProd'
-              inputs:
-                connectTo: 'VsTeam'
-                connectedServiceName: 'Marketplace'
-                fileType: 'vsix'
-                vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks.vsix'
-                publisherId: 'foxholenl'
-                extensionId: 'Gitleaks'
-                updateTasksVersion: false
-                extensionVisibility: 'public'
-                noWaitValidation:  true
+  - stage: DeployPROD
+    displayName: 'Publish to Marketplace (Public)'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    dependsOn: [ScanRepo, Build, DeployDEV]
+    jobs:
+      - deployment:
+        environment: Production
+        strategy: 
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: vsix
+                  patterns: "**/*-public.vsix"
+                - task: TfxInstaller@5
+                  displayName: 'Use Node CLI for Azure DevOps'
+                  inputs:
+                    version: '0.x'
+                    checkLatest: true
+                - task: PublishAzureDevOpsExtension@5.0.357
+                  displayName: 'Publish Extension'
+                  inputs:
+                    connectTo: 'VsTeam'
+                    connectedServiceName: 'Marketplace'
+                    fileType: 'vsix'
+                    vsixFile: '$(Pipeline.Workspace)/vsix/foxholenl-gitleaks-public.vsix'
+                    updateTasksVersion: false
+                    noWaitValidation:  true
               
