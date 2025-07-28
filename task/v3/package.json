@@ -32,7 +32,7 @@
   "author": "Joost Voskuil (joost@foxhole.nl)",
   "license": "MIT",
   "dependencies": {
-    "azure-devops-node-api": "^14.1.0",
+    "azure-devops-node-api": "^15.1.0",
     "azure-pipelines-task-lib": "^5.2.0",
     "azure-pipelines-tool-lib": "^2.0.8",
     "ts-node": "^10.9.2",
