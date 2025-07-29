@@ -1,20 +1,34 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directories:
-      - "**/*"
+    directory: "/task/v2/"
     schedule:
       interval: "weekly"
     target-branch: "main"
-
-  - package-ecosystem: "devcontainers"
-    directory: "/"
+    labels:
+    - "npm dependencies"
+    - "task v2"
+    groups:
+      all:
+        patterns:
+          - "*"
+  - package-ecosystem: "npm"
+    directory: "/task/v3/"
     schedule:
       interval: "weekly"
     target-branch: "main"
+    labels:
+    - "npm dependencies"
+    - "task v3"
+    groups:
+      all:
+        patterns:
+          - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
     target-branch: "main"
+    labels:
+    - "github actions"
