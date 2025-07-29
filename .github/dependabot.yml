@@ -3,6 +3,7 @@ updates:
   - package-ecosystem: "npm"
     directories:
       - "**/*"
+      - "!task/v2"
     schedule:
       interval: "weekly"
     target-branch: "main"
