@@ -1,8 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directories:
-      - "/task/v2/"
+    directory: "/task/v2/"
     schedule:
       interval: "weekly"
     target-branch: "main"
@@ -14,8 +13,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "npm"
-    directories:
-      - "/task/v3/"
+    directory: "/task/v3/"
     schedule:
       interval: "weekly"
     target-branch: "main"
