@@ -30,3 +30,5 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "main"
+    labels:
+    - "github actions"
