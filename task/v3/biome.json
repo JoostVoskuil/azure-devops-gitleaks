@@ -1,18 +1,15 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true,
-			"complexity": {
-				"useArrowFunction": "off"
-			}
-		}
-	},
-	"files": {
-		"ignore": ["**/*.js"]
-	  }	
+  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "useArrowFunction": "off"
+      }
+    }
+  },
+  "files": {
+    "includes": ["*.ts", "!*.js"]
+  }
 }
