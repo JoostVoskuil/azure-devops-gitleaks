@@ -11,7 +11,7 @@
     "noEmitOnError": true,
     "rootDir": ".",
     "skipLibCheck": true,
-    "types": ["@types/mocha","mocha","node"]
+    "types": ["node"]
   },
   "exclude": [
     "node_modules"
