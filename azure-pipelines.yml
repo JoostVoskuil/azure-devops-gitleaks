@@ -72,7 +72,7 @@ stages:
             inputs:
               version: 'v0.x'
               checkLatest: true
-          - task: PackageAzureDevOpsExtension@4
+          - task: PackageAzureDevOpsExtension@5
             displayName: 'Package Extension DEV'
             inputs:
               rootFolder: '$(Build.SourcesDirectory)'
