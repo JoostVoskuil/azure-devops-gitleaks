@@ -83,7 +83,7 @@ stages:
               extensionTag: '-dev'
               extensionVersion: '$(Build.BuildNumber)'
               extensionVisibility: private
-          - task: PackageAzureDevOpsExtension@4
+          - task: PackageAzureDevOpsExtension@5
             displayName: 'Package Extension PROD'
             inputs:
               rootFolder: '$(Build.SourcesDirectory)'
