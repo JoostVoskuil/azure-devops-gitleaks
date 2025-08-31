@@ -1,4 +1,4 @@
-import * as path from "node:path"
+import * as path from 'node:path'
 import taskLib = require("azure-pipelines-task-lib/task")
 
 async function run(): Promise<void> {

@@ -39,7 +39,7 @@ stages:
               extraProperties: |
                 sonar.coverage.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
                 sonar.cpd.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
-                sonar.exclusions=node_modules/*
+                sonar.exclusions=node_modules/*,task/v2/*.ts
           - task: SonarCloudAnalyze@3
             inputs:
               jdkversion: 'JAVA_HOME_17_X64'
