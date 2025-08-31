@@ -1,14 +1,13 @@
 version: 2
 updates:
-patterns:
   - package-ecosystem: "npm"
     directory: "/task/v3/"
     schedule:
       interval: "weekly"
     target-branch: "main"
     labels:
-    - "npm dependencies"
-    - "task v3"
+      - "npm dependencies"
+      - "task v3"
     groups:
       all:
         patterns:
@@ -20,4 +19,4 @@ patterns:
       interval: "weekly"
     target-branch: "main"
     labels:
-    - "github actions"
+      - "github actions"
