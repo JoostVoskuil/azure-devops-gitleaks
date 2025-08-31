@@ -1,14 +1,5 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/task/v2/"
-    schedule:
-      interval: "weekly"
-    target-branch: "main"
-    labels:
-    - "npm dependencies"
-    - "task v2"
-    groups:
       all:
         patterns:
           - "*"
