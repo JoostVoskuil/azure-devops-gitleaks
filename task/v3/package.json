@@ -32,17 +32,17 @@
   "author": "Joost Voskuil (joost@foxhole.nl)",
   "license": "MIT",
   "dependencies": {
-    "azure-devops-node-api": "^15.1.0",
-    "azure-pipelines-task-lib": "^5.2.0",
+    "azure-devops-node-api": "^15.1.1",
+    "azure-pipelines-task-lib": "^5.2.1",
     "azure-pipelines-tool-lib": "^2.0.8",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^24.1.0",
-    "@biomejs/biome": "1.9.4",
-    "mocha": "^11.2.2",
+    "@types/node": "^24.3.0",
+    "@biomejs/biome": "2.2.2",
+    "mocha": "^11.7.1",
     "mocha-junit-reporter": "^2.2.1",
     "nyc": "^17.1.0",
     "source-map-support": "^0.5.21",

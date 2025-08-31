@@ -12,8 +12,8 @@
   "minumumAgentVersion": "2.206.1",
   "version": {
     "Major": 2,
-    "Minor": 13,
-    "Patch": 2
+    "Minor": 21,
+    "Patch": 1
 
   },
   "groups": [
@@ -224,66 +224,10 @@
   "execution": {
     "Node16": {
       "target": "$(currentDirectory)/index.js"
-    },
-    "Node20": {
-      "target": "$(currentDirectory)/index.js"
     }
   },
   "messages": {
-    "ThanksToZacharyRice": "Thanks to Zachary Rice (https://github.com/zricethezav) for creating and maintaining gitleaks.",
-    "ThanksToJesseHouwing": "Thanks to Jesse Houwing (https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.",
-    "OnlySupportsGitLeaks8": "This version of the task only supports GitLeaks version 8. Specified version is %s",
-    "DetectedChanges": "Detected %s Git commit(s)",
-    "ScanningCommits": "Scanning for %s Git commit(s) for this build. First commit is %s, Last commit is %s",
-    "LogOptionsFound": "Log options is set as input, scanmode is ignored",
-    "PreValidationScan": "Only commits belonging to this Pull Request are scanned.",
-    "ChangeScan": "Only commits are scanned that are ommited between this build and the previous build with a max of %s commits.",
-    "PreValidationBuildInvallid": "Scanmode is 'prevalidation', however, this task is not run as part of a pull request.",
-    "ResultError": "Leaks found. See log and report for details. See https://docs.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository for information how to remove secrets.",
-    "ResultErrorOnExecution": "Execution errors occured. See log for details.",
-    "ResultSuccess": "Good job! No leaks.",
-    "ScanFolder": "Scan Folder is set to %s",
-    "ReportPath": "Report path is set to %s",
-    "IncorrectConfig": "Incorrect configuration set.",
-    "ConfigFile": "Config file parameter is set to %s",
-    "CachedTool": "Cached tool is %s",
-    "CannotParseVersion": "Cannot parse version %s",
-    "DownloadUri": "%s download uri is %s",
-    "CannotRetrieveVersion": "Cannot retrieve version from GitHub. Maybe it hitted the API throttling.",
-    "CannotDownloadUri": "Cannot retreive download from url %s",
-    "OsArchNotSupported": "OS '%s' and architecture '%s' is not supported by %s.",
-    "UploadResults": "Uploading report file to %s",
-    "GettingUrl": "Getting %s to find latest version of %s",
-    "ReleaseInfo": "GitLeaks latest release version is %s",
-    "CommitsFile": "CommitsFile is set to  %s",
-    "Commits": "The following commits will be scanned: %s",
-    "GetEndpointUrlEmpty": "GetEndpointUrl %s is empty",
-    "GetEndpointAuthorizationParameterEmpty": "GetEndpointAuthorizationParameter %s is empty",
-    "VariableEmpty": "Variable %s is empty",
-    "InputEmpty": "Input %s is empty",
-    "AdoConnectionError": "Connection cannot be made to Azure DevOps.",
-    "GitLeaksNotFound": "Gitleaks cannot be found at %s",
-    "OfflineAgent": "The agent has no internet connection, searching for toolversion to use on the agent.",
-    "OfflineAgentToolNotAvailable": "The agent has no internet connection and the specified Gitleaks tool version is not available on the agent.",
-    "OnlineAgentHasLatestVersion": "The latest version of the tool is available in the toolcache. Version is %s",
-    "OnlineAgentHasNotTheLatestVersion": "The latest version of Gitleaks (%s) must be downloaded...",
-    "NoToolcacheDownloading": "Version %s is not available in toolcache. Downloading version %s.",
-    "AvailableInToolcache": "Version %s of gitleaks is already available in toolcache.",
-    "DownloadFromGitHub": "Downloading %s from GitHub.",
-    "CachedVersions": "Cached versions of Gitleaks on the agent are: %s",
-    "NoCommitsToScan": "No commits to scan; exiting.",
-    "UnknownScanMode": "Unknown scanmode: %s",
-    "cachedToolExecutable": "cachedToolExecutable: %s",
-    "Downloading": "Downloading %s",
-    "ScanningRange": "Scanning commit range: %s to %s",
-    "NotGitRepository": "For prevalidation/smart scanning mode, only 'TfsGit' is supported as repository type. This repository type is '%s'",
-    "ErrorFetchingGitHubAPI": "Error contacting GitHub API: %s",
-    "ErrorFetchingGitHub": "Error contacting GitHub Latest release page: %s",
-    "UploadFailed": "Failed to upload results to Azure DevOps. Error is %s",
-    "BaselinePathDoesNotExists": "The specified baseline file path does not exist.",
-    "QueryingGitHubLatestReleasePage": "Querying Gitleaks Latest Release GitHub Page.",
-    "QueryingGitHubAPI": "Querying Gitleaks GitHubs API for latest release.",
-    "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version.",
-    "TaskIsDeprecated": "There is a new version of this task available. Version 2 is deprecated. Please update to version 3."
+    "TaskIsDeprecated": "Version 2 is deprecated. Please update to version 3 of this task.",
+    "TaskIsDeprecatedFailure": "Because of the nature of this task (Secret Scanning). We fail this task."
   }
 }

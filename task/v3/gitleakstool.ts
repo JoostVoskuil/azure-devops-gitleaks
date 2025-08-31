@@ -105,14 +105,14 @@ export class GitleaksTool {
   private getDownloadFileName (version: string): string {
     const operatingSystem = getAzureDevOpsVariable('Agent.OS')
     const architecture = getAzureDevOpsVariable('Agent.OSArchitecture')
-    const suffix = this.getOsArchSuffix(operatingSystem, architecture, version)
+    const suffix = this.getOsArchSuffix(operatingSystem, architecture)
     if (!suffix) {
       throw new Error(taskLib.loc('OsArchNotSupported', operatingSystem, architecture, 'gitleaks'))
     }
     return `gitleaks_${version}_${suffix}`
   }
 
-  private getOsArchSuffix (os: string, arch: string, version: string): string | undefined {
+  private getOsArchSuffix (os: string, arch: string): string | undefined {
     const lowerArch = arch.toLowerCase()
     if (os === 'Windows_NT') {
       if (lowerArch === 'x64') return 'windows_x64.zip'
@@ -169,7 +169,7 @@ export class GitleaksTool {
       taskLib.debug(taskLib.loc('ReleaseInfo', version))
       return version
     }
-    catch (error) {
+    catch {
       return undefined
     }
   }
@@ -206,7 +206,7 @@ export class GitleaksTool {
       result = await http.get('https://github.com')
       if (result.message.statusCode !== undefined && result.message.statusCode >= 200 && result.message.statusCode < 300) return true
       return false
-    } catch (err) {
+    } catch {
       return false
     }
   }

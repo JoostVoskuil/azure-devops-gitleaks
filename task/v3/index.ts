@@ -15,6 +15,8 @@ async function run(): Promise<void> {
     console.log()
     // Get inputs on Task Behaviour
     const scanLocation = getAzureDevOpsPathInput('scanlocation')
+    // Set working directory
+    taskLib.cd(scanLocation)
     const reportFormat = getAzureDevOpsInput('reportformat')
     const reportName = taskLib.getInput('reportname', false)
     const baselinePath = taskLib.getInput('baselinePath', false)

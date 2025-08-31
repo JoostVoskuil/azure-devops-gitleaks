@@ -39,7 +39,7 @@ stages:
               extraProperties: |
                 sonar.coverage.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
                 sonar.cpd.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
-                sonar.exclusions=node_modules/*
+                sonar.exclusions=node_modules/*,task/v2/*.ts
           - task: SonarCloudAnalyze@3
             inputs:
               jdkversion: 'JAVA_HOME_17_X64'
@@ -72,7 +72,7 @@ stages:
             inputs:
               version: 'v0.x'
               checkLatest: true
-          - task: PackageAzureDevOpsExtension@4
+          - task: PackageAzureDevOpsExtension@5
             displayName: 'Package Extension DEV'
             inputs:
               rootFolder: '$(Build.SourcesDirectory)'
@@ -83,7 +83,7 @@ stages:
               extensionTag: '-dev'
               extensionVersion: '$(Build.BuildNumber)'
               extensionVisibility: private
-          - task: PackageAzureDevOpsExtension@4
+          - task: PackageAzureDevOpsExtension@5
             displayName: 'Package Extension PROD'
             inputs:
               rootFolder: '$(Build.SourcesDirectory)'
