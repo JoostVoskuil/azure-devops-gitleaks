@@ -1,6 +1,5 @@
 version: 2
 updates:
-      all:
         patterns:
           - "*"
   - package-ecosystem: "npm"
