@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 21,
-    "Patch": 0
+    "Patch": 1
 
   },
   "groups": [
@@ -227,7 +227,7 @@
     }
   },
   "messages": {
-    "TaskIsDeprecated": "There is a new version of this task available. Version 2 is deprecated. Please update to version 3.",
+    "TaskIsDeprecated": "Version 2 is deprecated. Please update to version 3 of this task.",
     "TaskIsDeprecatedFailure": "Because of the nature of this task (Secret Scanning). We fail this task."
   }
 }

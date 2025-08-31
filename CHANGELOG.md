@@ -1,5 +1,13 @@
 # Changelog
 
+## Task version 3.5
+
+- Update NPM dependencies
+- Update config
+- Always set working directory to scan location
+- Fixed warnings biome linting
+- Deprecated task version 2, task will fail when used.
+
 ## Task version 3.3
 
 - Update NPM dependencies
