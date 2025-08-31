@@ -1,7 +1,6 @@
 version: 2
 updates:
-        patterns:
-          - "*"
+patterns:
   - package-ecosystem: "npm"
     directory: "/task/v3/"
     schedule:
