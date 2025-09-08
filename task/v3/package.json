@@ -41,7 +41,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.3.0",
-    "@biomejs/biome": "2.2.2",
+    "@biomejs/biome": "2.2.3",
     "mocha": "^11.7.1",
     "mocha-junit-reporter": "^2.2.1",
     "nyc": "^17.1.0",
