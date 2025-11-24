@@ -1,5 +1,10 @@
 # Changelog
 
+## Task version 3.6
+- Update NPM dependencies
+- Update config
+- Fix typo, thanx @cmgchess
+
 ## Task version 3.5
 
 - Update NPM dependencies
