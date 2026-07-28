@@ -293,6 +293,6 @@
     "QueryingGitHubLatestReleasePage": "Querying Gitleaks Latest Release GitHub Page.",
     "QueryingGitHubAPI": "Querying Gitleaks GitHubs API for latest release.",
     "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version.",
-    "TaskIsDeprecated": "GitLeaks (and this extension) is no longer maintained, please use an alternative tool."
+    "TaskIsDeprecated": "GitLeaks (and this extension) is no longer maintained, please use an alternative tool like GitHub Advanced Security."
   }
 }
