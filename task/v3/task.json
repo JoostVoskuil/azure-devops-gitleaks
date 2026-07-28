@@ -12,8 +12,8 @@
   "minumumAgentVersion": "2.206.1",
   "version": {
     "Major": 3,
-    "Minor": 6,
-    "Patch": 1
+    "Minor": 7,
+    "Patch": 0
   },
   "groups": [
     {
@@ -292,6 +292,7 @@
     "IgnoreFilePathDoesNotExists": "The specified ignore file path does not exist.",
     "QueryingGitHubLatestReleasePage": "Querying Gitleaks Latest Release GitHub Page.",
     "QueryingGitHubAPI": "Querying Gitleaks GitHubs API for latest release.",
-    "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version."
+    "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version.",
+    "TaskIsDeprecated": "GitLeaks is no longer maintained, please use an alternative tool."
   }
 }
