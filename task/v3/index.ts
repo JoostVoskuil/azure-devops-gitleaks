@@ -15,6 +15,7 @@ async function run(): Promise<void> {
     console.log()
 
     taskLib.warning(taskLib.loc("TaskIsDeprecated"))
+    taskLib.warning(taskLib.loc("TaskIsDeprecated2"))
     console.log()
     // Get inputs on Task Behaviour
     const scanLocation = getAzureDevOpsPathInput('scanlocation')
