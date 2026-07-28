@@ -1,6 +1,13 @@
 # Changelog
 
+## Task version 3.7
+
+- Update NPM dependencies
+- Update config
+- Added warning that the task is deprecated and that users should consider using an alternative tool like GitHub Advanced Security.
+  
 ## Task version 3.6
+
 - Update NPM dependencies
 - Update config
 - Fix typo, thanx @cmgchess

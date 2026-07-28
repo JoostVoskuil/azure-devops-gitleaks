@@ -23,8 +23,8 @@ minVersion = "v8.25.0"
 description = "global allow lists"
 paths = [
     '''gitleaks\.toml''',
-    '''UDMSecretChecksv8.toml$''',
-    '''GitleaksUdmCombo.toml$''',
+    '''GitleaksUdmCombo\.toml''',
+    '''UDMSecretChecksv8\.toml''',
     '''(?i)\.(?:bmp|gif|jpe?g|png|svg|tiff?)$''',
     '''(?i)\.(?:eot|[ot]tf|woff2?)$''',
     '''(?i)\.(?:docx?|xlsx?|pdf|bin|socket|vsidx|v2|suo|wsuo|.dll|pdb|exe|gltf)$''',
@@ -3210,6 +3210,7 @@ regex = '''(?i)[\w.-]{0,50}?(?:zendesk)(?:[ \t\w.-]{0,20})[\s'"]{0,3}(?:=|>|:{1,
 keywords = ["zendesk"]
 
 ### AZURE
+
 [[rules]]
 id = "CSCAN0210" 
 description = "GitCredential"

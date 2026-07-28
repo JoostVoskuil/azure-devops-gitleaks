@@ -21,32 +21,6 @@ variables:
   extensionName: 'Gitleaks'
 
 stages:
-  - stage: ScanRepo
-    displayName: ScanRepo
-    dependsOn: []
-    jobs:
-      - job:
-        steps:
-          - task: SonarCloudPrepare@3
-            inputs:
-              SonarCloud: 'SonarCloud'
-              organization: 'joostvoskuil'
-              scannerMode: 'CLI'
-              configMode: 'manual'
-              cliProjectKey: 'JoostVoskuil_azure-devops-gitleaks'
-              cliProjectName: 'JoostVoskuil_azure-devops-gitleaks'
-              cliSources: '.'
-              extraProperties: |
-                sonar.coverage.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
-                sonar.cpd.exclusions=task/v2/test/*.ts,task/v3/test/*.ts
-                sonar.exclusions=node_modules/*,task/v2/*.ts
-          - task: SonarCloudAnalyze@3
-            inputs:
-              jdkversion: 'JAVA_HOME_17_X64'
-          - task: SonarCloudPublish@3
-            inputs:
-              pollingTimeoutSec: '300'
-
   - stage: Build
     displayName: Build
     dependsOn: []
@@ -104,7 +78,7 @@ stages:
   - stage: DeployDEV
     displayName: 'Publish to Marketplace (private)'
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-    dependsOn: [ScanRepo, Build]
+    dependsOn: [Build]
     jobs:
       - deployment:
         environment: Test
@@ -134,7 +108,7 @@ stages:
   - stage: DeployPROD
     displayName: 'Publish to Marketplace (Public)'
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    dependsOn: [ScanRepo, Build, DeployDEV]
+    dependsOn: [Build, DeployDEV]
     jobs:
       - deployment:
         environment: Production

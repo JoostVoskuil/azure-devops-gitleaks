@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-rel": "npm ci --production && tsc index.ts",
+    "build-rel": "npm ci --production && tsc index.ts --ignoreConfig --module commonjs --target es2022 --esModuleInterop --skipLibCheck --noImplicitAny false --useUnknownInCatchVariables false --sourceMap",
     "build-test": "npm ci && tsc",
     "clean": "rm -rf ./node_modules/ && npm run clean-build",
     "clean-build": "rm -rf ./coverage/ && rm -rf ./.nyc_output/ && rm -rf test-results.xml && find . -name '*.js' -delete && find . -name '*.js.map' -delete && find . -name '.taskkey' -delete",
@@ -31,8 +31,8 @@
   "author": "Joost Voskuil (joost@foxhole.nl)",
   "license": "MIT",
   "dependencies": {
-    "azure-pipelines-task-lib": "^5.2.1",
+    "azure-pipelines-task-lib": "^5.278.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   }
 }
