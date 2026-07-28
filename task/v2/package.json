@@ -31,8 +31,8 @@
   "author": "Joost Voskuil (joost@foxhole.nl)",
   "license": "MIT",
   "dependencies": {
-    "azure-pipelines-task-lib": "^5.2.1",
+    "azure-pipelines-task-lib": "^5.278.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   }
 }
