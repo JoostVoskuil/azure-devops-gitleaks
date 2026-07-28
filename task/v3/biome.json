@@ -1,14 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "complexity": {
-        "useArrowFunction": "off"
-      }
-    }
-  },
+  "$schema": "https://biomejs.dev/schemas/2.5.5/schema.json",
   "files": {
     "includes": ["*.ts", "!*.js"]
   }
