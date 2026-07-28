@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 7,
-    "Patch": 2
+    "Patch": 3
   },
   "groups": [
     {
@@ -293,7 +293,7 @@
     "QueryingGitHubLatestReleasePage": "Querying Gitleaks Latest Release GitHub Page.",
     "QueryingGitHubAPI": "Querying Gitleaks GitHubs API for latest release.",
     "CouldNotQueryGitLeaksLatestVersion": "Could not query GitHub to determine the latest GitLeaks version.",
-    "TaskIsDeprecated": "GitLeaks (and this extension) is no longer actively maintained, While still working, expect no updates regarding new features and/or scan heuristics.",
+    "TaskIsDeprecated": "Gitleaks (and this extension) is no longer actively maintained, While still working, expect no updates regarding new features and/or scan heuristics.",
     "TaskIsDeprecated2": "We recommend using an alternative tool like GitHub Advanced Security."
   }
 }
