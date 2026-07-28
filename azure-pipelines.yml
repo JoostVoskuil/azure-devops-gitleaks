@@ -78,7 +78,7 @@ stages:
   - stage: DeployDEV
     displayName: 'Publish to Marketplace (private)'
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-    dependsOn: [ScanRepo, Build]
+    dependsOn: [Build]
     jobs:
       - deployment:
         environment: Test
@@ -108,7 +108,7 @@ stages:
   - stage: DeployPROD
     displayName: 'Publish to Marketplace (Public)'
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    dependsOn: [ScanRepo, Build, DeployDEV]
+    dependsOn: [Build, DeployDEV]
     jobs:
       - deployment:
         environment: Production
