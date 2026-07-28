@@ -6,7 +6,6 @@
     "target": "es2022",
     "noImplicitAny": false,
     "sourceMap": true,
-    "moduleResolution": "node",
     "esModuleInterop": true,
     "noEmitOnError": true,
     "rootDir": ".",
