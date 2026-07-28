@@ -2,6 +2,8 @@
 
 This Azure DevOps task downloads gitleaks and runs a gitleak scan on the specified location.
 
+> GitLeaks is no longer maintained by the original author. GitLeaks is feature ready. There will be no new features added. This includes updated configs with updated secret detection rules. Consider using an alternative tool like GitHub Advanced Security.
+
 - Thanks to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining gitleaks.
 - Thanks to [Jesse Houwing](https://github.com/jessehouwing) for providing a gitleaks config that has most of Microsoft's deprecated credscan rules ported to it.
 
